@@ -14,7 +14,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// This is the API key for the application.
         /// </summary>
-        public const string API_KEY = "TEST";//"OneBusAwayWin8";
+        public const string API_KEY = "693c0a55-9ef0-4302-8bc3-f9b2db93e124";
 
         /// <summary>
         /// This is the URI of the server.
