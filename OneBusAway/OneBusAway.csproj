@@ -104,13 +104,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\OneBusAway.DataAccess\OneBusAway.DataAccess.csproj">
-      <Project>{b612d55d-895b-4c25-a696-5c7dfeb6bde4}</Project>
-      <Name>OneBusAway.DataAccess</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -149,6 +142,16 @@
     <SDKReference Include="Bing.Maps.Xaml, Version=1.0">
       <Name>Bing Maps for C#, C++, or Visual Basic %28Beta%29</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OneBusAway.Model\OneBusAway.Model.csproj">
+      <Project>{73f2debf-f056-4bda-b578-c2c99062f10b}</Project>
+      <Name>OneBusAway.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OneBusAway.ViewModels\OneBusAway.ViewModels.csproj">
+      <Project>{cdd8c2c7-66da-4ab0-8295-939b8bea6537}</Project>
+      <Name>OneBusAway.ViewModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

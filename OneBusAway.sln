@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Model", "OneBusAway.Model\OneBusAway.Model.csproj", "{73F2DEBF-F056-4BDA-B578-C2C99062F10B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.ViewModels", "OneBusAway.ViewModels\OneBusAway.ViewModels.csproj", "{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://mbraude.tfspreview.com/defaultcollection
 		SccLocalPath0 = .
@@ -30,6 +32,9 @@ Global
 		SccProjectUniqueName4 = OneBusAway.Model\\OneBusAway.Model.csproj
 		SccProjectName4 = OneBusAway.Model
 		SccLocalPath4 = OneBusAway.Model
+		SccProjectUniqueName5 = OneBusAway.ViewModels\\OneBusAway.ViewModels.csproj
+		SccProjectName5 = OneBusAway.ViewModels
+		SccLocalPath5 = OneBusAway.ViewModels
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +101,16 @@ Global
 		{73F2DEBF-F056-4BDA-B578-C2C99062F10B}.Release|ARM.ActiveCfg = Release|Any CPU
 		{73F2DEBF-F056-4BDA-B578-C2C99062F10B}.Release|x64.ActiveCfg = Release|Any CPU
 		{73F2DEBF-F056-4BDA-B578-C2C99062F10B}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Release|x64.ActiveCfg = Release|Any CPU
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
