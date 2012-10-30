@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using OneBusAway.Model;
 
 namespace OneBusAway.DataAccess
 {
@@ -88,7 +90,7 @@ namespace OneBusAway.DataAccess
             /// <summary>
             /// Sends a payload to the service asynchronously.
             /// </summary>
-            public async Task<string> SendAndRecieveAsync(string payload)
+            public async Task<XDocument> SendAndRecieveAsync(string payload)
             {
                 this.uriBuilder.Query = this.CreateQueryString();
                 this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
@@ -106,10 +108,23 @@ namespace OneBusAway.DataAccess
                 var response = await this.request.GetResponseAsync();
                 var responseStream = response.GetResponseStream();
 
+                XDocument doc = null;
+
                 using (var streamReader = new StreamReader(responseStream))
                 {
-                    return await streamReader.ReadToEndAsync();
+                    string xml = await streamReader.ReadToEndAsync();
+                    doc = XDocument.Parse(xml);
                 }
+
+                // Verify that OBA sent us a valid document and that it's status code is 200:                
+                int returnCode = doc.Root.GetFirstElementValue<int>("code");
+                if (returnCode != 200)
+                {
+                    string text = doc.Root.GetFirstElementValue<string>("text");
+                    throw new ObaException(returnCode, text);
+                }
+
+                return doc;
             }
 
             /// <summary>

@@ -44,6 +44,10 @@
       <HintPath>FakesAssemblies\OneBusAway.DataAccess.Fakes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -60,15 +64,30 @@
   <ItemGroup>
     <Compile Include="ObaDataAccessTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OneBusAway.DataAccess\OneBusAway.DataAccess.csproj">
       <Project>{b612d55d-895b-4c25-a696-5c7dfeb6bde4}</Project>
       <Name>OneBusAway.DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OneBusAway.Model\OneBusAway.Model.csproj">
+      <Project>{73f2debf-f056-4bda-b578-c2c99062f10b}</Project>
+      <Name>OneBusAway.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\OneBusAway.DataAccess.fakes" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

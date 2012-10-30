@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OneBusAway.DataAccess
 {
@@ -19,6 +20,6 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
-        Task<string> SendAndRecieveAsync(string payload = null);
+        Task<XDocument> SendAndRecieveAsync(string payload = null);
     }
 }
