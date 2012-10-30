@@ -28,13 +28,16 @@ namespace OneBusAway.Model
         /// <summary>
         /// Sets a property.
         /// </summary>
-        protected void SetProperty<T>(ref T prop, T newValue, [CallerMemberName] string propName = null)
+        protected bool SetProperty<T>(ref T prop, T newValue, [CallerMemberName] string propName = null)
         {
             if (! object.Equals(prop, newValue))
             {
                 prop = newValue;
                 this.FirePropertyChanged(propName);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
