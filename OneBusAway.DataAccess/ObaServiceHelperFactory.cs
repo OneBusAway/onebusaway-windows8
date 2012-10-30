@@ -58,6 +58,16 @@ namespace OneBusAway.DataAccess
             private HttpMethod httpMethod;
 
             /// <summary>
+            /// The oba method.
+            /// </summary>
+            private ObaMethod obaMethod;
+
+            /// <summary>
+            /// The service Url.
+            /// </summary>
+            private string serviceUrl;
+
+            /// <summary>
             /// Maps name / value pairs to the query string.
             /// </summary>
             private Dictionary<string, string> queryStringMap;
@@ -67,7 +77,10 @@ namespace OneBusAway.DataAccess
             /// </summary>
             public ObaServiceHelper(string serviceUrl, ObaMethod obaMethod, HttpMethod httpMethod)
             {
+                this.obaMethod = obaMethod;
                 this.httpMethod = httpMethod;
+                this.serviceUrl = serviceUrl;
+
                 this.uriBuilder = new UriBuilder(serviceUrl);
 
                 string obaMethodString = obaMethod.ToString();
@@ -85,6 +98,21 @@ namespace OneBusAway.DataAccess
             public void AddToQueryString(string name, string value)
             {
                 this.queryStringMap[name] = value;
+            }
+
+            /// <summary>
+            /// Sets the id for the rest query, if it exists.
+            /// </summary>
+            public void SetId(string id)
+            {
+                this.uriBuilder = new UriBuilder(serviceUrl);
+
+                string obaMethodString = obaMethod.ToString();
+                obaMethodString = obaMethodString.Replace('_', '-');
+                obaMethodString += "/";
+                obaMethodString += id;
+                obaMethodString += ".xml";
+                this.uriBuilder.Path += obaMethodString;
             }
 
             /// <summary>

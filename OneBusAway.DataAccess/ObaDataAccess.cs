@@ -46,5 +46,18 @@ namespace OneBusAway.DataAccess
             return (from stopElement in doc.Descendants("stop")
                     select new Stop(stopElement)).ToArray();
         }
+
+        /// <summary>
+        /// Returns the routes for a particular stop.
+        /// </summary>
+        public async Task<Route[]> GetRoutesForStopAsync(string stopId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.stop, HttpMethod.GET);
+            helper.SetId(stopId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+            return (from routeElement in doc.Descendants("route")
+                    select new Route(routeElement)).ToArray();
+        }
     }
 }

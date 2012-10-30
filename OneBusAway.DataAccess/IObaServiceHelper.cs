@@ -18,6 +18,17 @@ namespace OneBusAway.DataAccess
         void AddToQueryString(string name, string value);
 
         /// <summary>
+        /// For some rest API calls, the format will be:
+        /// 
+        /// obamethod/id.xml?querystring
+        /// 
+        /// Instead of just 
+        /// 
+        /// obamethod.xml?querystring.
+        /// </summary>
+        void SetId(string id);
+
+        /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
         Task<XDocument> SendAndRecieveAsync(string payload = null);
