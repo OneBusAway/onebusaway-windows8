@@ -116,6 +116,23 @@ namespace OneBusAway.DataAccess.Test {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;response&gt;
+        ///  &lt;version&gt;2&lt;/version&gt;
+        ///  &lt;code&gt;200&lt;/code&gt;
+        ///  &lt;currentTime&gt;1351717360572&lt;/currentTime&gt;
+        ///  &lt;text&gt;OK&lt;/text&gt;
+        ///  &lt;data class=&quot;entryWithReferences&quot;&gt;
+        ///    &lt;references /&gt;
+        ///    &lt;entry class=&quot;encodedPolyline&quot;&gt;
+        ///      &lt;points&gt;ky`bHvwajVtDL|DJfDH|@DnALVBn@LjA\LFDBZHzBhA|@b@nAn@dDdBtBfAf@VpCrAjEvBd@Nr@Lp@Fh@DfA?zA?zA?pBBlCBvDCjB?`@QTSVc@FSFSNm@BGDKHIRIfDeAbFyA|@_@x@o@d@c@h@{@JSr@}A|AsDbAcCJURw@FKRgA?ALy@H_AFs@?s@?i@?[OuDg@mJEa@Mc@ISkAgCiAyBGq@?iIAmO?MAaO?sF?cI?q@?e@?mF?cE?oA?sG@eH?eG?_@?aF?K@}N?U?OAeF?yH?mL [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string getShapeXml {
+            get {
+                return ResourceManager.GetString("getShapeXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;response&gt;
         ///  &lt;version&gt;1&lt;/version&gt;
         ///  &lt;code&gt;200&lt;/code&gt;
         ///  &lt;currentTime&gt;1351713956781&lt;/currentTime&gt;

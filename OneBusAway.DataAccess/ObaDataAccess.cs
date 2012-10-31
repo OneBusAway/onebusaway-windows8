@@ -74,5 +74,20 @@ namespace OneBusAway.DataAccess
             return (from stopElement in doc.Descendants("stop")
                     select new Stop(stopElement)).ToArray();
         }
+
+        /// <summary>
+        /// Returns the shape of a route for a particular route.
+        /// </summary>
+        public async Task<Shape> GetShapeForRouteAsync(string routeId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.shape);
+            helper.SetId(routeId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+
+            // Find all of the stops in the payload that have this route id:
+            return (from entryElement in doc.Descendants("entry")
+                    select new Shape(entryElement)).First();
+        }
     }
 }

@@ -39,8 +39,10 @@
     <Compile Include="Agency.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Route.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="Stop.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

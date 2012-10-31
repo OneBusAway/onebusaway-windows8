@@ -64,5 +64,17 @@ namespace OneBusAway.DataAccess.Test
             var stops = await access.GetStopsForRouteAsync("1_44");
             Assert.AreNotEqual(0, stops.Length);
         }
+
+        [TestMethod]
+        public async Task TestGetShapeForRouteAsync()
+        {
+            ObaDataAccess access = new ObaDataAccess();            
+
+            string xml = strings.getStopsForRouteXml;
+            this.helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));
+
+            var shape = await access.GetShapeForRouteAsync("1_40046045");
+            Assert.AreNotEqual(0, shape.Points.Length);
+        }
     }
 }
