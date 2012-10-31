@@ -89,5 +89,21 @@ namespace OneBusAway.DataAccess
             return (from entryElement in doc.Descendants("entry")
                     select new Shape(entryElement)).First();
         }
+
+        /// <summary>
+        /// Returns real time tracking data for the buses at a particular stop.
+        /// </summary>
+        public async Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.arrivals_and_departures_for_stop);
+            helper.SetId(stopId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+
+            // Find all of the stops in the payload that have this route id:
+            return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
+                    select new TrackingData(serverTime, arrivalAndDepartureElement)).ToArray();
+        }
     }
 }

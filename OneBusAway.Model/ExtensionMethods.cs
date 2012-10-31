@@ -27,5 +27,12 @@ namespace OneBusAway.Model
             return (T)Convert.ChangeType(childNode.Value, typeof(T));
         }
 
+        /// <summary>
+        /// Converts the OBA server time into a DateTime.
+        /// </summary>
+        public static DateTime ToDateTime(this long serverTime)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(serverTime);
+        }
     }
 }

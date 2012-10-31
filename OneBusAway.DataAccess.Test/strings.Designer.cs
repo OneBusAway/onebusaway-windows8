@@ -175,5 +175,31 @@ namespace OneBusAway.DataAccess.Test {
                 return ResourceManager.GetString("getStopsXml", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;response&gt;
+        ///  &lt;version&gt;1&lt;/version&gt;
+        ///  &lt;code&gt;200&lt;/code&gt;
+        ///  &lt;currentTime&gt;1351722134527&lt;/currentTime&gt;
+        ///  &lt;text&gt;OK&lt;/text&gt;
+        ///  &lt;data class=&quot;org.onebusaway.api.model.where.StopWithArrivalsAndDeparturesBeanV1&quot;&gt;
+        ///    &lt;stop&gt;
+        ///      &lt;id&gt;1_75403&lt;/id&gt;
+        ///      &lt;lat&gt;47.654366&lt;/lat&gt;
+        ///      &lt;lon&gt;-122.305214&lt;/lon&gt;
+        ///      &lt;direction&gt;S&lt;/direction&gt;
+        ///      &lt;name&gt;STEVENS WAY &amp;amp; BENTON LN&lt;/name&gt;
+        ///      &lt;code&gt;75403&lt;/code&gt;
+        ///      &lt;locationType&gt;0&lt;/locationType&gt;
+        ///      &lt;routes&gt;
+        ///        &lt;route&gt;
+        ///          &lt;id&gt;1_25&lt;/id&gt;
+        ///          &lt;s [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string getTrackingDataForStopXml {
+            get {
+                return ResourceManager.GetString("getTrackingDataForStopXml", resourceCulture);
+            }
+        }
     }
 }
