@@ -64,6 +64,33 @@ namespace OneBusAway.DataAccess.Test {
         ///   Looks up a localized string similar to &lt;response&gt;
         ///  &lt;version&gt;1&lt;/version&gt;
         ///  &lt;code&gt;200&lt;/code&gt;
+        ///  &lt;currentTime&gt;1351709286607&lt;/currentTime&gt;
+        ///  &lt;text&gt;OK&lt;/text&gt;
+        ///  &lt;data class=&quot;stop&quot;&gt;
+        ///    &lt;id&gt;1_75403&lt;/id&gt;
+        ///    &lt;lat&gt;47.654366&lt;/lat&gt;
+        ///    &lt;lon&gt;-122.305214&lt;/lon&gt;
+        ///    &lt;direction&gt;S&lt;/direction&gt;
+        ///    &lt;name&gt;STEVENS WAY &amp;amp; BENTON LN&lt;/name&gt;
+        ///    &lt;code&gt;75403&lt;/code&gt;
+        ///    &lt;locationType&gt;0&lt;/locationType&gt;
+        ///    &lt;routes&gt;
+        ///      &lt;route&gt;
+        ///        &lt;id&gt;1_25&lt;/id&gt;
+        ///        &lt;shortName&gt;25&lt;/shortName&gt;
+        ///        &lt;description&gt;Laurelhurst-Lakeview&lt;/description&gt;
+        ///        &lt;type&gt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string getRoutesForStopXml {
+            get {
+                return ResourceManager.GetString("getRoutesForStopXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;response&gt;
+        ///  &lt;version&gt;1&lt;/version&gt;
+        ///  &lt;code&gt;200&lt;/code&gt;
         ///  &lt;currentTime&gt;1351629850901&lt;/currentTime&gt;
         ///  &lt;text&gt;OK&lt;/text&gt;
         ///  &lt;data class=&quot;stop&quot;&gt;
@@ -84,6 +111,30 @@ namespace OneBusAway.DataAccess.Test {
         internal static string getRoutesXml {
             get {
                 return ResourceManager.GetString("getRoutesXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;response&gt;
+        ///  &lt;version&gt;1&lt;/version&gt;
+        ///  &lt;code&gt;200&lt;/code&gt;
+        ///  &lt;currentTime&gt;1351713956781&lt;/currentTime&gt;
+        ///  &lt;text&gt;OK&lt;/text&gt;
+        ///  &lt;data class=&quot;org.onebusaway.transit_data.model.StopsForRouteBean&quot;&gt;
+        ///    &lt;route&gt;
+        ///      &lt;id&gt;1_44&lt;/id&gt;
+        ///      &lt;shortName&gt;44&lt;/shortName&gt;
+        ///      &lt;description&gt;ballard/montlake&lt;/description&gt;
+        ///      &lt;type&gt;3&lt;/type&gt;
+        ///      &lt;url&gt;http://metro.kingcounty.gov/tops/bus/schedules/s044_0_.html&lt;/url&gt;
+        ///      &lt;agency&gt;
+        ///        &lt;id&gt;1&lt;/id&gt;
+        ///        &lt;name&gt;Metro Transit&lt;/name&gt;
+        ///        &lt;url&gt;http://metro.kingcou [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string getStopsForRouteXml {
+            get {
+                return ResourceManager.GetString("getStopsForRouteXml", resourceCulture);
             }
         }
         

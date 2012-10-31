@@ -32,7 +32,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Factory method creates a service helper.
         /// </summary>
-        public virtual IObaServiceHelper CreateHelper(ObaMethod obaMethod, HttpMethod httpMethod)
+        public virtual IObaServiceHelper CreateHelper(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
         {
             return new ObaServiceHelper(this.serviceUrl, obaMethod, httpMethod);
         }

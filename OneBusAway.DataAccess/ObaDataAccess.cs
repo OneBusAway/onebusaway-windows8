@@ -38,7 +38,7 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_location, HttpMethod.GET);            
+            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_location);
             helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
             helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
 
@@ -52,12 +52,27 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Route[]> GetRoutesForStopAsync(string stopId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stop, HttpMethod.GET);
+            var helper = this.Factory.CreateHelper(ObaMethod.stop);
             helper.SetId(stopId);
 
             XDocument doc = await helper.SendAndRecieveAsync();
             return (from routeElement in doc.Descendants("route")
                     select new Route(routeElement)).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the stops for a particular route.
+        /// </summary>
+        public async Task<Stop[]> GetStopsForRouteAsync(string routeId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
+            helper.SetId(routeId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+
+            // Find all of the stops in the payload that have this route id:
+            return (from stopElement in doc.Descendants("stop")
+                    select new Stop(stopElement)).ToArray();
         }
     }
 }

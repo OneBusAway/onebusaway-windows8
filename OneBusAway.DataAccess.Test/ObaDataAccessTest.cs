@@ -10,62 +10,59 @@ namespace OneBusAway.DataAccess.Test
     [TestClass]
     public class ObaDataAccessTest
     {
+        private ObaDataAccess dataAccess;
+        private StubObaServiceHelperFactory factoryStub;
+        private StubIObaServiceHelper helperStub;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.dataAccess = new ObaDataAccess();
+
+            this.factoryStub = new StubObaServiceHelperFactory(Constants.SERVER_URL);
+            this.helperStub = new StubIObaServiceHelper();
+
+            factoryStub.CreateHelperObaMethodHttpMethod = (obaMethod, httpMethod) => this.helperStub;
+            this.dataAccess.Factory = this.factoryStub;
+        }
+
+
         [TestMethod]
         public async Task TestGetStops()
         {
-            ObaDataAccess access = new ObaDataAccess();
-
-            var factoryStub = new StubObaServiceHelperFactory(Constants.SERVER_URL);
-            var helperStub = new StubIObaServiceHelper();
-
-            factoryStub.CreateHelperObaMethodHttpMethod = (obaMethod, httpMethod) => helperStub;
-
             int queryStrCount = 0;
-
             string xml = strings.getStopsXml;
-            helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));
-            helperStub.AddToQueryStringStringString = (key, val) => queryStrCount++;
 
-            access.Factory = factoryStub;
+            this.helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));
+            this.helperStub.AddToQueryStringStringString = (key, val) => queryStrCount++;
 
-            var stops = await access.GetStopsForLocationAsync(47.653435, -122.305641);
+            var stops = await this.dataAccess.GetStopsForLocationAsync(47.653435, -122.305641);
 
             Assert.AreEqual(2, queryStrCount);
             Assert.AreEqual(1, stops.Length);
-        }        
-
-        [TestMethod]
-        [Ignore]
-        public async Task TestGetStopsIntegrationTestAsync()
-        {
-            ObaDataAccess access = new ObaDataAccess();
-            var stops = await access.GetStopsForLocationAsync(47.653435, -122.305641);
-        }
+        }                
 
         [TestMethod]
         public async Task TestGetRoutesForStopAsync()
         {
-            ObaDataAccess access = new ObaDataAccess();
-
-            var factoryStub = new StubObaServiceHelperFactory(Constants.SERVER_URL);
-            var helperStub = new StubIObaServiceHelper();
-
-            factoryStub.CreateHelperObaMethodHttpMethod = (obaMethod, httpMethod) => helperStub;
-            
             string xml = strings.getRoutesXml;
-            helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));            
+            this.helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));            
 
-            access.Factory = factoryStub;
-            var routes = await access.GetRoutesForStopAsync("1_75403");
+            var routes = await this.dataAccess.GetRoutesForStopAsync("1_75403");
 
             Assert.AreNotEqual(0, routes.Length);
         }
 
         [TestMethod]
-        public async Task TestGetRoutesForStopIntegrationTestAsync()
+        public async Task TestGetStopsForRouteAsync()
         {
             ObaDataAccess access = new ObaDataAccess();
-            var routes = await access.GetRoutesForStopAsync("1_75403");
+
+            string xml = strings.getStopsForRouteXml;
+            this.helperStub.SendAndRecieveAsyncString = payload => Task.FromResult<XDocument>(XDocument.Parse(xml));
+
+            var stops = await access.GetStopsForRouteAsync("1_44");
+            Assert.AreNotEqual(0, stops.Length);
         }
     }
 }
