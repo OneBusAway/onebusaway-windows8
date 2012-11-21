@@ -11,5 +11,9 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class MainPageViewModel : ViewModelBase
     {
+        public MainPageViewModel()
+        {
+            this.HeaderViewModel.FavoritesIsEnabled = false;
+        }
     }
 }

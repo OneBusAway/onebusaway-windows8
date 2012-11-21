@@ -47,6 +47,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeaderControlViewModel.cs" />
     <Compile Include="MainPageViewModel.cs" />
     <Compile Include="ObservableCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

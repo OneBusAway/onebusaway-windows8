@@ -12,5 +12,27 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class ViewModelBase : BindableBase
     {
+        /// <summary>
+        /// Header control for all pages
+        /// </summary>
+        private HeaderControlViewModel headerControlVM;
+
+        public ViewModelBase()
+        {
+            this.HeaderViewModel = new HeaderControlViewModel();
+        }
+
+        public HeaderControlViewModel HeaderViewModel
+        {
+            get
+            {
+                return this.headerControlVM;
+            }
+            set
+            {
+                SetProperty(ref this.headerControlVM, value);
+            }
+        }
+
     }
 }
