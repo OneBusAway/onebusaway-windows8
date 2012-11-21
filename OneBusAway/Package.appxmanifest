@@ -15,9 +15,9 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="OneBusAway.App">
-      <VisualElements DisplayName="OneBusAway" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="OneBusAway" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="allLogos" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
+      <VisualElements DisplayName="OneBusAway" Logo="Assets\logo_150x150_black.png" SmallLogo="Assets\logo_30x30_black.png" Description="OneBusAway" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" WideLogo="Assets\logo_310x150_black.png" ShortName="OneBusAway" />
+        <SplashScreen Image="Assets\logo_620x300_black.png" />
       </VisualElements>
     </Application>
   </Applications>

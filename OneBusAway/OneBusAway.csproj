@@ -124,7 +124,17 @@
     <None Include="OneBusAway_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\logo_310x150_black.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\logo_150x150_black.png" />
+    <Content Include="Assets\logo_150x150_white.png" />
+    <Content Include="Assets\logo_24x24_black.png" />
+    <Content Include="Assets\logo_24x24_white.png" />
+    <Content Include="Assets\logo_30x30_black.png" />
+    <Content Include="Assets\logo_30x30_white.png" />
+    <Content Include="Assets\logo_50x50_black.png" />
+    <Content Include="Assets\logo_50x50_white.png" />
+    <Content Include="Assets\logo_620x300_black.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
