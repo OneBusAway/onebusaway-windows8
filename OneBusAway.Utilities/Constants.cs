@@ -26,6 +26,11 @@ namespace OneBusAway.Utilities
         public const string BingsMapsServiceApiKey = "AvU-uxo8TYI1W27CBfXD2He_ZJ2T_yYcPbbfPgn9x-0HVVJHqbCfbB69wEYECRmt";
 
         /// <summary>
+        /// Key to use the Bing Maps control
+        /// </summary>
+        public const string BingMapCredentials = "AoUHJXTeSKEqI4xCm_HWb3GEmQY_rLTAOKlhGgzZFCYpZsU-BcD_IUWE0PcjGGgr";
+
+        /// <summary>
         /// Base address to access the REST based Bing location service
         /// </summary>
         public const string BingLocationServiceBaseAddress = "http://dev.virtualearth.net/REST/v1/Locations";

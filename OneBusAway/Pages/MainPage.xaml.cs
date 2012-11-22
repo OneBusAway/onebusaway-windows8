@@ -1,10 +1,13 @@
-﻿using OneBusAway.ViewModels;
+﻿using Bing.Maps;
+using OneBusAway.Controls;
+using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,11 +25,32 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainPageViewModel mainPageViewModel;
+        Windows.Devices.Geolocation.Geolocator geolocator = new Windows.Devices.Geolocation.Geolocator();
+        UserLocation userLocation;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+
+            #region StuffForTheMap
+
+            geolocator.PositionChanged += geolocator_PositionChanged;
+            userLocation = new UserLocation();
+            mainPageMap.Children.Add(userLocation);
+            
+            #endregion
+        }
+
+        async void geolocator_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(
+                () =>
+                {
+                    Location location = new Location(args.Position.Coordinate.Latitude, args.Position.Coordinate.Longitude);
+                    MapLayer.SetPosition(userLocation, location);
+                    mainPageMap.SetView(location, 15.0f);
+                }));
         }
 
         /// <summary>
@@ -36,11 +60,6 @@ namespace OneBusAway.Pages
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            this.mainPageViewModel.Load();
         }
     }
 }

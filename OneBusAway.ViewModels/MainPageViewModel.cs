@@ -1,5 +1,6 @@
 ﻿using OneBusAway.DataAccess.BingService;
 using OneBusAway.Model.BingService;
+using OneBusAway.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,20 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class MainPageViewModel : PageViewModelBase
     {
-        Windows.Devices.Geolocation.Geolocator geolocator = new Windows.Devices.Geolocation.Geolocator();
-        Windows.Devices.Geolocation.Geoposition userPosition;
-
         RoutesAndStopsControlViewModel routesAndStopsViewModel;
 
         public MainPageViewModel()
         {
-            geolocator.PositionChanged += geolocator_PositionChanged;
             this.HeaderViewModel.FavoritesIsEnabled = false;
+
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
+
+            Load();
+        }
+
+        public async void Load()
+        {
+            await this.RoutesAndStopsViewModel.PopulateAsync();
         }
 
         public RoutesAndStopsControlViewModel RoutesAndStopsViewModel
@@ -37,14 +42,16 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public async void Load()
-        {
-            await this.RoutesAndStopsViewModel.PopulateAsync();
-        }
+        #region Public Properties
 
-        void geolocator_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
+        public string BingMapCredentials
         {
-            userPosition = args.Position;
+            get
+        {
+                return Constants.BingMapCredentials;               
+            }
         }
+        
+        #endregion
     }
 }

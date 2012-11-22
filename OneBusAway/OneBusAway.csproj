@@ -91,6 +91,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -114,6 +116,9 @@
     </Compile>
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserLocation.xaml.cs">
+      <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\LinkIsEnabledConverter.cs" />
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
@@ -161,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RoutesAndStopsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserLocation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
