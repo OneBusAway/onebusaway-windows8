@@ -16,7 +16,7 @@ namespace OneBusAway.Model
         private string name;
         private string phoneNumber;
         private string disclaimer;
-        private string uri;
+        private string id;
 
         /// <summary>
         /// Creates the agency.
@@ -49,11 +49,11 @@ namespace OneBusAway.Model
         {
             get
             {
-                return this.websiteUri;
+                return this.id;
             }
             set
             {
-                SetProperty(ref this.websiteUri, value);
+                SetProperty(ref this.id, value);
             }
         }
 

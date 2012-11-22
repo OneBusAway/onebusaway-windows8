@@ -26,6 +26,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +46,10 @@
     <ProjectReference Include="..\OneBusAway.Model\OneBusAway.Model.csproj">
       <Project>{73f2debf-f056-4bda-b578-c2c99062f10b}</Project>
       <Name>OneBusAway.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OneBusAway.Utilities\OneBusAway.Utilities.csproj">
+      <Project>{92f2bf3e-5120-4744-9dbf-1d7e8aaba8cb}</Project>
+      <Name>OneBusAway.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

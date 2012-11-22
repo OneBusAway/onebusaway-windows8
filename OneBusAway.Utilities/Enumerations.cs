@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OneBusAway.DataAccess
+namespace OneBusAway.Utilities
 {
     /// <summary>
     /// A collection of methods that OneBusAway supports.
@@ -46,5 +46,15 @@ namespace OneBusAway.DataAccess
         /// Get method type.
         /// </summary>
         GET = 1
+    }
+
+    /// <summary>
+    /// An enumeration to denote confidence of a search result
+    /// </summary>
+    public enum Confidence
+    {
+        Low = 0,
+        Medium,
+        High
     }
 }

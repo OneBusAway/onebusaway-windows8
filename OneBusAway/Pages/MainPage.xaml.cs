@@ -25,7 +25,6 @@ namespace OneBusAway.Pages
         public MainPage()
         {
             this.InitializeComponent();
-            this.DataContext = new MainPageViewModel();
         }
 
         /// <summary>

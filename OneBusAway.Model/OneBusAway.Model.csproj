@@ -25,6 +25,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +39,12 @@
   <ItemGroup>
     <Compile Include="Agency.cs" />
     <Compile Include="BindableBase.cs" />
+    <Compile Include="BingService\Address.cs" />
+    <Compile Include="BingService\Location.cs" />
+    <Compile Include="BingService\Point.cs" />
+    <Compile Include="BingService\Resource.cs" />
+    <Compile Include="BingService\ResourceSet.cs" />
+    <Compile Include="BingService\Response.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
