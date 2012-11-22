@@ -1,12 +1,13 @@
 ﻿<Page x:Class="OneBusAway.Pages.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:OneBusAway"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:OneBusAway"
       xmlns:ctrls="using:OneBusAway.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Loaded="OnLoaded"
     xmlns:viewmodel="using:OneBusAway.ViewModels"
-    mc:Ignorable="d">
+      mc:Ignorable="d">
 
     <Page.DataContext>
         <viewmodel:MainPageViewModel/>
@@ -36,10 +37,20 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid Grid.Column="0"
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".5*" />
+                <ColumnDefinition Width=".5*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <ctrls:RoutesAndStopsControl Grid.Column="0"
+                                         Grid.Row="0"
+                                         DataContext="{Binding RoutesAndStopsViewModel}"/>
+            
         </Grid>
-
     </Grid>
-
 </Page>

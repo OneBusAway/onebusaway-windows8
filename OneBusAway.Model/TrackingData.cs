@@ -16,6 +16,7 @@ namespace OneBusAway.Model
         private string tripId;
         private int scheduledArrivalInMinutes;
         private int predictedArrivalInMinutes;
+        private Route route;
 
         public TrackingData()
         {
@@ -41,6 +42,29 @@ namespace OneBusAway.Model
             else
             {
                 this.PredictedArrivalInMinutes = this.scheduledArrivalInMinutes;
+            }
+
+            // Grab the route element from the document and parse it into a Route object:
+            var routeElements = (from routeElement in arrivalAndDepartureElement.Document.Descendants("route")
+                                 where routeElement.GetFirstElementValue<string>("id") == this.RouteId
+                                 select routeElement).ToList();
+
+            if (routeElements.Count == 1)
+            {
+                this.Route = new Route(routeElements[0]);
+            }
+
+        }
+
+        public Route Route
+        {
+            get
+            {
+                return this.route;
+            }
+            set
+            {
+                SetProperty(ref this.route, value);
             }
         }
 

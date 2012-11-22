@@ -37,11 +37,12 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Gets the stops near a location.
         /// </summary>
-        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude)
+        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double radius)
         {
             var helper = this.Factory.CreateHelper(ObaMethod.stops_for_location);
             helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
             helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
+            helper.AddToQueryString("radius", radius.ToString(CultureInfo.CurrentCulture));
 
             XDocument doc = await helper.SendAndRecieveAsync();
             return (from stopElement in doc.Descendants("stop")

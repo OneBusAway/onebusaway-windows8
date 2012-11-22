@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OneBusAway.ViewModels
 {
-    public class HeaderControlViewModel : BindableBase
+    public class HeaderControlViewModel : ViewModelBase
     {
         private bool favoriteIsEnabled;
 

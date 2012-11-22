@@ -22,6 +22,8 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private MainPageViewModel mainPageViewModel;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -34,6 +36,11 @@ namespace OneBusAway.Pages
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            this.mainPageViewModel.Load();
         }
     }
 }

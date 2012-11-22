@@ -112,7 +112,11 @@
     <Compile Include="Controls\HeaderControl.xaml.cs">
       <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
+      <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\LinkIsEnabledConverter.cs" />
+    <Compile Include="Converters\TrackingDataToColorConverter.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -153,6 +157,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\HeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RoutesAndStopsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
