@@ -35,14 +35,45 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Gets stops near a location
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
+        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude)
+        {
+            return await this.GetStopsForLocationAsync(latitude, longitude, 0.0, 0.0, 0.0);
+        }
+
+        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double radius)
+        {
+            return await this.GetStopsForLocationAsync(latitude, longitude, radius, 0.0, 0.0);
+        }
+
+        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double latitudeSpan, double longitudeSpan)
+        {
+            return await this.GetStopsForLocationAsync(latitude, longitude, 0.0, latitudeSpan, longitudeSpan);
+        }
+
+        /// <summary>
         /// Gets the stops near a location.
         /// </summary>
-        public async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double radius)
+        private async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double radius, double latitudeSpan, double longitudeSpan)
         {
             var helper = this.Factory.CreateHelper(ObaMethod.stops_for_location);
             helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
             helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
-            helper.AddToQueryString("radius", radius.ToString(CultureInfo.CurrentCulture));
+
+            if (radius > 0)
+            {
+                helper.AddToQueryString("radius", radius.ToString(CultureInfo.CurrentCulture));
+            }
+            else if (latitudeSpan > 0 && longitude > 0)
+            {
+                helper.AddToQueryString("latSpan", latitudeSpan.ToString(CultureInfo.CurrentCulture));
+                helper.AddToQueryString("lonSpan", longitudeSpan.ToString(CultureInfo.CurrentCulture));
+            }
 
             XDocument doc = await helper.SendAndRecieveAsync();
             return (from stopElement in doc.Descendants("stop")

@@ -49,5 +49,15 @@ namespace OneBusAway.Utilities
         /// key that denotes the apiKey when calling the Bing Maps Service
         /// </summary>
         public const string Parameter_BingServiceApiKey = "key";
+
+        /// <summary>
+        /// Default map zoom when map control is loaded on any page
+        /// </summary>
+        public const double DefaultMapZoom = 17.0;
+
+        /// <summary>
+        /// Minimum zoom required for bus stops to be visible
+        /// </summary>
+        public const double MinBusStopVisibleZoom = 14.0;
     }
 }

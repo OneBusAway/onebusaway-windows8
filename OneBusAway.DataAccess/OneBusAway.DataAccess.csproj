@@ -26,7 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -50,11 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BingService\BingMapsServiceHelper.cs" />
-    <Compile Include="IObaServiceHelper.cs" />
-    <Compile Include="ObaDataAccess.cs" />
-    <Compile Include="ObaException.cs" />
+    <Compile Include="ObaService\IObaServiceHelper.cs" />
+    <Compile Include="ObaService\ObaDataAccess.cs" />
+    <Compile Include="ObaService\ObaException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ObaServiceHelperFactory.cs" />
+    <Compile Include="ObaService\ObaServiceHelperFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

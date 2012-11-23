@@ -1,0 +1,57 @@
+﻿<UserControl
+    x:Class="OneBusAway.Controls.BusStop"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OneBusAway.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="100"
+    d:DesignWidth="100">
+    
+    <Grid>
+        <Canvas>
+            <Image Name="bus" Height="30" Width="30" Source="ms-appx:///Assets/bus.gif" Margin="-15,-15,0,0"/>
+            <Polygon Name="SE" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="19,12,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="45"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="S" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="5,17,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="90"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="E" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="16,-5,0,0">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="0"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="W" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="-16,5,0,0" RenderTransformOrigin="0.5,0.5" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="180"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="NW" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="-19,-12,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="225"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="NE" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="12,-19,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="-45"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="N" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="-5,-17,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="-90"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="SW" Points="0,0 8,5, 0,10" Stroke="Crimson" Fill="Crimson" Margin="-12,19,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" >
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="135"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+        </Canvas>
+    </Grid>
+</UserControl>

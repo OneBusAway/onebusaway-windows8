@@ -16,9 +16,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace OneBusAway.Controls
 {
-    public sealed partial class UserLocation : UserControl
+    public sealed partial class UserLocationIcon : UserControl
     {
-        public UserLocation()
+        public UserLocationIcon()
         {
             this.InitializeComponent();
         }

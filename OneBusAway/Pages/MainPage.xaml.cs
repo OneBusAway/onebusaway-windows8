@@ -1,10 +1,13 @@
 ﻿using Bing.Maps;
 using OneBusAway.Controls;
+using OneBusAway.Model;
+using OneBusAway.Utilities;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -25,32 +28,73 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Windows.Devices.Geolocation.Geolocator geolocator = new Windows.Devices.Geolocation.Geolocator();
-        UserLocation userLocation;
+        Geolocator geolocator = new Geolocator();
+        Geoposition userPosition;
+        UserLocationIcon userLocationIcon;
+        MainPageViewModel mainPageViewModel;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-
-            #region StuffForTheMap
+            #region StuffForTheMap            
 
             geolocator.PositionChanged += geolocator_PositionChanged;
-            userLocation = new UserLocation();
-            mainPageMap.Children.Add(userLocation);
-            
+            mainPageMap.ViewChangeEnded += mainPageMap_ViewChangeEnded;
+            userLocationIcon = new UserLocationIcon();
+                        
             #endregion
+
+            mainPageViewModel = this.DataContext as MainPageViewModel;            
         }
 
-        async void geolocator_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
+        async void mainPageMap_ViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(
-                () =>
+            Location mapCenter = mainPageMap.Center;
+            double boundsWidth = mainPageMap.Bounds.Width;
+            double boundsHeight = mainPageMap.Bounds.Height;
+            double zoomLevel = mainPageMap.ZoomLevel;
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                mainPageMap.Children.Clear();
+                if (userPosition != null)
                 {
-                    Location location = new Location(args.Position.Coordinate.Latitude, args.Position.Coordinate.Longitude);
-                    MapLayer.SetPosition(userLocation, location);
-                    mainPageMap.SetView(location, 15.0f);
-                }));
+                    mainPageMap.Children.Add(userLocationIcon);
+                    MapLayer.SetPosition(userLocationIcon, new Location(userPosition.Coordinate.Latitude, userPosition.Coordinate.Longitude));
+                }                
+            });
+
+            if (zoomLevel > Constants.MinBusStopVisibleZoom)
+            {
+                var stops = await mainPageViewModel.GetStopsForLocation(mapCenter.Latitude, mapCenter.Longitude, boundsHeight, boundsWidth);
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    foreach (var stop in stops)
+                    {
+                        BusStop stopLocation = new BusStop(stop.Id, stop.Direction);                        
+                        mainPageMap.Children.Add(stopLocation);
+                        MapLayer.SetPosition(stopLocation, new Location(stop.Latitude, stop.Longitude));
+                    }
+                });
+            }
+        }
+
+        async void geolocator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            userPosition = args.Position;
+            double latitude = userPosition.Coordinate.Latitude;
+            double longitude = userPosition.Coordinate.Longitude;            
+
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    Location location = new Location(latitude, longitude);
+                    MapLayer.SetPosition(userLocationIcon, location);
+                    mainPageMap.SetView(location, Constants.DefaultMapZoom);                    
+                });
+                   
+            geolocator.PositionChanged -= geolocator_PositionChanged;
         }
 
         /// <summary>
