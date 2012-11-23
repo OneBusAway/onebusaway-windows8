@@ -10,6 +10,7 @@ namespace OneBusAway.ViewModels
     public class HeaderControlViewModel : ViewModelBase
     {
         private bool favoriteIsEnabled;
+        private string subText;
 
         public HeaderControlViewModel()
         {
@@ -24,6 +25,30 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.favoriteIsEnabled, value);
+            }
+        }
+
+        public string SubText
+        {
+            get
+            {
+                return this.subText;
+            }
+            set
+            {
+                if (SetProperty(ref this.subText, value))
+                {
+                    // If the subtext is set, make sure we fire the HasSubText event to update the UI.
+                    base.FirePropertyChanged("HasSubText");
+                }
+            }
+        }
+
+        public bool HasSubText
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.subText);
             }
         }
     }

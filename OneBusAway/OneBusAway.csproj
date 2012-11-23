@@ -123,8 +123,11 @@
     <Compile Include="Controls\UserLocation.xaml.cs">
       <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\LinkIsEnabledConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\SubTextConverter.cs" />
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
+    <Compile Include="NavigationController.cs" />
+    <Compile Include="NavigationControllerProxy.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -199,6 +202,10 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OneBusAway.DataAccess\OneBusAway.DataAccess.csproj">
+      <Project>{b612d55d-895b-4c25-a696-5c7dfeb6bde4}</Project>
+      <Name>OneBusAway.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OneBusAway.Model\OneBusAway.Model.csproj">
       <Project>{73f2debf-f056-4bda-b578-c2c99062f10b}</Project>
       <Name>OneBusAway.Model</Name>

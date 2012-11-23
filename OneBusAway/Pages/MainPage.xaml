@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Page.DataContext>
-        <viewmodel:MainPageViewModel/>
+        <viewmodel:MainPageViewModel />
     </Page.DataContext>
 
     <UserControl.Resources>
@@ -24,7 +24,7 @@
     <Grid Background="White">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".45*"/>
+            <ColumnDefinition Width=".45*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -37,27 +37,16 @@
         <ctrls:HeaderControl Grid.ColumnSpan="2"
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
+
+            <ctrls:RoutesAndStopsControl Grid.Column="0"
+                                     Grid.Row="1"
+                                     Margin="20"
+                                     DataContext="{Binding RoutesAndStopsViewModel}" />
             
-            <Grid Grid.Column="0"
-              Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".5*" />
-                    <ColumnDefinition Width=".5*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <ctrls:RoutesAndStopsControl Grid.Column="0"
-                                         Grid.Row="0"
-                                             Grid.ColumnSpan="2"
-                                         DataContext="{Binding RoutesAndStopsViewModel}"/>
-
-            </Grid>
+        <bingmaps:Map Name="mainPageMap"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Credentials="{Binding BingMapCredentials}" />
         
-            <bingmaps:Map Name="mainPageMap" 
-                          Grid.Row="1" 
-                          Grid.Column="1" 
-                          Credentials="{Binding BingMapCredentials}"/>        
     </Grid>
 </Page>

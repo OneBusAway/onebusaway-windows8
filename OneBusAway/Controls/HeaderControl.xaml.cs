@@ -22,21 +22,5 @@ namespace OneBusAway.Controls
         {
             this.InitializeComponent();
         }
-
-        /// <summary>
-        /// called when the help button is clicked
-        /// </summary>
-        private void OnHelpClicked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Called when the search button is clicked.
-        /// </summary>
-        private void OnSearchClicked(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -13,8 +13,7 @@
         <conv:TrackingDataToColorConverter x:Key="trackingDatatoColorConverter" />
     </UserControl.Resources>
 
-    <Grid Width="300"
-          Height="300">
+    <Grid>
 
         <ItemsControl Grid.Column="0"
                       Grid.Row="0"

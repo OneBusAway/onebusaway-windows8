@@ -18,7 +18,7 @@ namespace OneBusAway.Model
         private double longitude;
         private string direction;
         private string name;
-        private int code;
+        private string code;
         private Route[] routes;
 
         public Stop()
@@ -61,13 +61,12 @@ namespace OneBusAway.Model
             this.Longitude = stopElement.GetFirstElementValue<double>("lon");
             this.Direction = stopElement.GetFirstElementValue<string>("direction");
             this.Name = stopElement.GetFirstElementValue<string>("name");
-            this.Code = stopElement.GetFirstElementValue<int>("code");
+            this.Code = stopElement.GetFirstElementValue<string>("code");
 
             this.Routes = (from routeElement in stopElement.Descendants("route")
                            select new Route(routeElement)).ToArray();
         }
 
-        [XmlElement(ElementName = "id")]
         public string Id
         {
             get
@@ -80,7 +79,6 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlElement(ElementName = "lat")]
         public double Latitude
         {
             get
@@ -93,7 +91,6 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlElement(ElementName = "lon")]
         public double Longitude
         {
             get
@@ -106,7 +103,6 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlElement(ElementName = "direction")]
         public string Direction
         {
             get
@@ -119,7 +115,6 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlElement(ElementName = "name")]
         public string Name
         {
             get
@@ -132,8 +127,7 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlElement(ElementName = "code")]
-        public int Code
+        public string Code
         {
             get
             {
@@ -145,7 +139,6 @@ namespace OneBusAway.Model
             }
         }
 
-        [XmlArray(ElementName="routes")]        
         public Route[] Routes
         {
             get

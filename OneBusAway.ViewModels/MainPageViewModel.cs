@@ -48,7 +48,7 @@ namespace OneBusAway.ViewModels
         public string BingMapCredentials
         {
             get
-        {
+            {
                 return Constants.BingMapCredentials;               
             }
         }

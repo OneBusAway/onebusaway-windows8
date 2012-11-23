@@ -24,7 +24,14 @@ namespace OneBusAway.Model
                 return default(T);
             }
 
-            return (T)Convert.ChangeType(childNode.Value, typeof(T));
+            try
+            {
+                return (T)Convert.ChangeType(childNode.Value, typeof(T));
+            }
+            catch
+            {
+                return default(T);
+            }
         }
 
         /// <summary>
