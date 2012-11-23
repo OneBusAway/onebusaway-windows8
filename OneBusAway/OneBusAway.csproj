@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Bus.gif" />
+    <Content Include="Assets\bus.png" />
     <Content Include="Assets\logo_310x150_black.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\logo_150x150_black.png" />
