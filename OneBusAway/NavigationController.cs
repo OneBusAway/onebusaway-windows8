@@ -160,7 +160,9 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            // to do
+            var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
+            pane.Show();            
+
             return Task.FromResult<object>(null);
         }
     }

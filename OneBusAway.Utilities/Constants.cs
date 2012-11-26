@@ -58,6 +58,6 @@ namespace OneBusAway.Utilities
         /// <summary>
         /// Minimum zoom required for bus stops to be visible
         /// </summary>
-        public const double MinBusStopVisibleZoom = 14.0;
+        public const double MinBusStopVisibleZoom = 15.0;
     }
 }

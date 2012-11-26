@@ -74,6 +74,43 @@ namespace OneBusAway
             Window.Current.Activate();
         }
 
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            base.OnWindowCreated(args);
+
+            var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
+            pane.QuerySubmitted += App_QuerySubmitted;
+            pane.ResultSuggestionChosen += pane_ResultSuggestionChosen;
+            pane.SuggestionsRequested += pane_SuggestionsRequested;
+            pane.QueryChanged += pane_QueryChanged;
+
+        }
+
+        void pane_QueryChanged(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQueryChangedEventArgs args)
+        {
+            
+        }
+
+        void pane_SuggestionsRequested(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestedEventArgs args)
+        {
+            // TODO: possible implementation here is to get the user's favorites and do a search within those to see if any match.
+            // Those can be provided as suggestions.
+        }
+
+        void pane_ResultSuggestionChosen(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneResultSuggestionChosenEventArgs args)
+        {
+        }
+
+        void App_QuerySubmitted(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQuerySubmittedEventArgs args)
+        {
+            var frame = Window.Current.Content as Frame;
+
+            if (frame != null)
+            {
+                frame.Navigate(typeof(SearchResultsPage), args.QueryText);
+            }
+        }
+
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
@@ -86,6 +123,51 @@ namespace OneBusAway
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        /// <summary>
+        /// Invoked when the application is activated to display search results.
+        /// </summary>
+        /// <param name="args">Details about the activation request.</param>
+        protected async override void OnSearchActivated(Windows.ApplicationModel.Activation.SearchActivatedEventArgs args)
+        {
+            // TODO: Register the Windows.ApplicationModel.Search.SearchPane.GetForCurrentView().QuerySubmitted
+            // event in OnWindowCreated to speed up searches once the application is already running
+
+            // If the Window isn't already using Frame navigation, insert our own Frame
+            var previousContent = Window.Current.Content;
+            var frame = previousContent as Frame;
+
+            // If the app does not contain a top-level frame, it is possible that this 
+            // is the initial launch of the app. Typically this method and OnLaunched 
+            // in App.xaml.cs can call a common method.
+            if (frame == null)
+            {
+                // Create a Frame to act as the navigation context and associate it with
+                // a SuspensionManager key
+                frame = new Frame();
+                OneBusAway.Common.SuspensionManager.RegisterFrame(frame, "AppFrame");
+
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    // Restore the saved session state only when appropriate
+                    try
+                    {
+                        await OneBusAway.Common.SuspensionManager.RestoreAsync();
+                    }
+                    catch (OneBusAway.Common.SuspensionManagerException)
+                    {
+                        //Something went wrong restoring state.
+                        //Assume there is no state and continue
+                    }
+                }
+            }
+
+            frame.Navigate(typeof(SearchResultsPage), args.QueryText);
+            Window.Current.Content = frame;
+
+            // Ensure the current window is active
+            Window.Current.Activate();
         }
     }
 }

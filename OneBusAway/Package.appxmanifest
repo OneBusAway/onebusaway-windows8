@@ -19,6 +19,9 @@
         <DefaultTile ShowName="allLogos" WideLogo="Assets\logo_310x150_black.png" ShortName="OneBusAway" />
         <SplashScreen Image="Assets\logo_620x300_black.png" BackgroundColor="#78AA36" />
       </VisualElements>
+      <Extensions>
+        <Extension Category="windows.search" />
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
