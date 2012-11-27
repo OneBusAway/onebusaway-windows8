@@ -1,0 +1,50 @@
+﻿<!-- This page contains a table and map view for one particular instance of one particular route. Check slide 7 of the 
+    deck OneBusAway_c.pptx  -->
+    
+<Page x:Class="OneBusAway.Pages.RouteMap"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OneBusAway"
+    xmlns:ctrls="using:OneBusAway.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:OneBusAway.ViewModels"
+    xmlns:bingmaps="using:Bing.Maps"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="#FFF3F3F3">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".45*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header control -->
+        <ctrls:HeaderControl Grid.ColumnSpan="2"
+                             Grid.Row="0"
+                             DataContext="{Binding HeaderViewModel}" />
+
+        <ctrls:RouteDetails Grid.Column="0"
+                            Grid.Row="1"
+                            Margin="20"/>
+        
+        <bingmaps:Map Name="routeMap"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Credentials="{Binding BingMapCredentials}" />
+        
+    </Grid>
+</Page>

@@ -121,6 +121,9 @@
     <Compile Include="Controls\HeaderControl.xaml.cs">
       <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RouteDetails.xaml.cs">
+      <DependentUpon>RouteDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,9 @@
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
     <Compile Include="NavigationController.cs" />
     <Compile Include="NavigationControllerProxy.cs" />
+    <Compile Include="Pages\RouteMap.xaml.cs">
+      <DependentUpon>RouteMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -185,6 +191,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\RouteDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\RoutesAndStopsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -192,6 +202,10 @@
     <Page Include="Controls\UserLocation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RouteMap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>

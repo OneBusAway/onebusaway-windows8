@@ -58,6 +58,8 @@
     <Compile Include="ObservableCommand.cs" />
     <Compile Include="PageViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteDetailsViewModel.cs" />
+    <Compile Include="RouteMapPageViewModel.cs" />
     <Compile Include="RoutesAndStopsControlViewModel.cs" />
     <Compile Include="SearchResultsViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
