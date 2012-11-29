@@ -2,6 +2,7 @@
 using OneBusAway.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace OneBusAway.ViewModels
             this.obaDataAccess = new ObaDataAccess();
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification="Enables binding to xaml")]
         public TrackingData[] RealTimeData
         {
             get

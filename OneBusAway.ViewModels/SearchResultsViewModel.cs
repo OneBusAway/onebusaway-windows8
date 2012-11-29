@@ -3,6 +3,7 @@ using OneBusAway.Model.BingService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,7 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification="Enables binding to source control")]
         public ObservableCollection<SearchResult> SearchResults
         {
             get

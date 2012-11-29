@@ -1,4 +1,5 @@
-﻿using OneBusAway.ViewModels;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace OneBusAway
         /// <summary>
         /// View model describing one of the filters available for viewing search results.
         /// </summary>
-        private sealed class Filter : OneBusAway.Common.BindableBase
+        private sealed class Filter : BindableBase
         {
             private String _name;
             private int _count;
@@ -144,13 +145,13 @@ namespace OneBusAway
             public String Name
             {
                 get { return _name; }
-                set { if (this.SetProperty(ref _name, value)) this.OnPropertyChanged("Description"); }
+                set { if (this.SetProperty(ref _name, value)) this.FirePropertyChanged("Description"); }
             }
 
             public int Count
             {
                 get { return _count; }
-                set { if (this.SetProperty(ref _count, value)) this.OnPropertyChanged("Description"); }
+                set { if (this.SetProperty(ref _count, value)) this.FirePropertyChanged("Description"); }
             }
 
             public bool Active

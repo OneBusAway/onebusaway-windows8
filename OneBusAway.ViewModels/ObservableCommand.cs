@@ -1,6 +1,7 @@
 ﻿using OneBusAway.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// This event is invoked when this command is executed.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly")]
         public event Func<object, object, Task> Executed;
                 
         /// <summary>
