@@ -39,6 +39,14 @@ namespace OneBusAway.Pages
 
             #region StuffForTheMap            
 
+            if (NavigationController.Instance.MapCenter != null)
+            {
+                mainPageMap.Center = NavigationController.Instance.MapCenter;
+                mainPageMap.Bounds.Width = NavigationController.Instance.BoundsWidth;
+                mainPageMap.Bounds.Height = NavigationController.Instance.BoundsHeight;
+                mainPageMap.ZoomLevel = NavigationController.Instance.ZoomLevel;
+            }
+
             geolocator.PositionChanged += geolocator_PositionChanged;
             mainPageMap.ViewChangeEnded += mainPageMap_ViewChangeEnded;
             userLocationIcon = new UserLocationIcon();
@@ -55,15 +63,18 @@ namespace OneBusAway.Pages
             double boundsHeight = mainPageMap.Bounds.Height;
             double zoomLevel = mainPageMap.ZoomLevel;
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            // Save state for later:
+            NavigationController.Instance.MapCenter = mapCenter;
+            NavigationController.Instance.BoundsWidth = boundsWidth;
+            NavigationController.Instance.BoundsHeight = boundsHeight;
+            NavigationController.Instance.ZoomLevel = zoomLevel;
+
+            mainPageMap.Children.Clear();
+            if (userPosition != null)
             {
-                mainPageMap.Children.Clear();
-                if (userPosition != null)
-                {
-                    mainPageMap.Children.Add(userLocationIcon);
-                    MapLayer.SetPosition(userLocationIcon, new Location(userPosition.Coordinate.Latitude, userPosition.Coordinate.Longitude));
-                }                
-            });
+                mainPageMap.Children.Add(userLocationIcon);
+                MapLayer.SetPosition(userLocationIcon, new Location(userPosition.Coordinate.Latitude, userPosition.Coordinate.Longitude));
+            }
 
             if (zoomLevel > Constants.MinBusStopVisibleZoom)
             {
@@ -73,7 +84,7 @@ namespace OneBusAway.Pages
                 {
                     foreach (var stop in stops)
                     {
-                        BusStop stopLocation = new BusStop(stop.Id, stop.Direction);                        
+                        BusStop stopLocation = new BusStop(stop.Id, stop.Direction);
                         mainPageMap.Children.Add(stopLocation);
                         MapLayer.SetPosition(stopLocation, new Location(stop.Latitude, stop.Longitude));
                     }

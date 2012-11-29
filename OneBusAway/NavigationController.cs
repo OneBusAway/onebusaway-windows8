@@ -1,10 +1,14 @@
-﻿using OneBusAway.Model;
+﻿using Bing.Maps;
+using OneBusAway.Model;
+using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace OneBusAway
 {
@@ -38,7 +42,7 @@ namespace OneBusAway
         /// Command fires the go back command.
         /// </summary>
         private ObservableCommand goBackCommand;
-
+        
         /// <summary>
         /// Creates the controller.
         /// </summary>
@@ -128,20 +132,56 @@ namespace OneBusAway
             }
         }
 
+        public Location MapCenter
+        {
+            get;
+            set;
+        }
+
+        public double BoundsWidth
+        {
+            get;
+            set;
+        }
+
+        public double BoundsHeight
+        {
+            get;
+            set;
+        }
+
+        public double ZoomLevel
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Called when the user goes back
         /// </summary>
         private Task OnGoBackCommandExecuted(object arg1, object arg2)
         {
-            // to do
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null && currentFrame.CanGoBack)
+            {
+                currentFrame.GoBack();
+            }
+
             return Task.FromResult<object>(null);
         }
+
 
         /// <summary>
         /// Called when the go to main page command is executed.
         /// </summary>
         private Task OnGoToMainPageCommandExecuted(object arg1, object arg2)
         {
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                currentFrame.Navigate(typeof(MainPage));
+            }
+
             // to do - navigate pages.
             return Task.FromResult<object>(null);
         }
@@ -151,6 +191,12 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                currentFrame.Navigate(typeof(HelpPage));
+            }
+
             // to do - navigate pages.
             return Task.FromResult<object>(null);
         }

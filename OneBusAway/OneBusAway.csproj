@@ -135,6 +135,9 @@
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
     <Compile Include="NavigationController.cs" />
     <Compile Include="NavigationControllerProxy.cs" />
+    <Compile Include="Pages\HelpPage.xaml.cs">
+      <DependentUpon>HelpPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RouteMap.xaml.cs">
       <DependentUpon>RouteMap.xaml</DependentUpon>
     </Compile>
@@ -200,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\UserLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

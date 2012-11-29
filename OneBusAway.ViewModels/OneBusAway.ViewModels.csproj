@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HeaderControlViewModel.cs" />
+    <Compile Include="HelpPageViewModel.cs" />
     <Compile Include="MainPageViewModel.cs" />
     <Compile Include="ObservableCommand.cs" />
     <Compile Include="PageViewModelBase.cs" />
