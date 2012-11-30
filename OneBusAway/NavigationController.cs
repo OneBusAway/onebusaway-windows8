@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -42,6 +43,11 @@ namespace OneBusAway
         /// Command fires the go back command.
         /// </summary>
         private ObservableCommand goBackCommand;
+
+        /// <summary>
+        /// This is a stack of states that have been persisted to the navigation controller.
+        /// </summary>
+        private Stack<Dictionary<string, object>> persistedStates;
         
         /// <summary>
         /// Creates the controller.
@@ -59,6 +65,8 @@ namespace OneBusAway
 
             this.GoToSearchPageCommand = new ObservableCommand();
             this.GoToSearchPageCommand.Executed += OnGoToSearchPageCommandExecuted;
+
+            this.persistedStates = new Stack<Dictionary<string, object>>();
         }       
 
         /// <summary>
@@ -132,28 +140,15 @@ namespace OneBusAway
             }
         }
 
-        public Location MapCenter
+        /// <summary>
+        /// Returns a stack of persisted states.
+        /// </summary>
+        public Stack<Dictionary<string, object>> PersistedStates
         {
-            get;
-            set;
-        }
-
-        public double BoundsWidth
-        {
-            get;
-            set;
-        }
-
-        public double BoundsHeight
-        {
-            get;
-            set;
-        }
-
-        public double ZoomLevel
-        {
-            get;
-            set;
+            get
+            {
+                return this.persistedStates;
+            }
         }
 
         /// <summary>
@@ -182,7 +177,6 @@ namespace OneBusAway
                 currentFrame.Navigate(typeof(MainPage));
             }
 
-            // to do - navigate pages.
             return Task.FromResult<object>(null);
         }
 
@@ -197,7 +191,6 @@ namespace OneBusAway
                 currentFrame.Navigate(typeof(HelpPage));
             }
 
-            // to do - navigate pages.
             return Task.FromResult<object>(null);
         }
 
@@ -206,7 +199,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
+            var pane = SearchPane.GetForCurrentView();
             pane.Show();            
 
             return Task.FromResult<object>(null);

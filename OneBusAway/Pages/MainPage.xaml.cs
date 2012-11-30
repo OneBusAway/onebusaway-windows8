@@ -1,5 +1,6 @@
 ﻿using Bing.Maps;
 using OneBusAway.Controls;
+using OneBusAway.DataAccess;
 using OneBusAway.Model;
 using OneBusAway.Utilities;
 using OneBusAway.ViewModels;
@@ -28,84 +29,47 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Geolocator geolocator = new Geolocator();
-        Geoposition userPosition;
-        UserLocationIcon userLocationIcon;
-        MainPageViewModel mainPageViewModel;
+        private Geocoordinate userCoordinates;
+        private UserLocationIcon userLocationIcon;
+        private MainPageViewModel mainPageViewModel;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            #region StuffForTheMap            
-
-            if (NavigationController.Instance.MapCenter != null)
-            {
-                mainPageMap.Center = NavigationController.Instance.MapCenter;
-                mainPageMap.Bounds.Width = NavigationController.Instance.BoundsWidth;
-                mainPageMap.Bounds.Height = NavigationController.Instance.BoundsHeight;
-                mainPageMap.ZoomLevel = NavigationController.Instance.ZoomLevel;
-            }
-
-            geolocator.PositionChanged += geolocator_PositionChanged;
-            mainPageMap.ViewChangeEnded += mainPageMap_ViewChangeEnded;
-            userLocationIcon = new UserLocationIcon();
-                        
-            #endregion
-
-            mainPageViewModel = this.DataContext as MainPageViewModel;            
+            this.mainPageMap.ViewChangeEnded += OnMapViewChangeEnded;
+            this.userLocationIcon = new UserLocationIcon();
+            this.mainPageViewModel = (MainPageViewModel)this.DataContext;            
         }
 
-        async void mainPageMap_ViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
+        /// <summary>
+        /// Called when the main pages map view changes.
+        /// </summary>
+        private async void OnMapViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
         {
-            Location mapCenter = mainPageMap.Center;
-            double boundsWidth = mainPageMap.Bounds.Width;
-            double boundsHeight = mainPageMap.Bounds.Height;
-            double zoomLevel = mainPageMap.ZoomLevel;
-
-            // Save state for later:
-            NavigationController.Instance.MapCenter = mapCenter;
-            NavigationController.Instance.BoundsWidth = boundsWidth;
-            NavigationController.Instance.BoundsHeight = boundsHeight;
-            NavigationController.Instance.ZoomLevel = zoomLevel;
-
             mainPageMap.Children.Clear();
-            if (userPosition != null)
+            if (mainPageMap.ZoomLevel > Constants.MinBusStopVisibleZoom)
             {
-                mainPageMap.Children.Add(userLocationIcon);
-                MapLayer.SetPosition(userLocationIcon, new Location(userPosition.Coordinate.Latitude, userPosition.Coordinate.Longitude));
-            }
-
-            if (zoomLevel > Constants.MinBusStopVisibleZoom)
-            {
-                var stops = await mainPageViewModel.GetStopsForLocation(mapCenter.Latitude, mapCenter.Longitude, boundsHeight, boundsWidth);
-
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                try
                 {
+                    var stops = await mainPageViewModel.GetStopsForLocation(
+                        mainPageMap.Center.Latitude,
+                        mainPageMap.Center.Longitude,
+                        mainPageMap.Bounds.Height,
+                        mainPageMap.Bounds.Width);
+
                     foreach (var stop in stops)
                     {
                         BusStop stopLocation = new BusStop(stop.Id, stop.Direction);
                         mainPageMap.Children.Add(stopLocation);
                         MapLayer.SetPosition(stopLocation, new Location(stop.Latitude, stop.Longitude));
                     }
-                });
-            }
-        }
-
-        async void geolocator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
-        {
-            userPosition = args.Position;
-            double latitude = userPosition.Coordinate.Latitude;
-            double longitude = userPosition.Coordinate.Longitude;            
-
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                }
+                catch (ObaException)
                 {
-                    Location location = new Location(latitude, longitude);
-                    MapLayer.SetPosition(userLocationIcon, location);
-                    mainPageMap.SetView(location, Constants.DefaultMapZoom);                    
-                });
-                   
-            geolocator.PositionChanged -= geolocator_PositionChanged;
+                    // One Bus Away barfed for some reason.  We could be pinging them too frequently.
+                }
+            }
         }
 
         /// <summary>
@@ -113,8 +77,53 @@ namespace OneBusAway.Pages
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            Location location = null;
+            double zoom = Constants.DefaultMapZoom;
+
+            if (NavigationController.Instance.PersistedStates.Count > 0)
+            {
+                Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
+
+                if (previousState.ContainsKey("location"))
+                {
+                    location = (Location)previousState["location"];
+                }
+
+                if (previousState.ContainsKey("zoom"))
+                {
+                    zoom = (double)previousState["zoom"];
+                }
+            }
+            else
+            {
+                // We don't have a previous state, so let's ask the Geolocator to tell us where we are:
+                Geolocator geolocator = new Geolocator();
+                var geoPosition = await geolocator.GetGeopositionAsync();
+                this.userCoordinates = geoPosition.Coordinate;
+                location = new Location(this.userCoordinates.Latitude, this.userCoordinates.Longitude);                
+            }
+
+            MapLayer.SetPosition(userLocationIcon, location);
+            mainPageMap.SetView(location, zoom, new TimeSpan()); // timespan of 0 to kill the zoom animation
+
+            base.OnNavigatedTo(e);
+        }
+
+        /// <summary>
+        /// Invoked when the user navigates from this page.
+        /// </summary>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            // Persist the state for later:
+            NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
+            {
+                {"location", this.mainPageMap.Center},
+                {"zoom", this.mainPageMap.ZoomLevel}
+            });
+
+            base.OnNavigatedFrom(e);
         }
     }
 }
