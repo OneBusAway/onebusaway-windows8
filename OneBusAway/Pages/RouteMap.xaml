@@ -11,6 +11,10 @@
     xmlns:viewmodel="using:OneBusAway.ViewModels"
     xmlns:bingmaps="using:Bing.Maps"
     mc:Ignorable="d">
+    
+    <Page.DataContext>
+        <viewmodel:RouteMapPageViewModel/>
+    </Page.DataContext>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -40,11 +44,15 @@
         <ctrls:RouteDetails Grid.Column="0"
                             Grid.Row="1"
                             Margin="20"/>
-        
-        <bingmaps:Map Name="routeMap"
-                      Grid.Row="1"
-                      Grid.Column="1"
-                      Credentials="{Binding BingMapCredentials}" />
-        
+
+        <ctrls:MapControl x:Name="routeMap"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          MapCenter="{Binding MapCenter}"
+                          UserLocation="{Binding UserLocation}"
+                          CenterOnUserLocation="True"
+                          ZoomLevel="{Binding ZoomLevel}"
+                          BusStops="{Binding BusStops}"/>
+
     </Grid>
 </Page>

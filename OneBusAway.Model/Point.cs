@@ -18,6 +18,12 @@ namespace OneBusAway.Model
         {
         }
 
+        public Point(double _latitude, double _longitude)
+        {
+            latitude = _latitude;
+            longitude = _longitude;
+        }
+
         public double Latitude
         {
             get

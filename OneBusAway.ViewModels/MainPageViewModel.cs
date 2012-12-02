@@ -17,6 +17,10 @@ namespace OneBusAway.ViewModels
     public class MainPageViewModel : PageViewModelBase
     {
         RoutesAndStopsControlViewModel routesAndStopsViewModel;
+        private List<Stop> busStops = new List<Stop>();
+        private OneBusAway.Model.Point mapCenter;
+        private double zoomLevel = Constants.DefaultMapZoom;
+        private OneBusAway.Model.Point userLocation;
 
         public MainPageViewModel()
         {
@@ -25,9 +29,7 @@ namespace OneBusAway.ViewModels
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
 
             Load();
-        }
-
-        
+        }        
 
         
         #region Public Properties
@@ -52,6 +54,54 @@ namespace OneBusAway.ViewModels
                 return Constants.BingMapCredentials;               
             }
         }
+
+        public List<Stop> BusStops
+        {
+            get
+            {
+                return busStops;
+            }
+            set
+            {
+                SetProperty(ref this.busStops, value);
+            }
+        }
+
+        public OneBusAway.Model.Point MapCenter
+        {
+            get
+            {
+                return mapCenter;
+            }
+            set
+            {
+                SetProperty(ref this.mapCenter, value);                
+            }
+        }
+
+        public double ZoomLevel
+        {
+            get
+            {
+                return zoomLevel;
+            }
+            set
+            {
+                SetProperty(ref this.zoomLevel, value);
+            }
+        }
+
+        public OneBusAway.Model.Point UserLocation
+        {
+            get
+            {
+                return userLocation;
+            }
+            set
+            {
+                SetProperty(ref this.userLocation, value);
+            }
+        }
         
         #endregion
 
@@ -59,22 +109,27 @@ namespace OneBusAway.ViewModels
 
         public async void Load()
         {
-            await this.RoutesAndStopsViewModel.PopulateAsync();
+            try
+            {
+                await this.RoutesAndStopsViewModel.PopulateAsync();
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
         }
 
-        public async Task<Stop[]> GetStopsForLocation(double latitude, double longitude)
+        public async void RefreshStopsForLocationAsync(double latitude, double longitude, double latitudeSpan, double longitudeSpan)
         {
-            return await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, 0.0);
-        }
+            try
+            {
+                var result = await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, latitudeSpan, longitudeSpan);
 
-        public async Task<Stop[]> GetStopsForLocation(double latitude, double longitude, double radius)
-        {
-            return await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, radius);
-        }
-
-        public async Task<Stop[]> GetStopsForLocation(double latitude, double longitude, double latitudeSpan, double longitudeSpan)
-        {
-            return await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, latitudeSpan, longitudeSpan);
+                BusStops = result.ToList();
+            }
+            catch
+            {
+            }
         }
         
         #endregion

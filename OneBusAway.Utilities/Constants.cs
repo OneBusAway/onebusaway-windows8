@@ -53,11 +53,21 @@ namespace OneBusAway.Utilities
         /// <summary>
         /// Default map zoom when map control is loaded on any page
         /// </summary>
-        public const double DefaultMapZoom = 17.0;
+        public const double DefaultMapZoom = 12;
 
         /// <summary>
         /// Minimum zoom required for bus stops to be visible
         /// </summary>
         public const double MinBusStopVisibleZoom = 15.0;
+
+        /// <summary>
+        /// Default latitude in case user position can't be found. Defaulting to Puget Sound area
+        /// </summary>
+        public const double DefaultLatitude = 47.567547867111273;
+
+        /// <summary>
+        /// Default longitude in case user position can't be found. Defaulting to Puget Sound area
+        /// </summary>
+        public const double DefaultLongitude = -122.97295385181809;
     }
 }

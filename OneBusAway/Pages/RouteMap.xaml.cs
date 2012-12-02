@@ -28,6 +28,7 @@ namespace OneBusAway.Pages
         public RouteMap()
         {
             this.InitializeComponent();
+            
         }
 
         /// <summary>
@@ -37,6 +38,13 @@ namespace OneBusAway.Pages
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            //Geolocator geolocator = new Geolocator();
+            //var geoPosition = await geolocator.GetGeopositionAsync();
+            //    location = new Location(this.userCoordinates.Latitude, this.userCoordinates.Longitude);                
+            //}
+
+            //MapLayer.SetPosition(userLocationIcon, location);
+            //mainPageMap.SetView(location, zoom, new TimeSpan());
         }
     }
 }
