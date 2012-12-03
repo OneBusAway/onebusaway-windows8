@@ -18,7 +18,7 @@ namespace OneBusAway.ViewModels
 
         public SearchResultsViewModel()
         {
-
+            this.HeaderViewModel.SubText = "Search Results";
         }
 
         public string QueryText
@@ -63,7 +63,7 @@ namespace OneBusAway.ViewModels
             }
         }
          
-        public async void Search(string _queryText)
+        public async void SearchAsync(string _queryText)
         {
             // Set to false to make app believe search results are present - so that the error message is not shown
             ResultsEmpty = false;

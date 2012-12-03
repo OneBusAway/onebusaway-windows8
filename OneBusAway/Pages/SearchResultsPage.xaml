@@ -1,226 +1,108 @@
-﻿<common:LayoutAwarePage
-    x:Name="pageRoot"
-    x:Class="OneBusAway.SearchResultsPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:OneBusAway"
-    xmlns:vm="using:OneBusAway.ViewModels"
-    xmlns:ctrls="using:OneBusAway.Controls"
-    xmlns:common="using:OneBusAway.Common"
-    xmlns:converters="using:OneBusAway.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:ExtensionType="Search">
+﻿<Page x:Class="OneBusAway.Pages.SearchResultsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:OneBusAway"
+      xmlns:ctrls="using:OneBusAway.Controls"
+      xmlns:converters="using:OneBusAway.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodel="using:OneBusAway.ViewModels"
+      mc:Ignorable="d">
     
-    <Page.DataContext>
-        <vm:SearchResultsViewModel/>
-    </Page.DataContext>
+    <UserControl.DataContext>
+        <viewmodel:SearchResultsViewModel />
+    </UserControl.DataContext>
 
-    <Page.Resources>
-        <CollectionViewSource x:Name="resultsViewSource" Source="{Binding SearchResults}"/>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+            <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
 
-        <DataTemplate x:Key="SearchResultTemplate">
-            <Grid Width="294" Margin="6">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,0,0,10" Width="40" Height="40">
-                    <Image Source="ms-appx:///Assets/bus.png" Stretch="UniformToFill"/>
-                </Border>
-                <StackPanel Grid.Column="1" Margin="10,-10,0,0">
-                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
-                    <TextBlock Text="{Binding SubTitle}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
-                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
+            <DataTemplate x:Key="SearchResultTemplate">
+                <Grid Width="294" Margin="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,0,0,10" Width="40" Height="40">
+                        <Image Source="ms-appx:///Assets/bus.png" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="10,-10,0,0">
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
+                        <TextBlock Text="{Binding SubTitle}" Style="{StaticResource BodyTextStyle}" FontStyle="Italic" TextWrapping="NoWrap"/>
+                        <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+
         
-    </Page.Resources>
+    </UserControl.Resources>
 
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
+    <Grid x:Name="pageGrid" Background="#FFF3F3F3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- Header control -->
         <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Margin="0,0,0,-7" Grid.Column="0" Canvas.ZIndex="1" x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <!-- Header control -->
-            <ctrls:HeaderControl Grid.Row="0" Grid.ColumnSpan="2" DataContext="{Binding HeaderViewModel}" />
+            <ctrls:HeaderControl Grid.Column="0"
+                             Grid.Row="0"
+                             DataContext="{Binding HeaderViewModel}" />
         </Grid>
 
-        <!-- Back button, page title and subtitles-->
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="resultText" Grid.Column="2" VerticalAlignment="Bottom" Text="Results for&#x00a0;" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/>
-            <TextBlock x:Name="queryText" Grid.Column="3" Text="{Binding QueryText}" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/>
-        </Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid x:Name="resultsPanel" Grid.Row="2">
-            <Grid x:Name="typicalPanel">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <GridView
-                    x:Name="resultsGridView"
-                    AutomationProperties.AutomationId="ResultsGridView"
-                    AutomationProperties.Name="Search Results"
-                    TabIndex="1"
-                    Margin="0,-238,0,0"
-                    Padding="110,240,110,46"
-                    SelectionMode="None"
-                    IsSwipeEnabled="false"
-                    IsItemClickEnabled="True"
-                    ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
-                    ItemTemplate="{StaticResource SearchResultTemplate}">
-
-                    <GridView.ItemContainerStyle>
-                        <Style TargetType="Control">
-                            <Setter Property="Height" Value="70"/>
-                            <Setter Property="Margin" Value="0,0,38,8"/>
-                        </Style>
-                    </GridView.ItemContainerStyle>
-                </GridView>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="resultText" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Search Query:" Style="{StaticResource PageSubheaderTextStyle}"/>
+                <TextBlock x:Name="queryText" Grid.Row="1" Grid.Column="2" Text="{Binding QueryText}" Foreground="Black" Style="{StaticResource PageSubheaderTextStyle}"/>
             </Grid>
 
-            <!--
-                The body of the page when snapped uses a combo box to select a filter above a
-                vertical scrolling list of search results
-            -->
-            <Grid x:Name="snappedPanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <ListView
-                    x:Name="resultsListView"
-                    AutomationProperties.AutomationId="ResultsListView"
-                    AutomationProperties.Name="Search Results"
-                    TabIndex="1"
-                    Grid.Row="0"
-                    Margin="10,0,0,0"
-                    Padding="0,0,0,60"
+            <Grid x:Name="resultsPanel" Grid.Row="2">
+                <GridView Grid.Row="0"
+                    x:Name="resultsGridView"
+                    Margin="50,20,0,0"
                     SelectionMode="None"
                     IsSwipeEnabled="false"
                     IsItemClickEnabled="True"
-                    ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
+                    ItemsSource="{Binding SearchResults}"
                     ItemTemplate="{StaticResource SearchResultTemplate}">
 
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="Control">
-                            <Setter Property="Height" Value="70"/>
-                            <Setter Property="Margin" Value="0,0,18,8"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="Control">
+                                <Setter Property="Height" Value="70"/>
+                                <Setter Property="Margin" Value="0,0,38,8"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                    </GridView>
             </Grid>
         </Grid>
 
         <TextBlock
             x:Name="noResultsTextBlock"
-            Grid.Row="2"
-            Margin="120,50,0,0"
+            Grid.Row="1"
+            Margin="50,100,0,0"
             Visibility="{Binding ResultsEmpty, Converter={StaticResource boolToVisibilityConverter}}"
             Style="{StaticResource SubheaderTextStyle}"
-            Text="No results match your search." />
-
-        <VisualStateManager.VisualStateGroups>
-
-            <!-- Visual states reflect the application's view state -->
-            <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape"/>
-                <VisualState x:Name="Filled"/>
-
-                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filtersItemsControl" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,-3,90,30"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsGridView" Storyboard.TargetProperty="Padding">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="90,240,86,56"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,50,0,0"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-
-                <!--
-                    The back button and title have different styles when snapped in addition to more extensive changes:
-                    * The query text becomes the page header
-                    * A different representation for filter selection and search results is used
-                -->
-                <VisualState x:Name="Snapped">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="typicalPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="snappedPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
-
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BaselineTextStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name = "ResultStates">
-                <VisualState x:Name="ResultsFound" />
-                <!-- When there are no results, the results panel is replaced with an informational TextBlock -->
-                <VisualState x:Name="NoResultsFound">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>						
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+            Text="No results match your search." />       
+        
     </Grid>
-</common:LayoutAwarePage>
+
+</Page>

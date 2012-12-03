@@ -200,7 +200,7 @@ namespace OneBusAway
         private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
             var pane = SearchPane.GetForCurrentView();
-            pane.Show();            
+            pane.Show();  
 
             return Task.FromResult<object>(null);
         }
