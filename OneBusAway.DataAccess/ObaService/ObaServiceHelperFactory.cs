@@ -90,7 +90,7 @@ namespace OneBusAway.DataAccess
                 this.uriBuilder.Path += obaMethodString;
 
                 this.queryStringMap = new Dictionary<string, string>();
-                this.queryStringMap["key"] = Constants.API_KEY;
+                this.queryStringMap["key"] = UtilitiesConstants.API_KEY;
             }
             
             /// <summary>

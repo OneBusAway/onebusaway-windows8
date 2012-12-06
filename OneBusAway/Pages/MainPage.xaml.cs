@@ -58,40 +58,26 @@ namespace OneBusAway.Pages
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            OneBusAway.Model.Point mapCenter = new OneBusAway.Model.Point();
-
-            OneBusAway.Model.Point userLocation = new OneBusAway.Model.Point();
-
-            if (App.UserLocation != null)
-            {
-                userLocation.Latitude = App.UserLocation.Coordinate.Latitude;
-                userLocation.Longitude = App.UserLocation.Coordinate.Longitude;
-            }
-            else
-            {
-                // TODO: Raise an error bar informing user that his location could not be found
-                userLocation = null;
-            }
-
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {            
             if (NavigationController.Instance.PersistedStates.Count > 0)
             {
                 Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
-
-                mapCenter.Latitude = ((OneBusAway.Model.Point)previousState["location"]).Latitude;
-                mapCenter.Longitude = ((OneBusAway.Model.Point)previousState["location"]).Longitude;
-                mainPageViewModel.ZoomLevel = (double)previousState["zoom"];
+                mainPageViewModel.MapControlViewModel = (MapControlViewModel)previousState["mapControlViewModel"];
             }
-            else
+            else 
             {
-                mapCenter = userLocation;
-                mainPageViewModel.ZoomLevel = Constants.DefaultMapZoom;
-            }                        
+                Geolocator geolocator = new Geolocator();
+                var position = await geolocator.GetGeopositionAsync();
 
-            mainPageViewModel.MapCenter = mapCenter;
-            mainPageViewModel.UserLocation = userLocation;
-            
+                OneBusAway.Model.Point userLocation = new OneBusAway.Model.Point();
+                userLocation.Latitude = position.Coordinate.Latitude;
+                userLocation.Longitude = position.Coordinate.Longitude;
+
+                mainPageViewModel.MapControlViewModel.ResetZoomLevel();
+                mainPageViewModel.MapControlViewModel.MapCenter = userLocation;
+                mainPageViewModel.MapControlViewModel.UserLocation = userLocation;
+            }
 
             base.OnNavigatedTo(e);
         }
@@ -104,8 +90,7 @@ namespace OneBusAway.Pages
             // Persist the state for later:
             NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
             {
-                {"location", mainPageMap.MapCenter},
-                {"zoom", this.mainPageMap.ZoomLevel}
+                {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel}
             });
 
             base.OnNavigatedFrom(e);

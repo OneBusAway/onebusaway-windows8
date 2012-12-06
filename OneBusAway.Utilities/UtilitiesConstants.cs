@@ -8,7 +8,7 @@ namespace OneBusAway.Utilities
     /// <summary>
     /// A collection of constants that are used thrughout the application.
     /// </summary>
-    public static class Constants    
+    public static class UtilitiesConstants    
     {
         /// <summary>
         /// This is the API key for the application.
@@ -49,11 +49,6 @@ namespace OneBusAway.Utilities
         /// key that denotes the apiKey when calling the Bing Maps Service
         /// </summary>
         public const string Parameter_BingServiceApiKey = "key";
-
-        /// <summary>
-        /// Default map zoom when map control is loaded on any page
-        /// </summary>
-        public const double DefaultMapZoom = 12;
 
         /// <summary>
         /// Minimum zoom required for bus stops to be visible

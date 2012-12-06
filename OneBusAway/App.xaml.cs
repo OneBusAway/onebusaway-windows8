@@ -25,10 +25,6 @@ namespace OneBusAway
     /// </summary>
     sealed partial class App : Application
     {
-        Geolocator geolocator = new Geolocator();
-
-        public static Geoposition UserLocation;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -37,13 +33,6 @@ namespace OneBusAway
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-
-            geolocator.PositionChanged += geolocator_PositionChanged;
-        }
-
-        void geolocator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
-        {
-            UserLocation = args.Position;
         }
 
         /// <summary>

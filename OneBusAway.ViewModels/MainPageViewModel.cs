@@ -5,6 +5,7 @@ using OneBusAway.Model.BingService;
 using OneBusAway.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,20 +18,18 @@ namespace OneBusAway.ViewModels
     public class MainPageViewModel : PageViewModelBase
     {
         RoutesAndStopsControlViewModel routesAndStopsViewModel;
-        private List<Stop> busStops = new List<Stop>();
-        private OneBusAway.Model.Point mapCenter;
-        private double zoomLevel = Constants.DefaultMapZoom;
-        private OneBusAway.Model.Point userLocation;
-
+        MapControlViewModel mapControlViewModel;
+        private Stop[] busStops;
+        
         public MainPageViewModel()
         {
             this.HeaderViewModel.FavoritesIsEnabled = false;
 
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
+            this.MapControlViewModel = new ViewModels.MapControlViewModel();
 
             Load();
-        }        
-
+        }
         
         #region Public Properties
 
@@ -46,62 +45,38 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        public MapControlViewModel MapControlViewModel
+        {
+            get
+            {
+                return this.mapControlViewModel;
+            }
+            set
+            {
+                SetProperty(ref this.mapControlViewModel, value);
+            }
+        }
 
         public string BingMapCredentials
         {
             get
             {
-                return Constants.BingMapCredentials;               
+                return UtilitiesConstants.BingMapCredentials;
             }
         }
 
-        public List<Stop> BusStops
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification="Must be bound to an array or list")]
+        public Stop[] BusStops
         {
             get
             {
                 return busStops;
             }
-            set
+            private set
             {
                 SetProperty(ref this.busStops, value);
             }
-        }
-
-        public OneBusAway.Model.Point MapCenter
-        {
-            get
-            {
-                return mapCenter;
-            }
-            set
-            {
-                SetProperty(ref this.mapCenter, value);                
-            }
-        }
-
-        public double ZoomLevel
-        {
-            get
-            {
-                return zoomLevel;
-            }
-            set
-            {
-                SetProperty(ref this.zoomLevel, value);
-            }
-        }
-
-        public OneBusAway.Model.Point UserLocation
-        {
-            get
-            {
-                return userLocation;
-            }
-            set
-            {
-                SetProperty(ref this.userLocation, value);
-            }
-        }
+        }        
         
         #endregion
 
@@ -113,9 +88,8 @@ namespace OneBusAway.ViewModels
             {
                 await this.RoutesAndStopsViewModel.PopulateAsync();
             }
-            catch (Exception ex)
+            catch 
             {
-                ex.ToString();
             }
         }
 
@@ -123,9 +97,7 @@ namespace OneBusAway.ViewModels
         {
             try
             {
-                var result = await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, latitudeSpan, longitudeSpan);
-
-                BusStops = result.ToList();
+                this.BusStops = await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, latitudeSpan, longitudeSpan);
             }
             catch
             {

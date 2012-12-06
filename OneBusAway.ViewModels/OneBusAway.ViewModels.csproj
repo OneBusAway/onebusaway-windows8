@@ -54,10 +54,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModelConstants.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HeaderControlViewModel.cs" />
     <Compile Include="HelpPageViewModel.cs" />
     <Compile Include="MainPageViewModel.cs" />
+    <Compile Include="MapControlViewModel.cs" />
     <Compile Include="ObservableCommand.cs" />
     <Compile Include="PageViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

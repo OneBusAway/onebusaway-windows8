@@ -22,7 +22,7 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public ObaDataAccess()
         {
-            this.Factory = new ObaServiceHelperFactory(Constants.SERVER_URL);
+            this.Factory = new ObaServiceHelperFactory(UtilitiesConstants.SERVER_URL);
         }
 
         /// <summary>
@@ -134,9 +134,11 @@ namespace OneBusAway.DataAccess
             XDocument doc = await helper.SendAndRecieveAsync();
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
+            string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");
+
             // Find all of the stops in the payload that have this route id:
             return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
-                    select new TrackingData(serverTime, arrivalAndDepartureElement)).ToArray();
+                    select new TrackingData(serverTime, stopName, arrivalAndDepartureElement)).ToArray();
         }
     }
 }

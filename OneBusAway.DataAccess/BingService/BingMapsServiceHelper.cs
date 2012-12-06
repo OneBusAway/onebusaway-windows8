@@ -38,14 +38,14 @@ namespace OneBusAway.DataAccess.BingService
             }
 
             Dictionary<string, string> queryParameters = Helpers.GetBasicParameters();
-            queryParameters.Add(Constants.Parameter_Query, query);
+            queryParameters.Add(UtilitiesConstants.Parameter_Query, query);
 
             if (userPosition != null)
             {
-                queryParameters.Add(Constants.Parameter_UserLocation, userPosition.Coordinate.Latitude + "," + userPosition.Coordinate.Longitude);
+                queryParameters.Add(UtilitiesConstants.Parameter_UserLocation, userPosition.Coordinate.Latitude + "," + userPosition.Coordinate.Longitude);
             }
 
-            string url = Helpers.CreateServiceUrl(Constants.BingLocationServiceBaseAddress, queryParameters);
+            string url = Helpers.CreateServiceUrl(UtilitiesConstants.BingLocationServiceBaseAddress, queryParameters);
 
             Response response = await Helpers.GetJsonResponse<Response>(url);
 

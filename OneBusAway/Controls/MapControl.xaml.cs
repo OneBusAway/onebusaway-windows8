@@ -45,7 +45,7 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return Utilities.Constants.BingMapCredentials;
+                return Utilities.UtilitiesConstants.BingMapCredentials;
             }
         }
 
@@ -82,7 +82,7 @@ namespace OneBusAway.Controls
                 }
                 else
                 {
-                    map.Center = new Location(Constants.DefaultLatitude, Constants.DefaultLongitude);
+                    map.Center = new Location(UtilitiesConstants.DefaultLatitude, UtilitiesConstants.DefaultLongitude);
 
                     map.SetView(map.Center, ZoomLevel, new TimeSpan());
                 }
@@ -102,7 +102,12 @@ namespace OneBusAway.Controls
                 if (value != null)
                 {
                     userLocation = new Location(value.Latitude, value.Longitude);
-                    map.Children.Add(userLocationIcon);
+
+                    if (!map.Children.Contains(userLocationIcon))
+                    {
+                        map.Children.Add(userLocationIcon);
+                    }
+                    
                     MapLayer.SetPosition(userLocationIcon, userLocation);
                 }
                 else
@@ -249,7 +254,7 @@ namespace OneBusAway.Controls
 
         void map_ViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
         {
-            if (ZoomLevel >= Constants.MinBusStopVisibleZoom)
+            if (ZoomLevel >= UtilitiesConstants.MinBusStopVisibleZoom)
             {
                 OnRaiseViewChangeEndedEvent(e);
             }
