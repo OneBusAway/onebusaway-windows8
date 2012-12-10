@@ -46,11 +46,10 @@
         <ctrls:MapControl x:Name="mainPageMap"
                           Grid.Row="1"
                           Grid.Column="1"
-                          MapCenter="{Binding MapControlViewModel.MapCenter}"
-                          UserLocation="{Binding MapControlViewModel.UserLocation}"
                           CenterOnUserLocation="True"
-                          ZoomLevel="{Binding MapControlViewModel.ZoomLevel}"
-                          BusStops="{Binding BusStops}"/>
+                          MapView="{Binding MapControlViewModel.MapView, Mode=TwoWay}"
+                          UserLocation="{Binding MapControlViewModel.UserLocation}"
+                          BusStops="{Binding MapControlViewModel.BusStops, Mode=TwoWay}"/>
         
     </Grid>
 </Page>

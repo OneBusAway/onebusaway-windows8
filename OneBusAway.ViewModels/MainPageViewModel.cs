@@ -19,7 +19,6 @@ namespace OneBusAway.ViewModels
     {
         RoutesAndStopsControlViewModel routesAndStopsViewModel;
         MapControlViewModel mapControlViewModel;
-        private Stop[] busStops;
         
         public MainPageViewModel()
         {
@@ -37,7 +36,7 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return this.routesAndStopsViewModel;
+                return this.routesAndStopsViewModel;                
             }
             set
             {
@@ -63,20 +62,7 @@ namespace OneBusAway.ViewModels
             {
                 return UtilitiesConstants.BingMapCredentials;
             }
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification="Must be bound to an array or list")]
-        public Stop[] BusStops
-        {
-            get
-            {
-                return busStops;
-            }
-            private set
-            {
-                SetProperty(ref this.busStops, value);
-            }
-        }        
+        }    
         
         #endregion
 
@@ -89,17 +75,6 @@ namespace OneBusAway.ViewModels
                 await this.RoutesAndStopsViewModel.PopulateAsync();
             }
             catch 
-            {
-            }
-        }
-
-        public async void RefreshStopsForLocationAsync(double latitude, double longitude, double latitudeSpan, double longitudeSpan)
-        {
-            try
-            {
-                this.BusStops = await new ObaDataAccess().GetStopsForLocationAsync(latitude, longitude, latitudeSpan, longitudeSpan);
-            }
-            catch
             {
             }
         }

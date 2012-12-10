@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MapView.cs" />
     <Compile Include="ObaService\Agency.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="BingService\Address.cs" />

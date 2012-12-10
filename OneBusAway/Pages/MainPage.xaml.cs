@@ -20,12 +20,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace OneBusAway.Pages
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Main Page of the OBA app
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -35,22 +33,8 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
 
-            this.mainPageViewModel = (MainPageViewModel)this.DataContext; 
+            this.mainPageViewModel = (MainPageViewModel)this.DataContext;           
 
-            mainPageMap.ViewChangeEnded += mainPageMap_ViewChangeEnded;            
-
-        }
-
-        void mainPageMap_ViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
-        {
-            try
-            {
-                mainPageViewModel.RefreshStopsForLocationAsync(mainPageMap.MapCenter.Latitude, mainPageMap.MapCenter.Longitude, mainPageMap.Bounds.Height, mainPageMap.Bounds.Width);
-            }
-            catch (ObaException)
-            {
-                // One Bus Away barfed for some reason.  We could be pinging them too frequently.
-            }
         }
 
         /// <summary>
@@ -70,13 +54,10 @@ namespace OneBusAway.Pages
                 Geolocator geolocator = new Geolocator();
                 var position = await geolocator.GetGeopositionAsync();
 
-                OneBusAway.Model.Point userLocation = new OneBusAway.Model.Point();
-                userLocation.Latitude = position.Coordinate.Latitude;
-                userLocation.Longitude = position.Coordinate.Longitude;
-
-                mainPageViewModel.MapControlViewModel.ResetZoomLevel();
-                mainPageViewModel.MapControlViewModel.MapCenter = userLocation;
+                OneBusAway.Model.Point userLocation = new OneBusAway.Model.Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
                 mainPageViewModel.MapControlViewModel.UserLocation = userLocation;
+
+                mainPageViewModel.MapControlViewModel.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
             }
 
             base.OnNavigatedTo(e);

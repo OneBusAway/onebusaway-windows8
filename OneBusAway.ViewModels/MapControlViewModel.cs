@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OneBusAway.DataAccess;
+using OneBusAway.Model;
+using OneBusAway.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +14,9 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class MapControlViewModel : ViewModelBase
     {
-        private OneBusAway.Model.Point mapCenter;
-        private double zoomLevel = ViewModelConstants.DefaultMapZoom;
         private OneBusAway.Model.Point userLocation;
+        private MapView mapView;
+        private List<Stop> busStops;
 
         /// <summary>
         /// Creates the map control view model.
@@ -22,27 +25,36 @@ namespace OneBusAway.ViewModels
         {
         }
 
-        public OneBusAway.Model.Point MapCenter
+        /// <summary>
+        /// Gets an object that describes the state of the map at any point of time. This property should be bound to the MapControl's MapView property in xaml.
+        /// This property is updated whenever the map view changes (either zoom or the center of the map)
+        /// </summary>
+        public MapView MapView
         {
             get
             {
-                return mapCenter;
+                return mapView;
             }
             set
             {
-                SetProperty(ref this.mapCenter, value);
+                SetProperty(ref mapView, value);
+
+                if (value.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
+                {
+                    RefreshStopsForLocationAsync();
+                }
             }
         }
 
-        public double ZoomLevel
+        public List<Stop> BusStops
         {
             get
             {
-                return zoomLevel;
+                return busStops;
             }
             set
             {
-                SetProperty(ref this.zoomLevel, value);
+                SetProperty(ref busStops, value);
             }
         }
 
@@ -58,9 +70,18 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public void ResetZoomLevel()
+        public async void RefreshStopsForLocationAsync()
         {
-            this.ZoomLevel = ViewModelConstants.DefaultMapZoom;
+            try
+            {
+                var output = await new ObaDataAccess().GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude, mapView.BoundsHeight, mapView.BoundsWidth);
+
+                BusStops = output.ToList();
+            }
+            catch (Exception)
+            {
+                // TODO
+            }
         }
     }
 }
