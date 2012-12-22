@@ -32,10 +32,35 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        public async Task PopulateAsync(List<Favorite> favs)
+        {
+            List<TrackingData> trackingData = new List<TrackingData>();
+
+            // FIXME: These two lines should be removed
+            // They are here to add a fake favorite for now.
+            favs = new List<Favorite>();
+            favs.Add(new Favorite("1_75403", "1_67"));
+
+            foreach (Favorite fav in favs)
+            {
+                TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
+
+                foreach (TrackingData tdata in tdataArray)
+                {
+                    if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        trackingData.Add(tdata);
+                        break;
+                    }
+                }
+            }
+
+            this.RealTimeData = trackingData.ToArray();
+        }
+
         public async Task PopulateAsync()
         {
             this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync("1_75403");
         }
-
     }
 }

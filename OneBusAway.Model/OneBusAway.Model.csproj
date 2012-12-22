@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MapView.cs" />
+    <Compile Include="Favorite.cs" />
     <Compile Include="ObaService\Agency.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="BingService\Address.cs" />

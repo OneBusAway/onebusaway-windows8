@@ -17,6 +17,8 @@ namespace OneBusAway.Model
         string stopName;
         private int scheduledArrivalInMinutes;
         private int predictedArrivalInMinutes;
+        private string predictedArrivalTime;
+        private string status;
         private Route route;
 
         public TrackingData()
@@ -30,6 +32,7 @@ namespace OneBusAway.Model
         {
             this.RouteId = arrivalAndDepartureElement.GetFirstElementValue<string>("routeId");
             this.TripId = arrivalAndDepartureElement.GetFirstElementValue<string>("tripId");
+            this.StopName = stopName;
 
             DateTime scheduledArrivalDateTime = arrivalAndDepartureElement.GetFirstElementValue<long>("scheduledArrivalTime").ToDateTime();
             this.ScheduledArrivalInMinutes = (scheduledArrivalDateTime - serverTime).Minutes;
@@ -45,15 +48,28 @@ namespace OneBusAway.Model
                 this.PredictedArrivalInMinutes = this.scheduledArrivalInMinutes;
             }
 
+            this.predictedArrivalTime = DateTime.Now.AddMinutes(this.predictedArrivalInMinutes).ToString("HH:mm");
+
+            int difference = this.predictedArrivalInMinutes - this.scheduledArrivalInMinutes;
+            if (difference > 0)
+            {
+                this.status = "DELAY";
+            }
+            else
+            {
+                this.status = "ON TIME";
+            }
+
             // Grab the route element from the document and parse it into a Route object:
             var routeElements = (from routeElement in arrivalAndDepartureElement.Document.Descendants("route")
                                  where routeElement.GetFirstElementValue<string>("id") == this.RouteId
                                  select routeElement).ToList();
 
-            if (routeElements.Count == 1)
-            {
+            // FIXME: Sometimes we get two routes here with same id, so for now I am taking the first one.
+            //if (routeElements.Count == 1)
+            //{
                 this.Route = new Route(routeElements[0]);
-            }
+            //}
 
         }
 
@@ -126,6 +142,30 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.predictedArrivalInMinutes, value);
+            }
+        }
+
+        public string PredictedArrivalTime
+        {
+            get
+            {
+                return this.predictedArrivalTime;
+            }
+            set
+            {
+                SetProperty(ref this.predictedArrivalTime, value);
+            }
+        }
+
+        public string Status
+        {
+            get
+            {
+                return this.status;
+            }
+            set
+            {
+                SetProperty(ref this.status, value);
             }
         }
     }

@@ -24,13 +24,13 @@
     <Grid Background="#FFF3F3F3">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".45*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="45*" />
+            <ColumnDefinition Width="55*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
 
         <!-- Header control -->
@@ -40,7 +40,7 @@
 
             <ctrls:RoutesAndStopsControl Grid.Column="0"
                                      Grid.Row="1"
-                                     Margin="20"
+                                     Margin="140,30,90,20"
                                      DataContext="{Binding RoutesAndStopsViewModel}" />
         
         <ctrls:MapControl x:Name="mainPageMap"

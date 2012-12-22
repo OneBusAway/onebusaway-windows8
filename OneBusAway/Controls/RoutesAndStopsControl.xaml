@@ -14,34 +14,140 @@
     </UserControl.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <!-- FIXME: These heights should be computed as percentages
+            or things will look bad on screens with a different size -->
+            <RowDefinition Height="35" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Column="0"
-                      Grid.Row="0"
+        <Grid Grid.Row="0" Background="{StaticResource obaGreen}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="12*" />
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="16*" />
+                <ColumnDefinition Width="18*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="2"
+                       Text="ROUTE"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       TextAlignment="Left"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3"
+                       Text="STOP"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       TextAlignment="Left"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="5"
+                       Text="ETA"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="6"
+                       Text="STATUS"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Grid>
+        
+        <Rectangle Grid.Row="1" />
+        
+        <ItemsControl Grid.Row="2"
                       ItemsSource="{Binding RealTimeData}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Background="#FFF0F0F0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="25" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="12*" />
+                            <ColumnDefinition Width="40*" />
+                            <ColumnDefinition Width="8*" />
+                            <ColumnDefinition Width="16*" />
+                            <ColumnDefinition Width="18*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="40" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="6" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   Grid.Row="0"
-                                   Text="{Binding Route.ShortName}"
-                                   Foreground="Black" />
-                        <TextBlock Grid.Column="1"
-                                   Grid.Row="0"
-                                   Text="{Binding Route.Description}"
-                                   Foreground="Black" />
-                        <Rectangle Grid.Column="2"
-                                   Grid.Row="0"
+                        <Rectangle Grid.Row="0"
+                                   Grid.Column="0"
                                    Fill="{Binding Converter={StaticResource trackingDatatoColorConverter}}" />
-                        <TextBlock Grid.Column="2"
-                                   Grid.Row="0" />
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="2"
+                                   Text="{Binding Route.ShortName}"
+                                   Foreground="Black"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   TextAlignment="Left"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="3"
+                                   Text="{Binding StopName}"
+                                   Foreground="Black"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Left"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="4"
+                                   Text="&#xE113;"
+                                   FontFamily="Segoe UI Symbol"
+                                   FontWeight="Bold"
+                                   FontSize="18"
+                                   Foreground="{StaticResource obaGreen}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Center" />
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="5"
+                                   Text="{Binding PredictedArrivalTime}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                        <Grid Grid.Row="0"
+                                Grid.Column="6"
+                                Background="{Binding Converter={StaticResource trackingDatatoColorConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="5*" />
+                                <RowDefinition Height="5*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Text="{Binding PredictedArrivalInMinutes}"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       TextAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Bottom" />
+                            <TextBlock Grid.Row="1"
+                                       Text="{Binding Status}"
+                                       Foreground="White"
+                                       FontSize="18"
+                                       FontWeight="Light"
+                                       TextAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Top" />
+                        </Grid>
+                        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

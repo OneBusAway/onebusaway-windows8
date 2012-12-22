@@ -72,7 +72,7 @@ namespace OneBusAway.ViewModels
         {
             try
             {
-                await this.RoutesAndStopsViewModel.PopulateAsync();
+                await this.RoutesAndStopsViewModel.PopulateAsync(null);
             }
             catch 
             {
