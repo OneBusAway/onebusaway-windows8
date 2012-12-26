@@ -86,12 +86,12 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public void SelectStop(string selectedStopId)
+        public void SelectStop(string name, string selectedStopId, string direction)
         {
             var stopSelected = this.StopSelected;
             if (stopSelected != null)
             {
-                stopSelected(this, new StopSelectedEventArgs(selectedStopId));
+                stopSelected(this, new StopSelectedEventArgs(name, selectedStopId, direction));
             }
         }
     }

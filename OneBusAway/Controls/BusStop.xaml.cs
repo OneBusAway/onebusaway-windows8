@@ -19,7 +19,7 @@ namespace OneBusAway.Controls
 {
     public sealed partial class BusStop : UserControl
     {   
-        public BusStop(string stopId, string direction)
+        public BusStop(string name, string stopId, string direction)
         {
             this.InitializeComponent();
 
@@ -33,6 +33,8 @@ namespace OneBusAway.Controls
             SE.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
             _stopId = stopId;
+            _stopName = name;
+            _direction = direction;
 
             switch (direction)
             {
@@ -75,6 +77,24 @@ namespace OneBusAway.Controls
             }
         }
 
+        private string _direction;
+        public string Direction
+        {
+            get
+            {
+                return _direction;
+            }
+        }
+
+        private string _stopName;
+        public string StopName
+        {
+            get
+            {
+                return _stopName;
+            }
+        }
+
         /// <summary>
         /// Fire the view models' event.
         /// </summary>
@@ -83,7 +103,7 @@ namespace OneBusAway.Controls
             var viewModel = this.DataContext as MapControlViewModel;
             if (viewModel != null)
             {
-                viewModel.SelectStop(this.StopId);
+                viewModel.SelectStop(this.StopName, this.StopId, this.Direction);
             }
         }
     }

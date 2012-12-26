@@ -274,7 +274,8 @@ namespace OneBusAway.Controls
                     }
                     else
                     {
-                        BusStop busStopIcon = new BusStop(stop.StopId, stop.Direction);
+
+                        BusStop busStopIcon = new BusStop(stop.Name, stop.StopId, stop.Direction);
                         busStopIcon.DataContext = mapControl.DataContext;
 
                         mapControl.map.Children.Add(busStopIcon);

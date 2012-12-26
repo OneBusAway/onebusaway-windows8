@@ -11,18 +11,32 @@
     
     <UserControl.Resources>
         <conv:TrackingDataToColorConverter x:Key="trackingDatatoColorConverter" />
+        <conv:LastUpdatedTextConverter x:Key="lastUpdatedConverter" />
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <!-- FIXME: These heights should be computed as percentages
             or things will look bad on screens with a different size -->
+            <RowDefinition Height="70" />            
             <RowDefinition Height="35" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <TextBlock FontSize="22" FontWeight="Bold" Foreground="{StaticResource obaGreen}" Text="{Binding StopHeaderText}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Stretch" Foreground="Black" Text="{Binding StopSubHeaderText}" />
+                <TextBlock Grid.Column="1" Grid.Row="0" FontSize="14" Foreground="Gray" HorizontalAlignment="Right" Text="{Binding LastUpdated, Converter={StaticResource lastUpdatedConverter}}" />
+            </Grid>            
+        </StackPanel>
 
-        <Grid Grid.Row="0" Background="{StaticResource obaGreen}">
+        <Grid Grid.Row="1" Background="{StaticResource obaGreen}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="4*" />
@@ -32,7 +46,7 @@
                 <ColumnDefinition Width="16*" />
                 <ColumnDefinition Width="18*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="2"
+            <TextBlock Grid.Column="2"                       
                        Text="ROUTE"
                        FontSize="15"
                        FontWeight="SemiBold"
@@ -62,9 +76,9 @@
                        VerticalAlignment="Center" />
         </Grid>
         
-        <Rectangle Grid.Row="1" />
+        <Rectangle Grid.Row="2" />
         
-        <ItemsControl Grid.Row="2"
+        <ItemsControl Grid.Row="3"
                       ItemsSource="{Binding RealTimeData}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -88,6 +102,7 @@
                         <TextBlock Grid.Row="0"
                                    Grid.Column="2"
                                    Text="{Binding Route.ShortName}"
+                                   TextTrimming="WordEllipsis"
                                    Foreground="Black"
                                    FontSize="20"
                                    FontWeight="Bold"
@@ -96,7 +111,8 @@
                                    VerticalAlignment="Center" />
                         <TextBlock Grid.Row="0"
                                    Grid.Column="3"
-                                   Text="{Binding StopName}"
+                                   Text="{Binding Route.Description}"
+                                   TextTrimming="WordEllipsis"
                                    Foreground="Black"
                                    FontSize="18"
                                    FontWeight="Bold"
