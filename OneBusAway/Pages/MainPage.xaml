@@ -47,9 +47,10 @@
                           Grid.Row="1"
                           Grid.Column="1"
                           CenterOnUserLocation="True"
-                          MapView="{Binding MapControlViewModel.MapView, Mode=TwoWay}"
-                          UserLocation="{Binding MapControlViewModel.UserLocation}"
-                          BusStops="{Binding MapControlViewModel.BusStops, Mode=TwoWay}"/>
+                          DataContext="{Binding MapControlViewModel}"
+                          MapView="{Binding MapView, Mode=TwoWay}"
+                          UserLocation="{Binding UserLocation}"
+                          BusStops="{Binding BusStops, Mode=TwoWay}"/>
         
     </Grid>
 </Page>

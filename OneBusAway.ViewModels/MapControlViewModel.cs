@@ -18,6 +18,8 @@ namespace OneBusAway.ViewModels
         private MapView mapView;
         private List<Stop> busStops;
 
+        public event EventHandler<StopSelectedEventArgs> StopSelected;
+
         /// <summary>
         /// Creates the map control view model.
         /// </summary>
@@ -81,6 +83,15 @@ namespace OneBusAway.ViewModels
             catch (Exception)
             {
                 // TODO
+            }
+        }
+
+        public void SelectStop(string selectedStopId)
+        {
+            var stopSelected = this.StopSelected;
+            if (stopSelected != null)
+            {
+                stopSelected(this, new StopSelectedEventArgs(selectedStopId));
             }
         }
     }

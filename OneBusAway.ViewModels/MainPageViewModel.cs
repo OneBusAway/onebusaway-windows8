@@ -25,11 +25,13 @@ namespace OneBusAway.ViewModels
             this.HeaderViewModel.FavoritesIsEnabled = false;
 
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
-            this.MapControlViewModel = new ViewModels.MapControlViewModel();
+            this.MapControlViewModel = new MapControlViewModel();
+
+            this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
 
             Load();
         }
-        
+
         #region Public Properties
 
         public RoutesAndStopsControlViewModel RoutesAndStopsViewModel
@@ -72,13 +74,25 @@ namespace OneBusAway.ViewModels
         {
             try
             {
-                await this.RoutesAndStopsViewModel.PopulateAsync(null);
+                await this.RoutesAndStopsViewModel.PopulateFavoritesAsync(null);
             }
             catch 
             {
             }
         }
         
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Called when the user selects a stop.
+        /// </summary>
+        private async void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        {
+            await this.routesAndStopsViewModel.PopulateStopAsync(e.SelectedStopId);
+        }
+
         #endregion
     }
 }

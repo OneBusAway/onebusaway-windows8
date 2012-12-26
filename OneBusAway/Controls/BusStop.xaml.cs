@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneBusAway.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 namespace OneBusAway.Controls
 {
     public sealed partial class BusStop : UserControl
-    {        
+    {   
         public BusStop(string stopId, string direction)
         {
             this.InitializeComponent();
@@ -71,6 +72,18 @@ namespace OneBusAway.Controls
             get
             {
                 return _stopId;
+            }
+        }
+
+        /// <summary>
+        /// Fire the view models' event.
+        /// </summary>
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var viewModel = this.DataContext as MapControlViewModel;
+            if (viewModel != null)
+            {
+                viewModel.SelectStop(this.StopId);
             }
         }
     }

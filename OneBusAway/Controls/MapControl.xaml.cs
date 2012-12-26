@@ -268,13 +268,14 @@ namespace OneBusAway.Controls
                 var stops = e.NewValue as List<Stop>;
                 foreach (var stop in stops)
                 {
-                    if (mapControl.busStops.Any(x => x.Code == stop.Code))
+                    if (mapControl.busStops.Any(x => string.Equals(x.StopId, stop.StopId, StringComparison.Ordinal)))
                     {
                         // don't do anything since the bus stop already exists
                     }
                     else
                     {
-                        BusStop busStopIcon = new BusStop(stop.Code, stop.Direction);
+                        BusStop busStopIcon = new BusStop(stop.StopId, stop.Direction);
+                        busStopIcon.DataContext = mapControl.DataContext;
 
                         mapControl.map.Children.Add(busStopIcon);
                         mapControl.busStops.Add(stop);

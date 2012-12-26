@@ -32,7 +32,7 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public async Task PopulateAsync(List<Favorite> favs)
+        public async Task PopulateFavoritesAsync(List<Favorite> favs)
         {
             List<TrackingData> trackingData = new List<TrackingData>();
 
@@ -58,9 +58,9 @@ namespace OneBusAway.ViewModels
             this.RealTimeData = trackingData.ToArray();
         }
 
-        public async Task PopulateAsync()
+        public async Task PopulateStopAsync(string stopId)
         {
-            this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync("1_75403");
+            this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
         }
     }
 }

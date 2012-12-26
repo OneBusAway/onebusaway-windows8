@@ -56,7 +56,7 @@ namespace OneBusAway.Model
             //    </route>
             //</routes>
             //</stop>
-            this.Id = stopElement.GetFirstElementValue<string>("id");
+            this.StopId = stopElement.GetFirstElementValue<string>("id");
             this.Latitude = stopElement.GetFirstElementValue<double>("lat");
             this.Longitude = stopElement.GetFirstElementValue<double>("lon");
             this.Direction = stopElement.GetFirstElementValue<string>("direction");
@@ -67,7 +67,7 @@ namespace OneBusAway.Model
                            select new Route(routeElement)).ToArray();
         }
 
-        public string Id
+        public string StopId
         {
             get
             {
