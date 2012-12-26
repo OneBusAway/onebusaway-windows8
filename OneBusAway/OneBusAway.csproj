@@ -123,12 +123,16 @@
     <Compile Include="Controls\RouteDetails.xaml.cs">
       <DependentUpon>RouteDetails.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RouteMapsAndSchedulesControl.xaml.cs">
+      <DependentUpon>RouteMapsAndSchedulesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\UserLocation.xaml.cs">
       <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\LastUpdatedTextConverter.cs" />
     <Compile Include="Converters\SubTextConverter.cs" />
@@ -198,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RouteDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RouteMapsAndSchedulesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

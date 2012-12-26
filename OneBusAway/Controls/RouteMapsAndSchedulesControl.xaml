@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="OneBusAway.Controls.RouteMapsAndSchedulesControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OneBusAway.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conv="using:OneBusAway.Converters"
+    mc:Ignorable="d"
+    d:DesignHeight="200"
+    d:DesignWidth="400">
+    
+    <UserControl.Resources>
+        <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock FontWeight="Bold" 
+                   FontSize="14" 
+                   Foreground="Black" 
+                   Margin="0,15,0,0" 
+                   Text="ROUTE MAPS &amp; SCHEDULES"
+                   Visibility="{Binding DistinctRoutes, Converter={StaticResource arrayToVisibilityConverter}}"/>
+        
+        <ItemsControl Grid.Column="0"
+                      Grid.Row="1"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      VerticalContentAlignment="Top"
+                      HorizontalContentAlignment="Stretch"
+                      ItemsSource="{Binding DistinctRoutes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapGrid ItemHeight="60"                              
+                              ItemWidth="60" 
+                              FlowDirection="LeftToRight"
+                              Orientation="Horizontal"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              HorizontalChildrenAlignment="Left" 
+                              VerticalChildrenAlignment="Top" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="40"
+                            Height="40"
+                            Margin="-20,15,0,0"
+                            BorderBrush="{StaticResource obaGreen}"
+                            BorderThickness="1">
+                        <TextBlock Foreground="Black"
+                                   Text="{Binding}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>            
+        </ItemsControl>        
+    </Grid>    
+</UserControl>

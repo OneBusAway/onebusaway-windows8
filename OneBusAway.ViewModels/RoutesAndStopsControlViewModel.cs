@@ -37,6 +37,24 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.realTimeData, value);
+                FirePropertyChanged("DistinctRoutes");
+            }
+        }
+
+        /// <summary>
+        /// Returns the distinct routes from the real time data.
+        /// </summary>
+        public string[] DistinctRoutes
+        {
+            get
+            {
+                if (this.realTimeData == null)
+                {
+                    return new string[] { };
+                }
+
+                return (from trackingData in this.realTimeData
+                        select trackingData.Route.ShortName).Distinct().ToArray();
             }
         }
 

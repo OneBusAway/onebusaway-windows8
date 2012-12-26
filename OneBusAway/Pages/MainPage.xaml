@@ -38,11 +38,28 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
+        <Grid Grid.Column="0"
+              Grid.Row="1"
+              Margin="80,30,20,20">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
             <ctrls:RoutesAndStopsControl Grid.Column="0"
-                                     Grid.Row="1"
-                                     Margin="80,30,20,20"
-                                     DataContext="{Binding RoutesAndStopsViewModel}" />
-        
+                                         Grid.Row="0"
+                                         DataContext="{Binding RoutesAndStopsViewModel}" />
+            
+            <ctrls:RouteMapsAndSchedulesControl Grid.Column="0"
+                                                Grid.Row="1"
+                                                DataContext="{Binding RoutesAndStopsViewModel}" />
+            
+        </Grid>
+
         <ctrls:MapControl x:Name="mainPageMap"
                           Grid.Row="1"
                           Grid.Column="1"
@@ -51,6 +68,6 @@
                           MapView="{Binding MapView, Mode=TwoWay}"
                           UserLocation="{Binding UserLocation}"
                           BusStops="{Binding BusStops, Mode=TwoWay}"/>
-        
+
     </Grid>
 </Page>
