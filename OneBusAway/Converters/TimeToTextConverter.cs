@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Data;
 
 namespace OneBusAway.Converters
 {
-    public class LastUpdatedTextConverter : IValueConverter
+    public class TimeToTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -16,7 +16,7 @@ namespace OneBusAway.Converters
                 DateTime time = (DateTime)value;
                 if (time > DateTime.MinValue)
                 {
-                    return String.Format("LAST UPDATED: {0}", time.ToString("hh:mm tt"));
+                    return time.ToString("h:mm tt");
                 }
             }
 

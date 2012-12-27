@@ -17,7 +17,7 @@ namespace OneBusAway.Model
         string stopName;
         private int scheduledArrivalInMinutes;
         private int predictedArrivalInMinutes;
-        private string predictedArrivalTime;
+        private DateTime predictedArrivalTime;
         private string status;
         private Route route;
 
@@ -48,7 +48,7 @@ namespace OneBusAway.Model
                 this.PredictedArrivalInMinutes = this.scheduledArrivalInMinutes;
             }
 
-            this.predictedArrivalTime = DateTime.Now.AddMinutes(this.predictedArrivalInMinutes).ToString("h:mm tt");
+            this.predictedArrivalTime = DateTime.Now.AddMinutes(this.predictedArrivalInMinutes);
 
             int difference = this.predictedArrivalInMinutes - this.scheduledArrivalInMinutes;
             if (difference > 0)
@@ -145,7 +145,7 @@ namespace OneBusAway.Model
             }
         }
 
-        public string PredictedArrivalTime
+        public DateTime PredictedArrivalTime
         {
             get
             {
