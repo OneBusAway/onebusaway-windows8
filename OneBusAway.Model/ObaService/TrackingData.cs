@@ -48,7 +48,7 @@ namespace OneBusAway.Model
                 this.PredictedArrivalInMinutes = this.scheduledArrivalInMinutes;
             }
 
-            this.predictedArrivalTime = DateTime.Now.AddMinutes(this.predictedArrivalInMinutes).ToString("HH:mm");
+            this.predictedArrivalTime = DateTime.Now.AddMinutes(this.predictedArrivalInMinutes).ToString("h:mm tt");
 
             int difference = this.predictedArrivalInMinutes - this.scheduledArrivalInMinutes;
             if (difference > 0)
