@@ -42,7 +42,7 @@
         
     </UserControl.Resources>
 
-    <Grid x:Name="pageGrid" Background="#FFF3F3F3">
+    <Grid x:Name="pageGrid" Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>

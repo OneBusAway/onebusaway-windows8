@@ -177,17 +177,21 @@ namespace OneBusAway
         /// <summary>
         /// Called when the user goes back
         /// </summary>
-        private Task OnGoBackCommandExecuted(object arg1, object arg2)
+        private async Task OnGoBackCommandExecuted(object arg1, object arg2)
         {
             var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null && currentFrame.CanGoBack)
+            if (currentFrame != null)
             {
-                currentFrame.GoBack();
+                if (currentFrame.CanGoBack)
+                {
+                    currentFrame.GoBack();
+                }
+                else if (currentFrame.CurrentSourcePageType == typeof(MainPage))
+                {
+                    await DisplayMainPageFavorites(currentFrame);
+                }
             }
-
-            return Task.FromResult<object>(null);
         }
-
 
         /// <summary>
         /// Called when the go to main page command is executed.
@@ -199,11 +203,7 @@ namespace OneBusAway
             {
                 if (currentFrame.CurrentSourcePageType == typeof(MainPage))
                 {
-                    // Tell the view model to display favorites in this case:
-                    var page = (MainPage)currentFrame.Content;
-                    var viewModel = (MainPageViewModel)page.DataContext;
-
-                    await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                    await DisplayMainPageFavorites(currentFrame);
                 }
                 else
                 {
@@ -249,6 +249,23 @@ namespace OneBusAway
             }
 
             return Task.FromResult<object>(null);
+        }
+
+        /// <summary>
+        /// If the user clicks 'back' or 'favorites' while they are on the main page, then we don't really
+        /// go back...we just change the display so that favorites are being shown.
+        /// </summary>
+        /// <param name="currentFrame"></param>
+        /// <returns></returns>
+        private async Task DisplayMainPageFavorites(Frame currentFrame)
+        {
+            var page = currentFrame.Content as MainPage;
+            if (page != null)
+            {
+                var viewModel = (MainPageViewModel)page.DataContext;
+                await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                viewModel.HeaderViewModel.SubText = null;
+            }
         }
     }
 }

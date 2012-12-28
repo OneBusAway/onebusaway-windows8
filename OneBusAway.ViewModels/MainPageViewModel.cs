@@ -87,6 +87,7 @@ namespace OneBusAway.ViewModels
         private async void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
         {
             await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);
+            this.HeaderViewModel.SubText = "REAL TIME";
         }
 
         #endregion

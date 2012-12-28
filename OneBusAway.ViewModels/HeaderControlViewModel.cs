@@ -19,7 +19,9 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return this.subText;
+                return (string.IsNullOrEmpty(this.subText))
+                    ? "ONE BUS AWAY"
+                    : this.subText;
             }
             set
             {

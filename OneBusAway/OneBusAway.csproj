@@ -147,8 +147,8 @@
     <Compile Include="Pages\HelpPage.xaml.cs">
       <DependentUpon>HelpPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\RouteMap.xaml.cs">
-      <DependentUpon>RouteMap.xaml</DependentUpon>
+    <Compile Include="Pages\RouteMapPage.xaml.cs">
+      <DependentUpon>RouteMapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -233,7 +233,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\RouteMap.xaml">
+    <Page Include="Pages\RouteMapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

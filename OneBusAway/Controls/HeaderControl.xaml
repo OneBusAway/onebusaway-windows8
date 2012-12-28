@@ -70,7 +70,7 @@
                        HorizontalAlignment="Left"
                        FontSize="34"
                        Height="31"
-                       Text="{Binding Converter={StaticResource subTextConverter}}" />
+                       Text="{Binding SubText}" />
         </Grid>
 
         <!-- Links on top right -->

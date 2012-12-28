@@ -20,12 +20,12 @@ namespace OneBusAway.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class RouteMap : Page
+    public sealed partial class RouteMapPage : Page
     {
 
         public RouteMapPageViewModel RouteMapPageViewModel;
 
-        public RouteMap()
+        public RouteMapPage()
         {
             this.InitializeComponent();
             
