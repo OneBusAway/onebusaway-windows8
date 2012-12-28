@@ -18,6 +18,20 @@ namespace OneBusAway.DataAccess
         public ObaException(int errorCode, string errorText)
             : base(string.Format(CultureInfo.CurrentCulture, "OBA Error {0}: {1}", errorCode, errorText))
         {
+            this.ErrorCode = errorCode;
+            this.ErrorText = errorText;
+        }
+
+        public int ErrorCode
+        {
+            get;
+            private set;
+        }
+
+        public string ErrorText
+        {
+            get;
+            private set;
         }
     }
 }

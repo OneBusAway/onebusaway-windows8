@@ -131,7 +131,26 @@ namespace OneBusAway.DataAccess
             var helper = this.Factory.CreateHelper(ObaMethod.arrivals_and_departures_for_stop);
             helper.SetId(stopId);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            XDocument doc = null;
+            while (true)
+            {
+                try
+                {
+                    doc = await helper.SendAndRecieveAsync();
+                    break;
+                }
+                catch (ObaException e)
+                {
+                    if (e.ErrorCode != 401)
+                    {
+                        throw;
+                    }
+                }
+
+                // the server is busy.  Wait 1/2 second and try again.
+                await Task.Delay(500);
+            }
+
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
             string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");

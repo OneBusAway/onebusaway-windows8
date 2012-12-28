@@ -128,16 +128,7 @@ namespace OneBusAway.ViewModels
             this.StopHeaderText = stopName;
             this.StopSubHeaderText = string.Format("{0} BOUND", direction);
 
-            try
-            {
-                this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
-            }
-            catch (ObaException)
-            {
-                // Bad data? This means there are no data for this stop - Oba has barfed on us.
-                this.RealTimeData = new TrackingData[] { };
-            }
-
+            this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
             this.LastUpdated = DateTime.Now;
         }
     }
