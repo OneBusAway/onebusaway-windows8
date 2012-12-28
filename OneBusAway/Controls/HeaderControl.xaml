@@ -122,7 +122,6 @@
             
             <Button Grid.Column="0"
                     Grid.Row="0"
-                    IsEnabled="{Binding FavoritesIsEnabled}"
                     Command="{Binding GoToMainPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="40,0,40,0">FAVORITES</Button>
             

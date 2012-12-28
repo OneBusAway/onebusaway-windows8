@@ -169,15 +169,24 @@ namespace OneBusAway
         /// <summary>
         /// Called when the go to main page command is executed.
         /// </summary>
-        private Task OnGoToMainPageCommandExecuted(object arg1, object arg2)
+        private async Task OnGoToMainPageCommandExecuted(object arg1, object arg2)
         {
             var currentFrame = Window.Current.Content as Frame;
             if (currentFrame != null)
             {
-                currentFrame.Navigate(typeof(MainPage));
-            }
+                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
+                {
+                    // Tell the view model to display favorites in this case:
+                    var page = (MainPage)currentFrame.Content;
+                    var viewModel = (MainPageViewModel)page.DataContext;
 
-            return Task.FromResult<object>(null);
+                    await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                }
+                else
+                {
+                    currentFrame.Navigate(typeof(MainPage));
+                }
+            }
         }
 
         /// <summary>

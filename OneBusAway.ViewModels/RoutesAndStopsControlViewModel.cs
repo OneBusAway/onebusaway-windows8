@@ -94,13 +94,12 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public async Task PopulateFavoritesAsync(List<Favorite> favs)
+        public async Task PopulateFavoritesAsync()
         {
             List<TrackingData> trackingData = new List<TrackingData>();
 
-            // FIXME: These two lines should be removed
-            // They are here to add a fake favorite for now.
-            favs = new List<Favorite>();
+            //  TO DO: Load favorites from some storage location...somewhere.
+            var favs = new List<Favorite>();
             favs.Add(new Favorite("1_75403", "1_67"));
 
             this.StopHeaderText = Favorites;
@@ -128,7 +127,17 @@ namespace OneBusAway.ViewModels
         {
             this.StopHeaderText = stopName;
             this.StopSubHeaderText = string.Format("{0} BOUND", direction);
-            this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
+
+            try
+            {
+                this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
+            }
+            catch (ObaException)
+            {
+                // Bad data? This means there are no data for this stop - Oba has barfed on us.
+                this.RealTimeData = new TrackingData[] { };
+            }
+
             this.LastUpdated = DateTime.Now;
         }
     }

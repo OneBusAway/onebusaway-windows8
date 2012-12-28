@@ -29,8 +29,7 @@
     <x:String x:Key="ChevronGlyph">&#xE26B;</x:String>
 
     <SolidColorBrush x:Key="obaGreen" Color="#78AA36" />
-    <SolidColorBrush x:Key="lateBusBlue"
-                     Color="#24A0F2" />
+    <SolidColorBrush x:Key="lateBusBlue" Color="#24A0F2" />
 
     <Style TargetType="HyperlinkButton">
         <Setter Property="FontSize"

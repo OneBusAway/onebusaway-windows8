@@ -21,7 +21,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="#FFF3F3F3">
+    <Grid Background="White">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="45*" />
@@ -29,8 +29,8 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="9*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Header control -->

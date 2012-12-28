@@ -9,23 +9,10 @@ namespace OneBusAway.ViewModels
 {
     public class HeaderControlViewModel : ViewModelBase
     {
-        private bool favoriteIsEnabled;
         private string subText;
 
         public HeaderControlViewModel()
         {
-        }
-
-        public bool FavoritesIsEnabled
-        {
-            get
-            {
-                return this.favoriteIsEnabled;
-            }
-            set
-            {
-                SetProperty(ref this.favoriteIsEnabled, value);
-            }
         }
 
         public string SubText

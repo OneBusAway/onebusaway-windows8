@@ -129,6 +129,9 @@
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TimeTableControl.xaml.cs">
+      <DependentUpon>TimeTableControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserLocation.xaml.cs">
       <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
@@ -153,6 +156,9 @@
     </Compile>
     <Compile Include="Pages\StopAndRoutesPage.xaml.cs">
       <DependentUpon>StopAndRoutesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\TimeTablePage.xaml.cs">
+      <DependentUpon>TimeTablePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -213,6 +219,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\TimeTableControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\UserLocation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -234,6 +244,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\StopAndRoutesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\TimeTablePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

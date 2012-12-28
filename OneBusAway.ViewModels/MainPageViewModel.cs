@@ -22,13 +22,8 @@ namespace OneBusAway.ViewModels
         
         public MainPageViewModel()
         {
-            this.HeaderViewModel.FavoritesIsEnabled = false;
-
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
             this.MapControlViewModel = new MapControlViewModel();
-
-            this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
-
             Load();
         }
 
@@ -53,8 +48,9 @@ namespace OneBusAway.ViewModels
                 return this.mapControlViewModel;
             }
             set
-            {
+            {                
                 SetProperty(ref this.mapControlViewModel, value);
+                this.mapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
             }
         }
 
@@ -74,7 +70,7 @@ namespace OneBusAway.ViewModels
         {
             try
             {
-                await this.RoutesAndStopsViewModel.PopulateFavoritesAsync(null);
+                await this.RoutesAndStopsViewModel.PopulateFavoritesAsync();
             }
             catch 
             {
