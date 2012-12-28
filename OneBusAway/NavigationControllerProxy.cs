@@ -71,6 +71,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns the go to time table page command.
+        /// </summary>
+        public ObservableCommand GoToTimeTablePageCommand
+        {
+            get
+            {
+                return NavigationController.Instance.GoToTimeTablePageCommand;
+            }
+        }
+
+        /// <summary>
         /// Returns the go to search page command.
         /// </summary>
         public ObservableCommand GoToSearchPageCommand

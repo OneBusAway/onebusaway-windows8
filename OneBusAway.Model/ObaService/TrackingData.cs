@@ -14,25 +14,23 @@ namespace OneBusAway.Model
     {
         private string routeId;
         private string tripId;
-        string stopName;
+        private string stopName;
+        private string stopId;
         private int scheduledArrivalInMinutes;
         private int predictedArrivalInMinutes;
         private DateTime predictedArrivalTime;
         private string status;
         private Route route;
 
-        public TrackingData()
-        {
-        }
-
         /// <summary>
         /// Creates the tracking data out of an arrival and departure element.
         /// </summary>
-        public TrackingData(DateTime serverTime, string stopName, XElement arrivalAndDepartureElement)
+        public TrackingData(DateTime serverTime, string stopId, string stopName, XElement arrivalAndDepartureElement)
         {
             this.RouteId = arrivalAndDepartureElement.GetFirstElementValue<string>("routeId");
             this.TripId = arrivalAndDepartureElement.GetFirstElementValue<string>("tripId");
             this.StopName = stopName;
+            this.StopId = stopId;
 
             DateTime scheduledArrivalDateTime = arrivalAndDepartureElement.GetFirstElementValue<long>("scheduledArrivalTime").ToDateTime();
             this.ScheduledArrivalInMinutes = (scheduledArrivalDateTime - serverTime).Minutes;
@@ -106,6 +104,18 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.stopName, value);
+            }
+        }
+
+        public string StopId
+        {
+            get
+            {
+                return this.stopId;
+            }
+            set
+            {
+                SetProperty(ref this.stopId, value);
             }
         }
 

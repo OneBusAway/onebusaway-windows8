@@ -137,6 +137,8 @@
     </Compile>
     <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\BusNumberConverter.cs" />
+    <Compile Include="Converters\TimeToFontWeightConverter.cs" />
     <Compile Include="Converters\TimeToTextConverter.cs" />
     <Compile Include="Converters\SubTextConverter.cs" />
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />

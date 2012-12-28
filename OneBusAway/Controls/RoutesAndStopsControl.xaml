@@ -5,41 +5,85 @@
              xmlns:local="using:OneBusAway.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oba="using:OneBusAway"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
-    
+
     <UserControl.Resources>
-        <conv:TrackingDataToColorConverter x:Key="trackingDatatoColorConverter" />
+        <conv:TrackingDataToColorConverter x:Key="trackingDataToColorConverter" />
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
+        <oba:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
     <Grid>
+
+        <Grid.Resources>
+            <Style x:Key="CommandableButton"
+                   TargetType="ButtonBase">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
+                                           TextTrimming="WordEllipsis"
+                                           Foreground="Black"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Left"
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
-            <!-- FIXME: These heights should be computed as percentages
-            or things will look bad on screens with a different size -->
-            <RowDefinition Height="70" />            
+            <RowDefinition Height="70" />
             <RowDefinition Height="35" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <TextBlock FontSize="22" FontWeight="Bold" Foreground="{StaticResource obaGreen}" Text="{Binding StopHeaderText}" />
+
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center">
+            <TextBlock FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource obaGreen}"
+                       Text="{Binding StopHeaderText}" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Stretch" Foreground="Black" Text="{Binding StopSubHeaderText}" />
-                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock FontSize="14" Foreground="Gray" Text="LAST UPDATED:" />
-                    <TextBlock FontSize="14" Foreground="Gray" Margin="2,0,0,0" Text="{Binding LastUpdated, Converter={StaticResource timeToTextConverter}}" />
+                <TextBlock Grid.Column="0"
+                           Grid.Row="0"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Stretch"
+                           Foreground="Black"
+                           Text="{Binding StopSubHeaderText}" />
+                <StackPanel Grid.Column="1"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock FontSize="14"
+                               Foreground="Gray"
+                               Text="LAST UPDATED:" />
+                    <TextBlock FontSize="14"
+                               Foreground="Gray"
+                               Margin="2,0,0,0"
+                               Text="{Binding LastUpdated, Converter={StaticResource timeToTextConverter}}" />
                 </StackPanel>
-            </Grid>            
+            </Grid>
         </StackPanel>
 
-        <Grid Grid.Row="1" Background="{StaticResource obaGreen}">
+        <Grid Grid.Row="1"
+              Background="{StaticResource obaGreen}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="4*" />
@@ -49,7 +93,7 @@
                 <ColumnDefinition Width="16*" />
                 <ColumnDefinition Width="18*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="2"                       
+            <TextBlock Grid.Column="2"
                        Text="ROUTE"
                        FontSize="15"
                        FontWeight="SemiBold"
@@ -78,9 +122,9 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
         </Grid>
-        
+
         <Rectangle Grid.Row="2" />
-        
+
         <ItemsControl Grid.Row="3"
                       ItemsSource="{Binding RealTimeData}">
             <ItemsControl.ItemTemplate>
@@ -101,7 +145,7 @@
                         </Grid.RowDefinitions>
                         <Rectangle Grid.Row="0"
                                    Grid.Column="0"
-                                   Fill="{Binding Converter={StaticResource trackingDatatoColorConverter}}" />
+                                   Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
                         <TextBlock Grid.Row="0"
                                    Grid.Column="2"
                                    Text="{Binding Route.ShortName}"
@@ -112,17 +156,12 @@
                                    TextAlignment="Left"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="0"
-                                   Grid.Column="3"
-                                   Text="{Binding Route.Description}"
-                                   TextTrimming="WordEllipsis"
-                                   Foreground="Black"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center"
-                                   TextAlignment="Left"
-                                   TextWrapping="Wrap" />
+                        <Button Grid.Row="0"
+                                Grid.Column="3"
+                                Command="{Binding GoToTimeTablePageCommand, Source={StaticResource navigationProxy}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource CommandableButton}"
+                                AutomationProperties.Name="{Binding Route.Description}" />
                         <TextBlock Grid.Row="0"
                                    Grid.Column="4"
                                    Text="&#xE113;"
@@ -143,8 +182,8 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
                         <Grid Grid.Row="0"
-                                Grid.Column="6"
-                                Background="{Binding Converter={StaticResource trackingDatatoColorConverter}}">
+                              Grid.Column="6"
+                              Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="5*" />
                                 <RowDefinition Height="5*" />
@@ -166,7 +205,9 @@
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Top" />
                         </Grid>
-                        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" />
+                        <Rectangle Grid.Row="1"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="8" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

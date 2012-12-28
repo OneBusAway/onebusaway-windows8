@@ -109,6 +109,31 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Returns the schedule for a particular stop / route combination.
+        /// </summary>
+        public async Task<StopRouteSchedule> GetScheduleForStopAndRoute(string stopId, string routeId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.schedule_for_stop);
+            helper.SetId(stopId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+
+            // Find all of the stops in the payload that have this route id:
+
+            var stopRouteScheduleElement = doc.Descendants("stopRouteSchedule")
+                .Where(xe => string.Equals(xe.GetFirstElementValue<string>("routeId"), routeId, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+
+            if (stopRouteScheduleElement == null)
+            {
+                throw new ArgumentException(string.Format("Unknown route / stop combination {0}/{1}", routeId, stopId));
+            }
+
+            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+            return new StopRouteSchedule(serverTime, stopRouteScheduleElement.Descendants("scheduleStopTimes").First());
+        }
+
+        /// <summary>
         /// Returns the shape of a route for a particular route.
         /// </summary>
         public async Task<Shape> GetShapeForRouteAsync(string routeId)
@@ -157,7 +182,7 @@ namespace OneBusAway.DataAccess
 
             // Find all of the stops in the payload that have this route id:
             return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
-                    select new TrackingData(serverTime, stopName, arrivalAndDepartureElement)).ToArray();
+                    select new TrackingData(serverTime, stopId, stopName, arrivalAndDepartureElement)).ToArray();
         }
     }
 }

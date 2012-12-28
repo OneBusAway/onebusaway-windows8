@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StopSelectedEventArgs.cs" />
+    <Compile Include="TimeTableControlViewModel.cs" />
     <Compile Include="TimeTablePageViewModel.cs" />
     <Compile Include="ViewModelConstants.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -40,6 +40,11 @@ namespace OneBusAway
         private ObservableCommand goToSearchPageCommand;
 
         /// <summary>
+        /// Command used to go to the time table page.
+        /// </summary>
+        private ObservableCommand goToTimeTablePageCommand;
+
+        /// <summary>
         /// Command fires the go back command.
         /// </summary>
         private ObservableCommand goBackCommand;
@@ -66,8 +71,11 @@ namespace OneBusAway
             this.GoToSearchPageCommand = new ObservableCommand();
             this.GoToSearchPageCommand.Executed += OnGoToSearchPageCommandExecuted;
 
+            this.GoToTimeTablePageCommand = new ObservableCommand();
+            this.GoToTimeTablePageCommand.Executed += OnGoToTimeTablePageCommandExecuted;
+
             this.persistedStates = new Stack<Dictionary<string, object>>();
-        }       
+        }
 
         /// <summary>
         /// Returns the instance of the controller.
@@ -141,6 +149,21 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns the go to time table command.
+        /// </summary>
+        public ObservableCommand GoToTimeTablePageCommand
+        {
+            get
+            {
+                return this.goToTimeTablePageCommand;
+            }
+            set 
+            {
+                SetProperty(ref this.goToTimeTablePageCommand, value);
+            }
+        }
+
+        /// <summary>
         /// Returns a stack of persisted states.
         /// </summary>
         public Stack<Dictionary<string, object>> PersistedStates
@@ -210,6 +233,20 @@ namespace OneBusAway
         {
             var pane = SearchPane.GetForCurrentView();
             pane.Show();  
+
+            return Task.FromResult<object>(null);
+        }
+
+        /// <summary>
+        /// Called when we go to the time table page.
+        /// </summary>
+        private Task OnGoToTimeTablePageCommandExecuted(object arg1, object arg2)
+        {
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                currentFrame.Navigate(typeof(TimeTablePage), arg2);
+            }
 
             return Task.FromResult<object>(null);
         }

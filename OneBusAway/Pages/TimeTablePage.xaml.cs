@@ -1,7 +1,10 @@
-﻿using System;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -31,8 +34,17 @@ namespace OneBusAway.Pages
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            var viewModel = this.DataContext as TimeTablePageViewModel;
+            if (viewModel != null)
+            {
+                TrackingData trackingData = e.Parameter as TrackingData;
+                if (trackingData != null)
+                {
+                    await viewModel.SetRouteAndStopData(trackingData);
+                }
+            }
         }
     }
 }

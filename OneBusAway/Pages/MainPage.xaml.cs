@@ -48,6 +48,7 @@ namespace OneBusAway.Pages
             {
                 Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
                 mainPageViewModel.MapControlViewModel = (MapControlViewModel)previousState["mapControlViewModel"];
+                mainPageViewModel.RoutesAndStopsViewModel = (RoutesAndStopsControlViewModel)previousState["routesAndStopsControlViewModel"];
             }
             else 
             {
@@ -71,7 +72,8 @@ namespace OneBusAway.Pages
             // Persist the state for later:
             NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
             {
-                {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel}
+                {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel},
+                {"routesAndStopsControlViewModel", this.mainPageViewModel.RoutesAndStopsViewModel}
             });
 
             base.OnNavigatedFrom(e);

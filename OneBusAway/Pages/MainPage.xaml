@@ -1,13 +1,13 @@
 ﻿<Page x:Class="OneBusAway.Pages.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:OneBusAway"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:OneBusAway"
       xmlns:ctrls="using:OneBusAway.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodel="using:OneBusAway.ViewModels"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodel="using:OneBusAway.ViewModels"
       xmlns:bingmaps="using:Bing.Maps"
-    mc:Ignorable="d">
+      mc:Ignorable="d">
 
     <Page.DataContext>
         <viewmodel:MainPageViewModel />
@@ -49,15 +49,15 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <ctrls:RoutesAndStopsControl Grid.Column="0"
                                          Grid.Row="0"
                                          DataContext="{Binding RoutesAndStopsViewModel}" />
-            
+
             <ctrls:RouteMapsAndSchedulesControl Grid.Column="0"
                                                 Grid.Row="1"
                                                 DataContext="{Binding RoutesAndStopsViewModel}" />
-            
+
         </Grid>
 
         <ctrls:MapControl x:Name="mainPageMap"
@@ -67,7 +67,7 @@
                           DataContext="{Binding MapControlViewModel}"
                           MapView="{Binding MapView, Mode=TwoWay}"
                           UserLocation="{Binding UserLocation}"
-                          BusStops="{Binding BusStops, Mode=TwoWay}"/>
+                          BusStops="{Binding BusStops, Mode=TwoWay}" />
 
     </Grid>
 </Page>
