@@ -14,7 +14,7 @@
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:TimeToFontWeightConverter x:Key="timeToFontWeightConverter" />
     </UserControl.Resources>
-    
+
     <Grid Background="White">
 
         <Grid.ColumnDefinitions>
@@ -75,40 +75,44 @@
             </Grid>
         </StackPanel>
 
-        <ItemsControl Grid.Column="0"
+        <ScrollViewer Grid.Column="0"
                       Grid.Row="1"
                       BorderThickness="0"
-                      ItemsSource="{Binding ScheduleData}">
+                      HorizontalScrollMode="Disabled"
+                      VerticalScrollMode="Auto"
+                      VerticalScrollBarVisibility="Hidden">
+            <ItemsControl BorderThickness="0"
+                          ItemsSource="{Binding ScheduleData}">
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ItemsControl Margin="0,5,0,5"
-                                  HorizontalAlignment="Stretch"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                  ItemsSource="{Binding}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapGrid Orientation="Horizontal"
-                                          Background="#F3F3F3" 
-                                          ItemWidth="80" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Foreground="Black"
-                                           FontSize="12"
-                                           Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter=false}"
-                                           Margin="20,5,20,5"
-                                           FontWeight="{Binding Converter={StaticResource timeToFontWeightConverter}}"
-                                           TextAlignment="Left" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl Margin="0,5,0,5"
+                                      HorizontalAlignment="Stretch"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ItemsSource="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapGrid Orientation="Horizontal"
+                                              Background="#F3F3F3"
+                                              ItemWidth="80" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Foreground="Black"
+                                               FontSize="12"
+                                               Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter=false}"
+                                               Margin="20,5,20,5"
+                                               FontWeight="{Binding Converter={StaticResource timeToFontWeightConverter}}"
+                                               TextAlignment="Left" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 
 </UserControl>

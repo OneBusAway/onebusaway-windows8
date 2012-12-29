@@ -25,7 +25,19 @@ namespace OneBusAway.Model
             //<serviceId>1_WEEKDAY</serviceId>
             //<tripId>1_21912615</tripId></scheduleStopTime>
             //</scheduleStopTime>
-            this.ArrivalTime = scheduleStopTimeElement.GetFirstElementValue<long>("arrivalTime").ToDateTime();
+
+            // IMPORTANT: the schedule time that we get from OBA is
+            // relative to the time on the server. So for instance, the arrival
+            // time may be 5:00pm, but that is relative to the server
+            // time which may be 3:00pm. What that means is that the 
+            // bus' arrival time is actually 2 hours from now, so to 
+            // make the time relative to the client we take the difference
+            // in minutes between the arrival time and the server time
+            // and then add it to the current time.
+            var arrivalTime = scheduleStopTimeElement.GetFirstElementValue<long>("arrivalTime").ToDateTime();
+            var arrivalTimeInMinutes = (arrivalTime - serverTime).TotalMinutes;
+
+            this.ArrivalTime = DateTime.Now.AddMinutes(arrivalTimeInMinutes);
             this.TripId = scheduleStopTimeElement.GetFirstElementValue<string>("tripId");
         }
 

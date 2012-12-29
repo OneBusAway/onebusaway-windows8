@@ -84,7 +84,8 @@ namespace OneBusAway.ViewModels
             var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
 
             var query = from scheduleStopTime in scheduleData.ScheduleStopTimes
-                        orderby scheduleStopTime.ArrivalTime descending
+                        orderby scheduleStopTime.ArrivalTime ascending
+                        where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
                         group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData                        
                         select (from byHourStopTime in groupedByHourData
                                 orderby byHourStopTime.ArrivalTime ascending
