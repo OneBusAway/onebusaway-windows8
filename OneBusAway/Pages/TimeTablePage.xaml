@@ -51,7 +51,8 @@
                           DataContext="{Binding MapControlViewModel}"
                           Shapes="{Binding Shapes}"
                           MapView="{Binding MapView, Mode=TwoWay}"
-                          BusStops="{Binding BusStops}" />
+                          BusStops="{Binding BusStops}" 
+                          SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}"/>
 
     </Grid>
     

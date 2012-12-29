@@ -54,6 +54,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusStopControlViewModel.cs" />
     <Compile Include="StopSelectedEventArgs.cs" />
     <Compile Include="TimeTableControlViewModel.cs" />
     <Compile Include="TimeTablePageViewModel.cs" />

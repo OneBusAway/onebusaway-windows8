@@ -64,10 +64,11 @@
                           Grid.Row="1"
                           Grid.Column="1"
                           CenterOnUserLocation="True"
-                          DataContext="{Binding MapControlViewModel}"
+                          DataContext="{Binding MapControlViewModel}"                          
                           MapView="{Binding MapView, Mode=TwoWay}"
                           UserLocation="{Binding UserLocation}"
-                          BusStops="{Binding BusStops, Mode=TwoWay}" />
+                          BusStops="{Binding BusStops, Mode=TwoWay}"
+                          SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
 
     </Grid>
 </Page>

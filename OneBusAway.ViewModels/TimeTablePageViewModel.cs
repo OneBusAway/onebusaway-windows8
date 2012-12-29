@@ -91,6 +91,16 @@ namespace OneBusAway.ViewModels
             RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.TripHeadsign);
             this.mapControlViewModel.BusStops = routeData.Stops.ToList();
             this.mapControlViewModel.Shapes = routeData.Shapes.ToList();
+
+            // Find the selected bus stop:
+            var selectedStop = (from busStop in this.mapControlViewModel.BusStops
+                                where string.Equals(trackingData.StopId, busStop.StopId, StringComparison.OrdinalIgnoreCase)
+                                select busStop).FirstOrDefault();
+
+            if (selectedStop != null)
+            {
+                mapControlViewModel.SelectStop(selectedStop);
+            }
         }
     }
 }

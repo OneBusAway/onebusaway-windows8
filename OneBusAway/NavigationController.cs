@@ -264,6 +264,7 @@ namespace OneBusAway
             {
                 var viewModel = (MainPageViewModel)page.DataContext;
                 await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                viewModel.MapControlViewModel.SelectedBusStop = null;
                 viewModel.HeaderViewModel.SubText = null;
             }
         }

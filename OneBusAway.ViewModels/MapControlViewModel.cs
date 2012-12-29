@@ -19,6 +19,7 @@ namespace OneBusAway.ViewModels
         private List<Stop> busStops;
         private List<Shape> shapes;
         private bool refreshBusStopsOnMapViewChanged;
+        private BusStopControlViewModel selectedBusStop;
 
         public event EventHandler<StopSelectedEventArgs> StopSelected;
 
@@ -43,6 +44,21 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.refreshBusStopsOnMapViewChanged, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the selected bus stop.
+        /// </summary>
+        public BusStopControlViewModel SelectedBusStop
+        {
+            get
+            {
+                return this.selectedBusStop;
+            }
+            set
+            {
+                SetProperty(ref this.selectedBusStop, value);
             }
         }
 
@@ -121,13 +137,31 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Called when a stop is selected.
         /// </summary>
-        public void SelectStop(string name, string selectedStopId, string direction)
+        public void SelectStop(BusStopControlViewModel busStopViewModel)
         {
             var stopSelected = this.StopSelected;
             if (stopSelected != null)
             {
-                stopSelected(this, new StopSelectedEventArgs(name, selectedStopId, direction));
+                this.SelectedBusStop = busStopViewModel;
+                stopSelected(this, new StopSelectedEventArgs(busStopViewModel.StopName, 
+                    busStopViewModel.StopId,
+                    busStopViewModel.Direction));
             }
+        }
+
+        /// <summary>
+        /// Selects a bus stop by a stop object. To do this we need to go through all
+        /// of the map controls and find the one whose view model stop id matches the stop.
+        /// </summary>
+        public void SelectStop(Stop stop)
+        {
+            this.SelectedBusStop = new BusStopControlViewModel(this)
+            {
+                IsSelected = true,
+                StopId = stop.StopId,
+                StopName = stop.Name,
+                Direction = stop.Direction
+            };
         }
     }
 }

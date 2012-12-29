@@ -16,6 +16,7 @@ using Windows.Devices.Geolocation;
 using OneBusAway.Utilities;
 using OneBusAway.Model;
 using Windows.UI;
+using OneBusAway.ViewModels;
 
 namespace OneBusAway.Controls
 {
@@ -185,6 +186,18 @@ namespace OneBusAway.Controls
             }
         }
 
+        public BusStopControlViewModel SelectedBusStop
+        {
+            get
+            {
+                return GetValue(SelectedBusStopDP) as BusStopControlViewModel;
+            }
+            set
+            {
+                SetValue(SelectedBusStopDP, value);
+            }
+        }
+
         #endregion
 
         #region Dependency Properties
@@ -208,6 +221,8 @@ namespace OneBusAway.Controls
         public static readonly DependencyProperty ShapesDP = DependencyProperty.Register("Shapes", typeof(OneBusAway.Model.Shape), typeof(MapControl), new PropertyMetadata(null, ShapesChanged));
 
         public static readonly DependencyProperty ClearBusStopsOnZoomOutDP = DependencyProperty.Register("ClearBusStopsOnZoomOut", typeof(bool), typeof(MapControl), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty SelectedBusStopDP = DependencyProperty.Register("SelectedBusStop", typeof(BusStopControlViewModel), typeof(MapControl), new PropertyMetadata(null, new PropertyChangedCallback(SelectedBusStopChanged)));
 
         #endregion
 
@@ -266,6 +281,40 @@ namespace OneBusAway.Controls
                 }
 
                 mapControl.map.ShapeLayers.Add(routeLayer);
+            }
+        }
+
+        private static void SelectedBusStopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            BusStopControlViewModel lastSelected = e.OldValue as BusStopControlViewModel;
+            if (lastSelected != null)
+            {
+                lastSelected.IsSelected = false;
+            }
+
+            BusStopControlViewModel newSelected = e.NewValue as BusStopControlViewModel;
+            if (newSelected != null)
+            {
+                newSelected.IsSelected = true;
+
+                // Make sure the new view model is bound to an existing control.
+                // If it's not then we need to find the one that is and make it selected:
+                MapControl mapControl = (MapControl)d;
+                var boundViewModel = (from busStop in mapControl.map.Children
+                                      let busStopControl = busStop as BusStop
+                                      where busStopControl != null
+                                      let busStopControlViewModel = busStopControl.DataContext as BusStopControlViewModel
+                                      where busStopControlViewModel != null
+                                        && string.Equals(busStopControlViewModel.StopId, newSelected.StopId, StringComparison.OrdinalIgnoreCase)
+                                        && busStopControlViewModel != newSelected
+                                      select busStopControlViewModel).FirstOrDefault();
+
+                // This means we have a control that matches the selected control, but it is not
+                // the same view model.
+                if(boundViewModel != null)
+                {
+                    mapControl.SelectedBusStop = boundViewModel;
+                }
             }
         }
 
@@ -330,14 +379,33 @@ namespace OneBusAway.Controls
             }
             else
             {
+                MapControlViewModel mapControlViewModel = (MapControlViewModel)mapControl.DataContext;
                 var stops = e.NewValue as List<Stop>;
                 foreach (var stop in stops)
                 {
                     // If we're not already displaying this bus stop then add it to the list:
                     if (!mapControl.busStops.Any(x => string.Equals(x.StopId, stop.StopId, StringComparison.Ordinal)))
                     {
-                        BusStop busStopIcon = new BusStop(stop.Name, stop.StopId, stop.Direction);
-                        busStopIcon.DataContext = mapControl.DataContext;
+                        BusStopControlViewModel busStopControlViewModel = new BusStopControlViewModel(mapControlViewModel)
+                        {
+                            StopName = stop.Name,
+                            StopId = stop.StopId,
+                            Direction = stop.Direction,
+                        };
+
+                        if (mapControlViewModel.SelectedBusStop != null)
+                        {
+                            busStopControlViewModel.IsSelected = string.Equals(mapControlViewModel.SelectedBusStop.StopId, stop.StopId, StringComparison.OrdinalIgnoreCase);
+                            if (busStopControlViewModel.IsSelected)
+                            {
+                                mapControlViewModel.SelectedBusStop = busStopControlViewModel;
+                            }
+                        }
+
+                        BusStop busStopIcon = new BusStop()
+                        {
+                            DataContext = busStopControlViewModel
+                        };
 
                         mapControl.map.Children.Add(busStopIcon);
                         mapControl.busStops.Add(stop);
