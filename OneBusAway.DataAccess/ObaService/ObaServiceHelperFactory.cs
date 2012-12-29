@@ -120,40 +120,47 @@ namespace OneBusAway.DataAccess
             /// Sends a payload to the service asynchronously.
             /// </summary>
             public async Task<XDocument> SendAndRecieveAsync(string payload)
-            {
-                this.uriBuilder.Query = this.CreateQueryString();
-                this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
-                this.request.Method = this.httpMethod.ToString();
-
-                if (this.httpMethod == HttpMethod.POST)
+            {                
+                while (true)
                 {
-                    Stream requestStream = await this.request.GetRequestStreamAsync();
-                    using (var streamWriter = new StreamWriter(requestStream))
+                    try
                     {
-                        await streamWriter.WriteAsync(payload);
+                        this.uriBuilder.Query = this.CreateQueryString();
+                        this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
+                        this.request.Method = this.httpMethod.ToString();
+
+                        var response = await this.request.GetResponseAsync();
+                        var responseStream = response.GetResponseStream();
+
+                        XDocument doc = null;
+
+                        using (var streamReader = new StreamReader(responseStream))
+                        {
+                            string xml = await streamReader.ReadToEndAsync();
+                            doc = XDocument.Parse(xml);
+                        }
+
+                        // Verify that OBA sent us a valid document and that it's status code is 200:                
+                        int returnCode = doc.Root.GetFirstElementValue<int>("code");
+                        if (returnCode != 200)
+                        {
+                            string text = doc.Root.GetFirstElementValue<string>("text");
+                            throw new ObaException(returnCode, text);
+                        }
+
+                        return doc;
                     }
+                    catch (ObaException e)
+                    {
+                        if (e.ErrorCode != 401)
+                        {
+                            throw;
+                        }
+                    }
+
+                    // If we keep getting 401s (permission denied), then we just need to keep retrying.
+                    await Task.Delay(500);
                 }
-
-                var response = await this.request.GetResponseAsync();
-                var responseStream = response.GetResponseStream();
-
-                XDocument doc = null;
-
-                using (var streamReader = new StreamReader(responseStream))
-                {
-                    string xml = await streamReader.ReadToEndAsync();
-                    doc = XDocument.Parse(xml);
-                }
-
-                // Verify that OBA sent us a valid document and that it's status code is 200:                
-                int returnCode = doc.Root.GetFirstElementValue<int>("code");
-                if (returnCode != 200)
-                {
-                    string text = doc.Root.GetFirstElementValue<string>("text");
-                    throw new ObaException(returnCode, text);
-                }
-
-                return doc;
             }
 
             /// <summary>

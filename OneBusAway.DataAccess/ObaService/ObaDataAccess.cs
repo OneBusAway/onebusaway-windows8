@@ -134,18 +134,16 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
-        /// Returns the shape of a route for a particular route.
+        /// Returns the route data for a route.
         /// </summary>
-        public async Task<Shape> GetShapeForRouteAsync(string routeId)
+        public async Task<RouteData> GetRouteDataAsync(string routeId, string tripHeadsign)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.shape);
+            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
             helper.SetId(routeId);
-
+            
             XDocument doc = await helper.SendAndRecieveAsync();
-
-            // Find all of the stops in the payload that have this route id:
-            return (from entryElement in doc.Descendants("entry")
-                    select new Shape(entryElement)).First();
+            XElement dataElement = doc.Descendants("data").First();
+            return new RouteData(dataElement, tripHeadsign);            
         }
 
         /// <summary>
@@ -156,26 +154,7 @@ namespace OneBusAway.DataAccess
             var helper = this.Factory.CreateHelper(ObaMethod.arrivals_and_departures_for_stop);
             helper.SetId(stopId);
 
-            XDocument doc = null;
-            while (true)
-            {
-                try
-                {
-                    doc = await helper.SendAndRecieveAsync();
-                    break;
-                }
-                catch (ObaException e)
-                {
-                    if (e.ErrorCode != 401)
-                    {
-                        throw;
-                    }
-                }
-
-                // the server is busy.  Wait 1/2 second and try again.
-                await Task.Delay(500);
-            }
-
+            XDocument doc = await helper.SendAndRecieveAsync();
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
             string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");

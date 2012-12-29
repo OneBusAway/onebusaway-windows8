@@ -17,6 +17,8 @@ namespace OneBusAway.ViewModels
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
         private List<Stop> busStops;
+        private List<Shape> shapes;
+        private bool refreshBusStopsOnMapViewChanged;
 
         public event EventHandler<StopSelectedEventArgs> StopSelected;
 
@@ -25,6 +27,23 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public MapControlViewModel()
         {
+            this.mapView = MapView.Current;
+            this.RefreshBusStopsOnMapViewChanged = true;
+        }
+
+        /// <summary>
+        /// When true, the control will refresh bus stops when the map moves. When false, it will use a static list.
+        /// </summary>
+        public bool RefreshBusStopsOnMapViewChanged
+        {
+            get
+            {
+                return this.refreshBusStopsOnMapViewChanged;
+            }
+            set
+            {
+                SetProperty(ref this.refreshBusStopsOnMapViewChanged, value);
+            }
         }
 
         /// <summary>
@@ -40,8 +59,9 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref mapView, value);
+                MapView.Current = value;
 
-                if (value.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
+                if (this.RefreshBusStopsOnMapViewChanged && value.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
                 {
                     RefreshStopsForLocationAsync();
                 }
@@ -57,6 +77,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref busStops, value);
+            }
+        }
+
+        public List<Shape> Shapes
+        {
+            get
+            {
+                return this.shapes;
+            }
+            set
+            {
+                SetProperty(ref this.shapes, value);
             }
         }
 
@@ -85,7 +117,10 @@ namespace OneBusAway.ViewModels
                 // TODO
             }
         }
-
+        
+        /// <summary>
+        /// Called when a stop is selected.
+        /// </summary>
         public void SelectStop(string name, string selectedStopId, string direction)
         {
             var stopSelected = this.StopSelected;

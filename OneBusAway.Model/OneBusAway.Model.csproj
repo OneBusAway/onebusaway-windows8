@@ -48,6 +48,7 @@
     <Compile Include="BingService\ResourceSet.cs" />
     <Compile Include="BingService\Response.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="ObaService\RouteData.cs" />
     <Compile Include="ObaService\ScheduleStopTime.cs" />
     <Compile Include="ObaService\StopRouteSchedule.cs" />
     <Compile Include="Point.cs" />

@@ -52,7 +52,7 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public string RouteDescription
+        public string TripHeadsign
         {
             get
             {

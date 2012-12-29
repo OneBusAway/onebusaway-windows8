@@ -29,9 +29,9 @@ namespace OneBusAway.Model
         /// http://code.google.com/apis/maps/documentation/polylinealgorithm.html
         /// 
         /// </summary>
-        public Shape(XElement shapeElement)
+        public Shape(XElement encodedPolylineElement)
         {
-            string encoded = shapeElement.GetFirstElementValue<string>("points");
+            string encoded = encodedPolylineElement.GetFirstElementValue<string>("points");
             int index = 0;
             int latitude = 0;
             int longitude = 0;

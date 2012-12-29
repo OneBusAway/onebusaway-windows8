@@ -24,7 +24,6 @@ namespace OneBusAway.ViewModels
         {
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
             this.MapControlViewModel = new MapControlViewModel();
-            Load();
         }
 
         #region Public Properties
@@ -63,22 +62,6 @@ namespace OneBusAway.ViewModels
         }    
         
         #endregion
-
-        #region Public Methods
-
-        public async void Load()
-        {
-            try
-            {
-                await this.RoutesAndStopsViewModel.PopulateFavoritesAsync();
-            }
-            catch 
-            {
-            }
-        }
-        
-        #endregion
-
         #region Event Handlers
 
         /// <summary>

@@ -15,6 +15,7 @@ using Bing.Maps;
 using Windows.Devices.Geolocation;
 using OneBusAway.Utilities;
 using OneBusAway.Model;
+using Windows.UI;
 
 namespace OneBusAway.Controls
 {
@@ -31,7 +32,7 @@ namespace OneBusAway.Controls
 
             this.userLocationIcon = new UserLocationIcon();
 
-            map.ViewChangeEnded += map_ViewChangeEnded;            
+            map.ViewChangeEnded += OnMapViewChangeEnded;            
         }
 
         public string BingMapCredentials
@@ -148,6 +149,18 @@ namespace OneBusAway.Controls
             }
         }
 
+        public List<Shape> Shapes
+        {
+            get
+            {
+                return GetValue(ShapesDP) as List<Shape>;
+            }
+            set
+            {
+                SetValue(ShapesDP, value);
+            }
+        }
+
         public MapView MapView
         {
             get
@@ -157,6 +170,18 @@ namespace OneBusAway.Controls
             set
             {
                 SetValue(MapViewDP, value);
+            }
+        }
+
+        public bool ClearBusStopsOnZoomOut
+        {
+            get
+            {
+                return (bool)GetValue(ClearBusStopsOnZoomOutDP);
+            }
+            set
+            {
+                SetValue(ClearBusStopsOnZoomOutDP, value);
             }
         }
 
@@ -180,6 +205,10 @@ namespace OneBusAway.Controls
 
         public static readonly DependencyProperty MapViewDP = DependencyProperty.Register("MapView", typeof(MapView), typeof(MapControl), new PropertyMetadata(null, MapViewChanged));
 
+        public static readonly DependencyProperty ShapesDP = DependencyProperty.Register("Shapes", typeof(OneBusAway.Model.Shape), typeof(MapControl), new PropertyMetadata(null, ShapesChanged));
+
+        public static readonly DependencyProperty ClearBusStopsOnZoomOutDP = DependencyProperty.Register("ClearBusStopsOnZoomOut", typeof(bool), typeof(MapControl), new PropertyMetadata(true));
+
         #endregion
 
         #region Dependency Property Changed Callbacks
@@ -189,7 +218,7 @@ namespace OneBusAway.Controls
             var mapControl = d as MapControl;
             var newValue = e.NewValue as MapView;
 
-            if (newValue != null)
+            if (e.OldValue == null && newValue != null)
             {
                 if (newValue.MapCenter.Latitude != mapControl.map.Center.Latitude ||
                     newValue.MapCenter.Longitude != mapControl.map.Center.Longitude)
@@ -201,6 +230,42 @@ namespace OneBusAway.Controls
                 {
                     mapControl.map.ZoomLevel = newValue.ZoomLevel;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Change the polylines on the map.
+        /// </summary>
+        private static void ShapesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MapControl mapControl = (MapControl)d;
+
+            if (e.OldValue != null)
+            {
+                // remove all old polylines from the map:
+                mapControl.map.ShapeLayers.Clear();
+            }
+
+            if (e.NewValue != null)
+            {
+                MapShapeLayer routeLayer = new MapShapeLayer();                
+                
+                List<Shape> shapes = (List<Shape>)e.NewValue;
+                foreach (var shape in shapes)
+                {
+                    MapPolyline polyline = new MapPolyline();
+                    polyline.Color = Color.FromArgb(255, 0x78, 0xAA, 0x36);
+                    polyline.Width = 6;
+
+                    foreach (var point in shape.Points)
+                    {
+                        polyline.Locations.Add(new Location(point.Latitude, point.Longitude));
+                    }
+
+                    routeLayer.Shapes.Add(polyline);
+                }
+
+                mapControl.map.ShapeLayers.Add(routeLayer);
             }
         }
 
@@ -268,13 +333,9 @@ namespace OneBusAway.Controls
                 var stops = e.NewValue as List<Stop>;
                 foreach (var stop in stops)
                 {
-                    if (mapControl.busStops.Any(x => string.Equals(x.StopId, stop.StopId, StringComparison.Ordinal)))
+                    // If we're not already displaying this bus stop then add it to the list:
+                    if (!mapControl.busStops.Any(x => string.Equals(x.StopId, stop.StopId, StringComparison.Ordinal)))
                     {
-                        // don't do anything since the bus stop already exists
-                    }
-                    else
-                    {
-
                         BusStop busStopIcon = new BusStop(stop.Name, stop.StopId, stop.Direction);
                         busStopIcon.DataContext = mapControl.DataContext;
 
@@ -289,28 +350,20 @@ namespace OneBusAway.Controls
 
         #endregion
 
-        void map_ViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
-        {            
-            try
+        /// <summary>
+        /// Called when the map view change ends.  Store the map view and if we zoom out far enough, 
+        /// clear the bus stops.
+        /// </summary>
+        void OnMapViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
+        {
+            this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude), 
+                map.ZoomLevel, 
+                map.Bounds.Height, 
+                map.Bounds.Width);
+
+            if (map.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom && this.ClearBusStopsOnZoomOut)
             {
-                map.ViewChangeEnded -= map_ViewChangeEnded;
-                if (map.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
-                {
-                    var mapCurrentView  = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude), map.ZoomLevel, map.Bounds.Height, map.Bounds.Width);
-                    SetValue(MapViewDP, mapCurrentView);
-                }
-                else
-                {
-                    SetValue(BusStopsDP, null);
-                }
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
-            finally
-            {
-                map.ViewChangeEnded += map_ViewChangeEnded;
+                this.BusStops = null;
             }
         }         
     }

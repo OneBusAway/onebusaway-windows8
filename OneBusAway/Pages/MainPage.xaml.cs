@@ -43,8 +43,8 @@ namespace OneBusAway.Pages
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {            
-            if (NavigationController.Instance.PersistedStates.Count > 0)
+        {
+            if (NavigationController.Instance.PersistedStates.Count > 0 && e.NavigationMode == NavigationMode.Back)
             {
                 Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
                 mainPageViewModel.MapControlViewModel = (MapControlViewModel)previousState["mapControlViewModel"];
@@ -60,6 +60,9 @@ namespace OneBusAway.Pages
                 mainPageViewModel.MapControlViewModel.UserLocation = userLocation;
 
                 mainPageViewModel.MapControlViewModel.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
+
+                // Load favorites:
+                await this.mainPageViewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
             }
 
             base.OnNavigatedTo(e);
@@ -71,12 +74,15 @@ namespace OneBusAway.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             // Persist the state for later:
-            NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
+            if (e.NavigationMode != NavigationMode.Back)
             {
-                {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel},
-                {"routesAndStopsControlViewModel", this.mainPageViewModel.RoutesAndStopsViewModel},
-                {"headerViewModel", this.mainPageViewModel.HeaderViewModel}
-            });
+                NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
+                {
+                    {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel},
+                    {"routesAndStopsControlViewModel", this.mainPageViewModel.RoutesAndStopsViewModel},
+                    {"headerViewModel", this.mainPageViewModel.HeaderViewModel}
+                });
+            }
 
             base.OnNavigatedFrom(e);
         }

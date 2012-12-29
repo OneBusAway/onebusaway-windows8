@@ -16,6 +16,7 @@ namespace OneBusAway.Model
         private string tripId;
         private string stopName;
         private string stopId;
+        private string tripHeadsign;
         private int scheduledArrivalInMinutes;
         private int predictedArrivalInMinutes;
         private DateTime predictedArrivalTime;
@@ -29,6 +30,7 @@ namespace OneBusAway.Model
         {
             this.RouteId = arrivalAndDepartureElement.GetFirstElementValue<string>("routeId");
             this.TripId = arrivalAndDepartureElement.GetFirstElementValue<string>("tripId");
+            this.TripHeadsign = arrivalAndDepartureElement.GetFirstElementValue<string>("tripHeadsign");
             this.StopName = stopName;
             this.StopId = stopId;
 
@@ -128,6 +130,18 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.tripId, value);
+            }
+        }
+
+        public string TripHeadsign
+        {
+            get
+            {
+                return this.tripHeadsign;
+            }
+            set
+            {
+                SetProperty(ref this.tripHeadsign, value);
             }
         }
 

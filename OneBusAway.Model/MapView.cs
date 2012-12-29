@@ -22,6 +22,16 @@ namespace OneBusAway.Model
             BoundsWidth = boundsWidth;
         }
 
+        /// <summary>
+        /// This is a place where we can cache the current map view so that moving from page to page can re-use 
+        /// the same map view.
+        /// </summary>
+        public static MapView Current
+        {
+            get;
+            set;
+        }
+
         public Point MapCenter { get; set; }
 
         public double ZoomLevel { get; set; }

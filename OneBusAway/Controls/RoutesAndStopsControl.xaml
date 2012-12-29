@@ -166,7 +166,7 @@
                                     Command="{Binding GoToTimeTablePageCommand, Source={StaticResource navigationProxy}}"
                                     CommandParameter="{Binding}"
                                     Style="{StaticResource CommandableButton}"
-                                    AutomationProperties.Name="{Binding Route.Description}" />
+                                    AutomationProperties.Name="{Binding TripHeadsign}" />
                             <TextBlock Grid.Row="0"
                                        Grid.Column="4"
                                        Text="&#xE113;"
