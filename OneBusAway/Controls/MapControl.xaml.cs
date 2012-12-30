@@ -285,7 +285,7 @@ namespace OneBusAway.Controls
         }
 
         private static void SelectedBusStopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        {            
             BusStopControlViewModel lastSelected = e.OldValue as BusStopControlViewModel;
             if (lastSelected != null)
             {
@@ -298,7 +298,7 @@ namespace OneBusAway.Controls
                 newSelected.IsSelected = true;
 
                 // Make sure the new view model is bound to an existing control.
-                // If it's not then we need to find the one that is and make it selected:
+                // If it's not then we need to find the one that is and make it selected:                
                 MapControl mapControl = (MapControl)d;
                 var boundViewModel = (from busStop in mapControl.map.Children
                                       let busStopControl = busStop as BusStop

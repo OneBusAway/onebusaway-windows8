@@ -5,141 +5,152 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:conv="using:OneBusAway.Converters"
-             mc:Ignorable="d"             
+             mc:Ignorable="d"
              d:DesignHeight="100"
              d:DesignWidth="100">
-    
+
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <conv:StringEqualsToVisibilityConverter x:Key="stringEqualsToVisibilityConverter" />
         <conv:MapViewToVisibilityConverter x:Key="mapViewToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid>     
-        <Canvas>
-            <Canvas Visibility="{Binding MapControlViewModel.MapView, Converter={StaticResource mapViewToVisibilityConverter}}">
-                <Image Name="bus"
-                       Height="28"
-                       Width="28"
-                       Source="ms-appx:///Assets/bus.png"
-                       Margin="-14,-14,0,0"
-                       PointerPressed="OnPointerPressed" />
-                <Polygon Name="SE"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Crimson"
-                         Fill="Crimson"
-                         Margin="19,12,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=SE}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="45" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="S"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="5,17,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=S}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="90" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="E"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=E}"
-                         Margin="16,-5,0,0">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="0" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="W"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="-16,5,0,0"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=W}"
-                         RenderTransformOrigin="0.5,0.5">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="180" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="NW"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="-19,-12,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=NW}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="225" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="NE"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="12,-19,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=NE}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="-45" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="N"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="-5,-17,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=N}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="-90" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-                <Polygon Name="SW"
-                         Points="0,0 8,5 0,10"
-                         Stroke="Black"
-                         Fill="Crimson"
-                         Margin="-12,19,0,0"
-                         RenderTransformOrigin="0.5,0.5"
-                         UseLayoutRounding="False"
-                         Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=SW}"
-                         d:LayoutRounding="Auto">
-                    <Polygon.RenderTransform>
-                        <CompositeTransform Rotation="135" />
-                    </Polygon.RenderTransform>
-                </Polygon>
-            </Canvas>
-            <Ellipse Fill="Red"
-                     Margin="-35,-35,0, 0"
-                     Opacity=".5"
-                     IsHitTestVisible="False"
-                     Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}"
-                     Width="70"
-                     Height="70" />
-            <Ellipse Fill="Transparent"
-                     Margin="-35,-35,0,0"
-                     Opacity="1"
-                     Stroke="Red"
-                     StrokeThickness="2"
-                     IsHitTestVisible="False"
-                     Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}"
-                     Width="70"
-                     Height="70" />
+    <Grid>
+        <Canvas Visibility="{Binding MapControlViewModel.MapView, Converter={StaticResource mapViewToVisibilityConverter}}">
+            <Image Name="bus"
+                   Height="28"
+                   Width="28"
+                   Source="ms-appx:///Assets/bus.png"
+                   Margin="-14,-14,0,0"
+                   PointerPressed="OnPointerPressed" />
+            <Polygon Name="SE"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Crimson"
+                     Fill="Crimson"
+                     Margin="19,12,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=SE}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="45" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="S"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="5,17,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=S}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="90" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="E"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=E}"
+                     Margin="16,-5,0,0">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="0" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="W"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="-16,5,0,0"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=W}"
+                     RenderTransformOrigin="0.5,0.5">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="180" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="NW"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="-19,-12,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=NW}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="225" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="NE"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="12,-19,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=NE}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="-45" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="N"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="-5,-17,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=N}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="-90" />
+                </Polygon.RenderTransform>
+            </Polygon>
+            <Polygon Name="SW"
+                     Points="0,0 8,5 0,10"
+                     Stroke="Black"
+                     Fill="Crimson"
+                     Margin="-12,19,0,0"
+                     RenderTransformOrigin="0.5,0.5"
+                     UseLayoutRounding="False"
+                     Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=SW}"
+                     d:LayoutRounding="Auto">
+                <Polygon.RenderTransform>
+                    <CompositeTransform Rotation="135" />
+                </Polygon.RenderTransform>
+            </Polygon>
         </Canvas>
+        <Grid Margin="0,-55,0,0"
+              Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Grid.Row="0"
+                  Background="Red"
+                  Height="30">
+                <TextBlock Margin="0"
+                           Padding="4"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           Text="{Binding StopName}" />
+            </Grid>
+            <Canvas Grid.Column="0"
+                    Grid.Row="1">
+                <Polygon Fill="Red"
+                         Points="0,0 15,0, 0,25" />
+            </Canvas>
+
+        </Grid>
     </Grid>
 </UserControl>
