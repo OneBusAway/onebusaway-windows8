@@ -138,6 +138,7 @@
     <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\BusNumberConverter.cs" />
+    <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
     <Compile Include="Converters\StringEqualsToVisibilityConverter.cs" />
     <Compile Include="Converters\TimeToFontWeightConverter.cs" />
     <Compile Include="Converters\TimeToTextConverter.cs" />

@@ -155,13 +155,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public void SelectStop(Stop stop)
         {
-            this.SelectedBusStop = new BusStopControlViewModel(this)
-            {
-                IsSelected = true,
-                StopId = stop.StopId,
-                StopName = stop.Name,
-                Direction = stop.Direction
-            };
+            this.SelectedBusStop = new BusStopControlViewModel(this, stop);
         }
     }
 }

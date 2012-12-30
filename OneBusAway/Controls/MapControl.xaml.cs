@@ -25,7 +25,7 @@ namespace OneBusAway.Controls
         private UserLocationIcon userLocationIcon;
         private bool centerOnUserLocation;
         private Location userLocation;
-        private List<Stop> busStops = new List<Stop>();
+        private HashSet<string> displayedBusStopLookup = new HashSet<string>();
 
         public MapControl()
         {
@@ -194,7 +194,7 @@ namespace OneBusAway.Controls
             }
             set
             {
-                SetValue(SelectedBusStopDP, value);
+                SetValue(SelectedBusStopDP, value);                
             }
         }
 
@@ -311,7 +311,7 @@ namespace OneBusAway.Controls
 
                 // This means we have a control that matches the selected control, but it is not
                 // the same view model.
-                if(boundViewModel != null)
+                if (boundViewModel != null)
                 {
                     mapControl.SelectedBusStop = boundViewModel;
                 }
@@ -371,7 +371,7 @@ namespace OneBusAway.Controls
 
             if (e.NewValue == null)
             {
-                mapControl.busStops = new List<Stop>();
+                mapControl.displayedBusStopLookup.Clear();
                 mapControl.map.Children.Clear();
 
                 mapControl.map.Children.Add(mapControl.userLocationIcon);
@@ -384,14 +384,9 @@ namespace OneBusAway.Controls
                 foreach (var stop in stops)
                 {
                     // If we're not already displaying this bus stop then add it to the list:
-                    if (!mapControl.busStops.Any(x => string.Equals(x.StopId, stop.StopId, StringComparison.Ordinal)))
+                    if (!mapControl.displayedBusStopLookup.Contains(stop.StopId))
                     {
-                        BusStopControlViewModel busStopControlViewModel = new BusStopControlViewModel(mapControlViewModel)
-                        {
-                            StopName = stop.Name,
-                            StopId = stop.StopId,
-                            Direction = stop.Direction,
-                        };
+                        BusStopControlViewModel busStopControlViewModel = new BusStopControlViewModel(mapControlViewModel, stop);
 
                         if (mapControlViewModel.SelectedBusStop != null)
                         {
@@ -408,7 +403,7 @@ namespace OneBusAway.Controls
                         };
 
                         mapControl.map.Children.Add(busStopIcon);
-                        mapControl.busStops.Add(stop);
+                        mapControl.displayedBusStopLookup.Add(stop.StopId);
 
                         MapLayer.SetPosition(busStopIcon, new Location(stop.Latitude, stop.Longitude));
                     }
@@ -428,11 +423,6 @@ namespace OneBusAway.Controls
                 map.ZoomLevel, 
                 map.Bounds.Height, 
                 map.Bounds.Width);
-
-            if (map.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom && this.ClearBusStopsOnZoomOut)
-            {
-                this.BusStops = null;
-            }
         }         
     }
 }

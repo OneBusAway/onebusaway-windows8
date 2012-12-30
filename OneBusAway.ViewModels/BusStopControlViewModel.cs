@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneBusAway.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,21 @@ namespace OneBusAway.ViewModels
         private string stopId;
         private string direction;
         private string stopName;
+        private double latitude;
+        private double longitude;
         private MapControlViewModel mapControlViewModel;
 
         /// <summary>
         /// Creates the view model.
         /// </summary>
-        public BusStopControlViewModel(MapControlViewModel mapControlViewModel)
+        public BusStopControlViewModel(MapControlViewModel mapControlViewModel, Stop stop)
         {
-            this.MapControlViewModel = mapControlViewModel;            
+            this.MapControlViewModel = mapControlViewModel;
+            this.StopId = stop.StopId;
+            this.StopName = stop.Name;
+            this.Latitude = stop.Latitude;
+            this.Longitude = stop.Longitude;
+            this.Direction = stop.Direction;
         }
 
         /// <summary>
@@ -37,6 +45,30 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.mapControlViewModel, value);
+            }
+        }
+
+        public double Latitude
+        {
+            get
+            {
+                return this.latitude;
+            }
+            set
+            {
+                SetProperty(ref this.latitude, value);
+            }
+        }
+
+        public double Longitude
+        {
+            get
+            {
+                return this.longitude;
+            }
+            set
+            {
+                SetProperty(ref this.longitude, value);
             }
         }
 
@@ -56,7 +88,7 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return stopId;
+                return this.stopId;
             }
             set
             {
@@ -68,7 +100,7 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return direction;
+                return this.direction;
             }
             set
             {
@@ -80,7 +112,7 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return stopName;
+                return this.stopName;
             }
             set
             {
