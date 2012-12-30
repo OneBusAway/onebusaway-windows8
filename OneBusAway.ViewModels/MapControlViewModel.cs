@@ -157,5 +157,21 @@ namespace OneBusAway.ViewModels
         {
             this.SelectedBusStop = new BusStopControlViewModel(this, stop);
         }
+
+        /// <summary>
+        /// Selects a stop based on the stop Id.
+        /// </summary>
+        public void SelectStop(string stopId)
+        {
+            // Find the selected bus stop:
+            var selectedStop = (from busStop in this.busStops
+                                where string.Equals(stopId, busStop.StopId, StringComparison.OrdinalIgnoreCase)
+                                select busStop).FirstOrDefault();
+
+            if (selectedStop != null)
+            {
+                SelectStop(selectedStop);
+            }
+        }
     }
 }

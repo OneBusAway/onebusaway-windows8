@@ -30,6 +30,11 @@ namespace OneBusAway.ViewModels
         private ObaDataAccess obaDataAccess;
 
         /// <summary>
+        /// The tracking data that we are based off of.
+        /// </summary>
+        private TrackingData trackingData;
+
+        /// <summary>
         /// Creates the time table view model.
         /// </summary>
         public TimeTablePageViewModel()
@@ -40,6 +45,7 @@ namespace OneBusAway.ViewModels
 
             this.MapControlViewModel = new MapControlViewModel();
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
+            this.MapControlViewModel.StopSelected += OnStopSelectedAsync;
         }
 
         /// <summary>
@@ -77,10 +83,11 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task SetRouteAndStopData(TrackingData trackingData)
         {
+            this.trackingData = trackingData;
             this.TimeTableControlViewModel.TripHeadsign = trackingData.TripHeadsign;
             this.TimeTableControlViewModel.RouteNumber = trackingData.Route.ShortName;
             this.TimeTableControlViewModel.StopDescription = trackingData.StopName;
-            await this.TimeTableControlViewModel.FindScheduleData(trackingData.StopId, trackingData.RouteId);
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(trackingData.StopId, trackingData.RouteId);
         }
 
         /// <summary>
@@ -91,16 +98,17 @@ namespace OneBusAway.ViewModels
             RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.TripHeadsign);
             this.mapControlViewModel.BusStops = routeData.Stops.ToList();
             this.mapControlViewModel.Shapes = routeData.Shapes.ToList();
+            this.mapControlViewModel.SelectStop(trackingData.StopId);            
+        }
 
-            // Find the selected bus stop:
-            var selectedStop = (from busStop in this.mapControlViewModel.BusStops
-                                where string.Equals(trackingData.StopId, busStop.StopId, StringComparison.OrdinalIgnoreCase)
-                                select busStop).FirstOrDefault();
-
-            if (selectedStop != null)
-            {
-                mapControlViewModel.SelectStop(selectedStop);
-            }
+        /// <summary>
+        /// Called when user selects another bus stop on the map control.
+        /// </summary>
+        private async void OnStopSelectedAsync(object sender, StopSelectedEventArgs e)
+        {
+            this.TimeTableControlViewModel.StopDescription = e.StopName;
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.trackingData.RouteId);
+            this.mapControlViewModel.SelectStop(e.SelectedStopId);
         }
     }
 }

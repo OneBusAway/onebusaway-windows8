@@ -27,7 +27,7 @@ namespace OneBusAway.ViewModels
         {
             this.MapControlViewModel = mapControlViewModel;
             this.StopId = stop.StopId;
-            this.StopName = stop.Name;
+            this.StopName = stop.Name;            
             this.Latitude = stop.Latitude;
             this.Longitude = stop.Longitude;
             this.Direction = stop.Direction;
@@ -107,7 +107,7 @@ namespace OneBusAway.ViewModels
                 SetProperty(ref this.direction, value);
             }
         }
-
+        
         public string StopName
         {
             get

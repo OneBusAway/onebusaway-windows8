@@ -79,20 +79,20 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Queries Oba for schedule data based on the current stop id.
         /// </summary>
-        public async Task FindScheduleData(string stopId, string routeId)
+        public async Task FindScheduleDataAsync(string stopId, string routeId)
         {
             var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
 
             var query = from scheduleStopTime in scheduleData.ScheduleStopTimes
                         orderby scheduleStopTime.ArrivalTime ascending
                         where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
-                        group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData                        
+                        group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
                         select (from byHourStopTime in groupedByHourData
                                 orderby byHourStopTime.ArrivalTime ascending
                                 select byHourStopTime.ArrivalTime).ToArray();
 
             this.ScheduleData = (from arrivalsByHour in query
-                                 select arrivalsByHour).ToArray();
+                                    select arrivalsByHour).ToArray();
         }
     }
 }
