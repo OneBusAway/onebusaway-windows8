@@ -8,7 +8,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:viewmodel="using:OneBusAway.ViewModels"
       mc:Ignorable="d">
-    
+
     <UserControl.DataContext>
         <viewmodel:SearchResultsViewModel />
     </UserControl.DataContext>
@@ -18,33 +18,16 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
-
-            <DataTemplate x:Key="SearchResultTemplate">
-                <Grid Width="294" Margin="6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,0,0,10" Width="40" Height="40">
-                        <Image Source="ms-appx:///Assets/bus.png" Stretch="UniformToFill"/>
-                    </Border>
-                    <StackPanel Grid.Column="1" Margin="10,-10,0,0">
-                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
-                        <TextBlock Text="{Binding SubTitle}" Style="{StaticResource BodyTextStyle}" FontStyle="Italic" TextWrapping="NoWrap"/>
-                        <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
-                    </StackPanel>
-                </Grid>
-            </DataTemplate>
         </ResourceDictionary>
 
-        
     </UserControl.Resources>
 
-    <Grid x:Name="pageGrid" Background="White">
+    <Grid Background="White">
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="45*" />
+            <ColumnDefinition Width="55*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -52,57 +35,26 @@
         </Grid.RowDefinitions>
 
         <!-- Header control -->
-        <Grid Grid.Row="0">
-            <ctrls:HeaderControl Grid.Column="0"
+        <ctrls:HeaderControl Grid.Column="0"
                              Grid.Row="0"
+                             Grid.ColumnSpan="2"
                              DataContext="{Binding HeaderViewModel}" />
-        </Grid>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <ctrls:SearchResultsControl Grid.Column="0"
+                                    Grid.Row="1"
+                                    DataContext="{Binding SearchResultsControlViewModel}"
+                                    Margin="80,30,20,20" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock x:Name="resultText" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Search Query:" Style="{StaticResource PageSubheaderTextStyle}"/>
-                <TextBlock x:Name="queryText" Grid.Row="1" Grid.Column="2" Text="{Binding QueryText}" Foreground="Black" Style="{StaticResource PageSubheaderTextStyle}"/>
-            </Grid>
-
-            <Grid x:Name="resultsPanel" Grid.Row="2">
-                <GridView Grid.Row="0"
-                    x:Name="resultsGridView"
-                    Margin="50,20,0,0"
-                    SelectionMode="None"
-                    IsSwipeEnabled="false"
-                    IsItemClickEnabled="True"
-                    ItemsSource="{Binding SearchResults}"
-                    ItemTemplate="{StaticResource SearchResultTemplate}">
-
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="Control">
-                                <Setter Property="Height" Value="70"/>
-                                <Setter Property="Margin" Value="0,0,38,8"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                    </GridView>
-            </Grid>
-        </Grid>
-
-        <TextBlock
-            x:Name="noResultsTextBlock"
-            Grid.Row="1"
-            Margin="50,100,0,0"
-            Visibility="{Binding ResultsEmpty, Converter={StaticResource boolToVisibilityConverter}}"
-            Style="{StaticResource SubheaderTextStyle}"
-            Text="No results match your search." />       
+        <ctrls:MapControl Grid.Row="1"
+                          Grid.Column="1"
+                          CenterOnUserLocation="True"
+                          ClearBusStopsOnZoomOut="False"
+                          DataContext="{Binding MapControlViewModel}"
+                          Shapes="{Binding Shapes}"
+                          MapView="{Binding MapView, Mode=TwoWay}"
+                          BusStops="{Binding BusStops}"
+                          SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
         
     </Grid>
-
+    
 </Page>

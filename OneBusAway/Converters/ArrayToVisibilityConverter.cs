@@ -13,13 +13,24 @@ namespace OneBusAway.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var trackingData = value as string[];
-            if(trackingData != null && trackingData.Length > 0)
+            var array = value as Array;
+
+            bool invert = false;
+            if (parameter != null)
             {
-                return Visibility.Visible;
+                bool.TryParse(parameter as string, out invert);
             }
 
-            return Visibility.Collapsed;
+            if (array != null && array.Length > 0)
+            {
+                return (invert)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+
+            return (invert)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

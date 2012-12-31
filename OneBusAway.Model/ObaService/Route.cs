@@ -50,7 +50,11 @@ namespace OneBusAway.Model
             this.ScheduleUri = routeElement.GetFirstElementValue<string>("url");
 
             // Throw if there is no agency.  There should always be an agency:
-            this.Agency = new Agency(routeElement.Descendants("agency").First());
+            var agencyElement = routeElement.Descendants("agency").FirstOrDefault();
+            if (agencyElement != null)
+            {
+                this.Agency = new Agency(agencyElement);
+            }
         }
         
         [XmlElement(ElementName="id")]

@@ -39,8 +39,6 @@ namespace OneBusAway.Pages
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref mainPageViewModel))
@@ -49,15 +47,7 @@ namespace OneBusAway.Pages
             } 
             else
             {
-                Geolocator geolocator = new Geolocator();
-                var position = await geolocator.GetGeopositionAsync();
-
-                OneBusAway.Model.Point userLocation = new OneBusAway.Model.Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
-                mainPageViewModel.MapControlViewModel.UserLocation = userLocation;
-
-                mainPageViewModel.MapControlViewModel.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
-
-                // Load favorites:
+                await this.mainPageViewModel.MapControlViewModel.FindUserLocationAsync();
                 await this.mainPageViewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
             }
 

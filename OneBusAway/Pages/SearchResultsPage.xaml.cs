@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -22,13 +23,12 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class SearchResultsPage : Page
     {
-        SearchResultsViewModel searchResultsViewModel;
+        private SearchResultsViewModel searchResultsViewModel;
 
         public SearchResultsPage()
         {
             this.InitializeComponent();
-
-            searchResultsViewModel = this.DataContext as SearchResultsViewModel;
+            searchResultsViewModel = (SearchResultsViewModel)this.DataContext;
         }
 
         /// <summary>
@@ -36,11 +36,33 @@ namespace OneBusAway.Pages
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var queryText = e.Parameter as string;
+            if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref this.searchResultsViewModel))
+            {
+                this.DataContext = this.searchResultsViewModel;
+            }
+            else
+            {
+                await this.searchResultsViewModel.MapControlViewModel.FindUserLocationAsync();
+            }
 
-            searchResultsViewModel.SearchAsync(queryText);
+            var queryText = e.Parameter as string;
+            if (!String.IsNullOrEmpty(queryText))
+            {
+                await searchResultsViewModel.SearchAsync(queryText);
+            }
+
+            base.OnNavigatedTo(e);
+        }
+
+        /// <summary>
+        /// Invoked when the user navigates from this page.
+        /// </summary>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            NavigationController.TryPersistViewModel(e.NavigationMode, this.searchResultsViewModel);
+            base.OnNavigatedFrom(e);
         }
     }
 }

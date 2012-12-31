@@ -81,6 +81,34 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Returns all of the agencies that OBA serves.
+        /// </summary>
+        public async Task<Agency[]> GetAllAgencies()
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.agencies_with_coverage);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+            return (from agencyWithCoverageElement in doc.Descendants("agency")
+                    select new Agency(agencyWithCoverageElement)).ToArray();
+        }
+
+        /// <summary>
+        /// Returns all of the route Ids for a particular agency.
+        /// </summary>
+        public async Task<Route[]> GetAllRouteIdsForAgency(Agency agency)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.routes_for_agency);
+            helper.SetId(agency.Id);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+            return (from routeElement in doc.Descendants("route")
+                    select new Route(routeElement)
+                    {
+                        Agency = agency
+                    }).ToArray();
+        }
+
+        /// <summary>
         /// Returns the routes for a particular stop.
         /// </summary>
         public async Task<Route[]> GetRoutesForStopAsync(string stopId)

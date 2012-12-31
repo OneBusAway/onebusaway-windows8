@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 
 namespace OneBusAway.ViewModels
 {
@@ -118,6 +119,20 @@ namespace OneBusAway.ViewModels
             {
                 SetProperty(ref this.userLocation, value);
             }
+        }
+
+        /// <summary>
+        /// Finds the users location asynchronously using the Geolocator.
+        /// </summary>
+        public async Task FindUserLocationAsync()
+        {
+            Geolocator geolocator = new Geolocator();
+            var position = await geolocator.GetGeopositionAsync();
+
+            var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
+            
+            this.UserLocation = userLocation;
+            this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
         }
 
         public async void RefreshStopsForLocationAsync()

@@ -10,96 +10,54 @@ using System.Threading.Tasks;
 
 namespace OneBusAway.ViewModels
 {
+    /// <summary>
+    /// View model for the search results page.
+    /// </summary>
     public class SearchResultsViewModel : PageViewModelBase
     {
-        private ObservableCollection<SearchResult> searchResults;
-        private string queryText;
-        private bool resultsEmpty = false;
+        private SearchResultsControlViewModel searchResultsControlViewModel;
+        private MapControlViewModel mapControlViewModel;
 
+        /// <summary>
+        /// Creates the search results page view model.
+        /// </summary>
         public SearchResultsViewModel()
         {
+            this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
+            this.MapControlViewModel = new MapControlViewModel();
             this.HeaderViewModel.SubText = "Search Results";
         }
 
-        public string QueryText
+        public SearchResultsControlViewModel SearchResultsControlViewModel
         {
             get
             {
-                return queryText;
+                return this.searchResultsControlViewModel;
             }
             set
             {
-                SetProperty(ref queryText, value);
+                SetProperty(ref this.searchResultsControlViewModel, value);
             }
         }
 
-        public bool ResultsEmpty
+        public MapControlViewModel MapControlViewModel
         {
             get
             {
-                return resultsEmpty;
+                return this.mapControlViewModel;
             }
             set
             {
-                SetProperty(ref resultsEmpty, value);
+                SetProperty(ref this.mapControlViewModel, value);
             }
         }
-
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification="Enables binding to source control")]
-        public ObservableCollection<SearchResult> SearchResults
+        
+        /// <summary>
+        /// Searches asynchronously for a stop with the given name.
+        /// </summary>
+        public async Task SearchAsync(string queryText)
         {
-            get
-            {
-                if (searchResults == null)
-                {
-                    searchResults = new ObservableCollection<SearchResult>();
-                }
-
-                return searchResults;
-            }
-            set
-            {
-                SetProperty(ref searchResults, value);
-            }
-        }
-         
-        public async void SearchAsync(string _queryText)
-        {
-            // Set to false to make app believe search results are present - so that the error message is not shown
-            ResultsEmpty = false;
-
-            if (!String.IsNullOrEmpty(_queryText))
-            {
-                queryText = _queryText;
-
-                List<Location> results = await OneBusAway.DataAccess.BingService.BingMapsServiceHelper.GetLocationByQuery(queryText);
-
-                searchResults.Clear();
-
-                if (results != null)
-                {
-
-                    foreach (Location result in results)
-                    {
-                        SearchResult searchResult = new SearchResult(result.GetType());
-                        searchResult.Title = result.Name;
-                        searchResult.SubTitle = result.Address.FormattedAddress;
-
-                        SearchResults.Add(searchResult);
-                    }
-
-                    ResultsEmpty = false;
-                }
-                else
-                {
-                    // TODO - Display error text on the search results page
-                    ResultsEmpty = true;
-                }
-            }
-            else
-            {
-                ResultsEmpty = true;
-            }
+            await this.SearchResultsControlViewModel.Search(queryText);
         }
     }
 }
