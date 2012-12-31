@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsCurrentHourToVisibilityConverter.cs" />
     <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
     <Compile Include="Converters\StringEqualsToVisibilityConverter.cs" />
     <Compile Include="Converters\StringFormatConverter.cs" />
