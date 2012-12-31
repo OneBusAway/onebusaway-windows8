@@ -45,10 +45,8 @@ namespace OneBusAway.Pages
         /// property is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (NavigationController.Instance.PersistedStates.Count > 0 && e.NavigationMode == NavigationMode.Back)
+            if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref this.timeTablePageViewModel))
             {
-                Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
-                this.timeTablePageViewModel = (TimeTablePageViewModel)previousState["timeTablePageViewModel"];
                 this.DataContext = this.timeTablePageViewModel;
             }
             else 
@@ -69,15 +67,7 @@ namespace OneBusAway.Pages
         /// </summary>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            // Persist the state for later:
-            if (e.NavigationMode != NavigationMode.Back)
-            {
-                NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
-                {
-                    {"timeTablePageViewModel", this.timeTablePageViewModel}
-                });
-            }
-
+            NavigationController.TryPersistViewModel(e.NavigationMode, this.timeTablePageViewModel);
             base.OnNavigatedFrom(e);
         }
     }

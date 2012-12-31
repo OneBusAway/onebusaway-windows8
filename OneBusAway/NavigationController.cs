@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace OneBusAway
 {
@@ -52,7 +53,7 @@ namespace OneBusAway
         /// <summary>
         /// This is a stack of states that have been persisted to the navigation controller.
         /// </summary>
-        private Stack<Dictionary<string, object>> persistedStates;
+        private Stack<ViewModelBase> persistedStates;
         
         /// <summary>
         /// Creates the controller.
@@ -74,7 +75,7 @@ namespace OneBusAway
             this.GoToTimeTablePageCommand = new ObservableCommand();
             this.GoToTimeTablePageCommand.Executed += OnGoToTimeTablePageCommandExecuted;
 
-            this.persistedStates = new Stack<Dictionary<string, object>>();
+            this.persistedStates = new Stack<ViewModelBase>();
         }
 
         /// <summary>
@@ -164,14 +165,36 @@ namespace OneBusAway
         }
 
         /// <summary>
-        /// Returns a stack of persisted states.
+        /// Attempts to retreive the view model type T from the navigation stack.
         /// </summary>
-        public Stack<Dictionary<string, object>> PersistedStates
+        public static bool TryRestoreViewModel<T>(NavigationMode navigationMode, ref T viewModel)
+            where T : ViewModelBase
         {
-            get
+            if (NavigationController.Instance.persistedStates.Count > 0 && navigationMode == NavigationMode.Back)
             {
-                return this.persistedStates;
+                viewModel = (T)NavigationController.Instance.persistedStates.Pop();
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to persist a view model of type T in the navigation stack.
+        /// </summary>
+        public static bool TryPersistViewModel<T>(NavigationMode navigationMode, T viewModel)
+            where T : ViewModelBase
+        {
+            // Persist the state for later:
+            if (navigationMode != NavigationMode.Back)
+            {
+                NavigationController.Instance.persistedStates.Push(viewModel);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

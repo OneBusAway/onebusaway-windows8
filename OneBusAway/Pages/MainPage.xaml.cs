@@ -33,8 +33,7 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
 
-            this.mainPageViewModel = (MainPageViewModel)this.DataContext;           
-
+            this.mainPageViewModel = (MainPageViewModel)this.DataContext; 
         }
 
         /// <summary>
@@ -44,14 +43,11 @@ namespace OneBusAway.Pages
         /// property is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (NavigationController.Instance.PersistedStates.Count > 0 && e.NavigationMode == NavigationMode.Back)
+            if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref mainPageViewModel))
             {
-                Dictionary<string, object> previousState = NavigationController.Instance.PersistedStates.Pop();
-                mainPageViewModel.MapControlViewModel = (MapControlViewModel)previousState["mapControlViewModel"];
-                mainPageViewModel.RoutesAndStopsViewModel = (RoutesAndStopsControlViewModel)previousState["routesAndStopsControlViewModel"];
-                mainPageViewModel.HeaderViewModel = (HeaderControlViewModel)previousState["headerViewModel"];
-            }
-            else 
+                this.DataContext = mainPageViewModel;
+            } 
+            else
             {
                 Geolocator geolocator = new Geolocator();
                 var position = await geolocator.GetGeopositionAsync();
@@ -73,17 +69,7 @@ namespace OneBusAway.Pages
         /// </summary>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            // Persist the state for later:
-            if (e.NavigationMode != NavigationMode.Back)
-            {
-                NavigationController.Instance.PersistedStates.Push(new Dictionary<string, object>()
-                {
-                    {"mapControlViewModel", this.mainPageViewModel.MapControlViewModel},
-                    {"routesAndStopsControlViewModel", this.mainPageViewModel.RoutesAndStopsViewModel},
-                    {"headerViewModel", this.mainPageViewModel.HeaderViewModel}
-                });
-            }
-
+            NavigationController.TryPersistViewModel(e.NavigationMode, this.mainPageViewModel);
             base.OnNavigatedFrom(e);
         }
     }
