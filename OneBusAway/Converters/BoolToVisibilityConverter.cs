@@ -16,16 +16,18 @@ namespace OneBusAway.Converters
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            bool? boolValue = (bool?)value;
             bool invert = false;
+
             if (parameter != null && Boolean.TryParse(parameter as string, out invert))
             {
                 if (invert)
-                {
-                    return ((bool)value) ? Visibility.Collapsed : Visibility.Visible;
+                {                    
+                    return (boolValue.HasValue && boolValue.Value) ? Visibility.Collapsed : Visibility.Visible;
                 }
             }
 
-            return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
+            return (boolValue.HasValue && boolValue.Value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -10,6 +10,7 @@
              d:DesignWidth="400">
 
     <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <conv:BusNumberConverter x:Key="busNumberConverter" />
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:TimeToFontWeightConverter x:Key="timeToFontWeightConverter" />
@@ -113,6 +114,16 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        
+        <TextBlock Grid.Column="0"
+                   Grid.Row="1"
+                   HorizontalAlignment="Center"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Margin="20"
+                   Visibility="{Binding ScheduleAvailable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
+                   Foreground="Black">SCHEDULE DATA AVAILABLE</TextBlock>
+        
     </Grid>
 
 </UserControl>

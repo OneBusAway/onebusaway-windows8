@@ -108,7 +108,7 @@ namespace OneBusAway.ViewModels
         {
             this.TimeTableControlViewModel.StopDescription = e.StopName;
             await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.trackingData.RouteId);
-            this.mapControlViewModel.SelectStop(e.SelectedStopId);
+            this.mapControlViewModel.SelectStop(e.SelectedStopId);            
         }
     }
 }

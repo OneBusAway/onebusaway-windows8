@@ -16,6 +16,7 @@ namespace OneBusAway.ViewModels
         private string routeNumber;
         private string routeDescription;
         private string stopDescription;
+        private bool? scheduleAvailable;
         private DateTime[][] scheduleData;
 
         private ObaDataAccess obaDataAccess;
@@ -25,6 +26,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public TimeTableControlViewModel()
         {
+            this.scheduleAvailable = null;
             this.obaDataAccess = new ObaDataAccess();
         }
 
@@ -37,6 +39,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.routeNumber, value);
+            }
+        }
+
+        public bool? ScheduleAvailable
+        {
+            get
+            {
+                return this.scheduleAvailable;
+            }
+            set
+            {
+                SetProperty(ref this.scheduleAvailable, value);
             }
         }
 
@@ -81,18 +95,28 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task FindScheduleDataAsync(string stopId, string routeId)
         {
-            var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
+            try
+            {
+                var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
 
-            var query = from scheduleStopTime in scheduleData.ScheduleStopTimes
-                        orderby scheduleStopTime.ArrivalTime ascending
-                        where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
-                        group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
-                        select (from byHourStopTime in groupedByHourData
-                                orderby byHourStopTime.ArrivalTime ascending
-                                select byHourStopTime.ArrivalTime).ToArray();
+                var query = from scheduleStopTime in scheduleData.ScheduleStopTimes
+                            orderby scheduleStopTime.ArrivalTime ascending
+                            where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
+                            group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
+                            select (from byHourStopTime in groupedByHourData
+                                    orderby byHourStopTime.ArrivalTime ascending
+                                    select byHourStopTime.ArrivalTime).ToArray();
 
-            this.ScheduleData = (from arrivalsByHour in query
-                                    select arrivalsByHour).ToArray();
+                this.ScheduleAvailable = true;
+                this.ScheduleData = (from arrivalsByHour in query
+                                     select arrivalsByHour).ToArray();
+            }
+            catch (ArgumentException)
+            {
+                // No schedule available for this stop:
+                this.ScheduleAvailable = false;
+                this.ScheduleData = null;
+            }
         }
     }
 }
