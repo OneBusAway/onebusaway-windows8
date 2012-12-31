@@ -3,6 +3,7 @@ using OneBusAway.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,6 +92,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.lastUpdated, value);
+                FirePropertyChanged("LastUpdatedText");
+            }
+        }
+
+        /// <summary>
+        /// Includes "LAST UPDATED" text.
+        /// </summary>
+        public string LastUpdatedText
+        {
+            get
+            {
+                return string.Format(CultureInfo.CurrentCulture, "LAST UPDATED: {0}", this.LastUpdated.ToString("h:mm tt"));
             }
         }
 
@@ -126,7 +139,7 @@ namespace OneBusAway.ViewModels
         public async Task PopulateStopAsync(string stopName, string stopId, string direction)
         {
             this.StopHeaderText = stopName;
-            this.StopSubHeaderText = string.Format("{0} BOUND", direction);
+            this.StopSubHeaderText = string.Format(CultureInfo.CurrentCulture, "{0} BOUND", direction);
 
             this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
             this.LastUpdated = DateTime.Now;

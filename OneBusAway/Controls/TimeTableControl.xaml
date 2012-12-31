@@ -11,9 +11,9 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
-        <conv:BusNumberConverter x:Key="busNumberConverter" />
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:TimeToFontWeightConverter x:Key="timeToFontWeightConverter" />
+        <conv:StringFormatConverter x:Key="stringFormatConverter" />
     </UserControl.Resources>
 
     <Grid Background="White">
@@ -34,7 +34,7 @@
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{StaticResource obaGreen}"
-                       Text="{Binding RouteNumber, Converter={StaticResource busNumberConverter}}" />
+                       Text="{Binding RouteNumber, Converter={StaticResource stringFormatConverter}, ConverterParameter='BUS {0}'}" />
             <TextBlock FontSize="14"
                        FontWeight="Bold"
                        Foreground="Black"

@@ -73,11 +73,7 @@
                             HorizontalAlignment="Right">
                     <TextBlock FontSize="14"
                                Foreground="Gray"
-                               Text="LAST UPDATED:" />
-                    <TextBlock FontSize="14"
-                               Foreground="Gray"
-                               Margin="2,0,0,0"
-                               Text="{Binding LastUpdated, Converter={StaticResource timeToTextConverter}}" />
+                               Text="{Binding LastUpdatedText}" />
                 </StackPanel>
             </Grid>
         </StackPanel>
