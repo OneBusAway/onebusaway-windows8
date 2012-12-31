@@ -233,18 +233,15 @@ namespace OneBusAway.Controls
             var mapControl = d as MapControl;
             var newValue = e.NewValue as MapView;
 
-            if (e.OldValue == null && newValue != null)
+            if (newValue.MapCenter.Latitude != mapControl.map.Center.Latitude ||
+                newValue.MapCenter.Longitude != mapControl.map.Center.Longitude)
             {
-                if (newValue.MapCenter.Latitude != mapControl.map.Center.Latitude ||
-                    newValue.MapCenter.Longitude != mapControl.map.Center.Longitude)
-                {
-                    mapControl.map.Center = new Location(newValue.MapCenter.Latitude, newValue.MapCenter.Longitude);
-                }
+                mapControl.map.Center = new Location(newValue.MapCenter.Latitude, newValue.MapCenter.Longitude);
+            }
 
-                if (newValue.ZoomLevel != mapControl.map.ZoomLevel)
-                {
-                    mapControl.map.ZoomLevel = newValue.ZoomLevel;
-                }
+            if (newValue.ZoomLevel != mapControl.map.ZoomLevel)
+            {
+                mapControl.map.ZoomLevel = newValue.ZoomLevel;
             }
         }
 
