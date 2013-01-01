@@ -91,5 +91,13 @@ namespace OneBusAway
                 return NavigationController.Instance.GoToSearchPageCommand;
             }
         }
+
+        public ObservableCommand AddToFavoritesCommand
+        {
+            get
+            {
+                return NavigationController.Instance.AddToFavoritesCommand;
+            }
+        }
     }
 }

@@ -41,6 +41,8 @@ namespace OneBusAway.Pages
         /// </summary>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await Favorites.Initialize();
+
             if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref mainPageViewModel))
             {
                 this.DataContext = mainPageViewModel;

@@ -50,6 +50,8 @@ namespace OneBusAway
         /// </summary>
         private ObservableCommand goBackCommand;
 
+        private ObservableCommand addToFavoritesCommand;
+
         /// <summary>
         /// This is a stack of states that have been persisted to the navigation controller.
         /// </summary>
@@ -74,6 +76,9 @@ namespace OneBusAway
 
             this.GoToTimeTablePageCommand = new ObservableCommand();
             this.GoToTimeTablePageCommand.Executed += OnGoToTimeTablePageCommandExecuted;
+
+            this.AddToFavoritesCommand = new ObservableCommand();
+            this.AddToFavoritesCommand.Executed += OnAddToFavoritesCommandExecuted;
 
             this.persistedStates = new Stack<ViewModelBase>();
         }
@@ -161,6 +166,18 @@ namespace OneBusAway
             set 
             {
                 SetProperty(ref this.goToTimeTablePageCommand, value);
+            }
+        }
+
+        public ObservableCommand AddToFavoritesCommand
+        {
+            get
+            {
+                return this.addToFavoritesCommand;
+            }
+            set
+            {
+                SetProperty(ref this.addToFavoritesCommand, value);
             }
         }
 
@@ -272,6 +289,34 @@ namespace OneBusAway
             }
 
             return Task.FromResult<object>(null);
+        }
+
+        private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
+        {
+            StopAndRoutePair pair = (StopAndRoutePair)arg2;
+            bool added = await Favorites.Add(pair);
+            if (!added) return;
+
+            var md = new Windows.UI.Popups.MessageDialog("You have successfully pinned this to your favorites.", "Success!");
+            md.Commands.Add(new Windows.UI.Popups.UICommand("Close"));
+            await md.ShowAsync();
+
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
+                {
+                    var page = currentFrame.Content as MainPage;
+
+                    if (page != null)
+                    {
+                        var viewModel = (MainPageViewModel)page.DataContext;
+                        TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
+                        viewModel.RoutesAndStopsViewModel.RealTimeData = null;
+                        viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
+                    }
+                }
+            }
         }
 
         /// <summary>

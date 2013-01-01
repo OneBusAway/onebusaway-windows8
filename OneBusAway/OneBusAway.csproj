@@ -142,6 +142,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\IsCurrentHourToVisibilityConverter.cs" />
     <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
+    <Compile Include="Converters\StopAndRouteToFavoriteColorConverter.cs" />
     <Compile Include="Converters\StringEqualsToVisibilityConverter.cs" />
     <Compile Include="Converters\StringFormatConverter.cs" />
     <Compile Include="Converters\TimeToFontWeightConverter.cs" />

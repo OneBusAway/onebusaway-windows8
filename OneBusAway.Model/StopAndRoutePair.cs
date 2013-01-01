@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OneBusAway.Model
 {
-    public class Favorite
+    public class StopAndRoutePair
     {
         public string Stop
         {
@@ -20,7 +20,7 @@ namespace OneBusAway.Model
             set;
         }
 
-        public Favorite(string stop, string route)
+        public StopAndRoutePair(string stop, string route)
         {
             Stop = stop;
             Route = route;

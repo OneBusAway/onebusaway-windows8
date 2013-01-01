@@ -37,8 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Favorites.cs" />
     <Compile Include="MapView.cs" />
-    <Compile Include="Favorite.cs" />
     <Compile Include="ObaService\Agency.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="BingService\Address.cs" />
@@ -57,6 +57,7 @@
     <Compile Include="ObaService\Shape.cs" />
     <Compile Include="ObaService\Stop.cs" />
     <Compile Include="ObaService\TrackingData.cs" />
+    <Compile Include="StopAndRoutePair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

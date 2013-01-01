@@ -12,6 +12,9 @@ namespace OneBusAway.Model
     /// </summary>
     public class TrackingData : BindableBase
     {
+        public const string Favorites = "FAVORITES";
+        public const string OneStop = "ONESTOP";
+
         private string routeId;
         private string tripId;
         private string stopName;
@@ -23,6 +26,9 @@ namespace OneBusAway.Model
         private string status;
         private Route route;
 
+        private string context;
+        private string stopOrDestination;
+
         /// <summary>
         /// Creates the tracking data out of an arrival and departure element.
         /// </summary>
@@ -33,6 +39,7 @@ namespace OneBusAway.Model
             this.TripHeadsign = arrivalAndDepartureElement.GetFirstElementValue<string>("tripHeadsign");
             this.StopName = stopName;
             this.StopId = stopId;
+            this.Context = OneStop;
 
             DateTime scheduledArrivalDateTime = arrivalAndDepartureElement.GetFirstElementValue<long>("scheduledArrivalTime").ToDateTime();
             this.ScheduledArrivalInMinutes = (scheduledArrivalDateTime - serverTime).Minutes;
@@ -71,6 +78,26 @@ namespace OneBusAway.Model
                 this.Route = new Route(routeElements[0]);
             //}
 
+        }
+
+        public string Context
+        {
+            get
+            {
+                return this.context;
+            }
+            set
+            {
+                this.context = value;
+                if (string.Equals(value, Favorites, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.StopOrDestination = this.StopName;
+                }
+                else
+                {
+                    this.StopOrDestination = this.TripHeadsign;
+                }
+            }
         }
 
         public Route Route
@@ -121,6 +148,14 @@ namespace OneBusAway.Model
             }
         }
 
+        public StopAndRoutePair StopAndRoute
+        {
+            get
+            {
+                return new StopAndRoutePair(this.stopId, this.routeId);
+            }
+        }
+
         public string TripId
         {
             get
@@ -142,6 +177,18 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.tripHeadsign, value);
+            }
+        }
+
+        public string StopOrDestination
+        {
+            get
+            {
+                return this.stopOrDestination;
+            }
+            set
+            {
+                SetProperty(ref this.stopOrDestination, value);
             }
         }
 

@@ -19,6 +19,7 @@ namespace OneBusAway.ViewModels
         private TrackingData[] realTimeData;
         private string stopHeaderText;
         private string stopSubHeaderText;
+        private string stopOrDestinationText;
         private DateTime lastUpdated;
 
         public RoutesAndStopsControlViewModel()
@@ -59,6 +60,18 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        public string StopOrDestinationText
+        {
+            get
+            {
+                return this.stopOrDestinationText;
+            }
+            set
+            {
+                SetProperty(ref this.stopOrDestinationText, value);
+            }
+        }
+
         public string StopHeaderText
         {
             get
@@ -68,6 +81,15 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.stopHeaderText, value);
+
+                if (string.Equals(this.stopHeaderText, Favorites, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.StopOrDestinationText = "STOP";
+                }
+                else
+                {
+                    this.StopOrDestinationText = "DESTINATION";
+                }
             }
         }
 
@@ -112,13 +134,13 @@ namespace OneBusAway.ViewModels
             List<TrackingData> trackingData = new List<TrackingData>();
 
             //  TO DO: Load favorites from some storage location...somewhere.
-            var favs = new List<Favorite>();
-            favs.Add(new Favorite("1_75403", "1_67"));
+            var favs = Model.Favorites.Get();// new List<StopAndRoutePair>();
+            //favs.Add(new StopAndRoutePair("1_75403", "1_67"));
 
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
 
-            foreach (Favorite fav in favs)
+            foreach (StopAndRoutePair fav in favs)
             {
                 TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
 
@@ -126,6 +148,7 @@ namespace OneBusAway.ViewModels
                 {
                     if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
                     {
+                        tdata.Context = TrackingData.Favorites;
                         trackingData.Add(tdata);
                         break;
                     }
