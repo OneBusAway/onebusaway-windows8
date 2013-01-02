@@ -10,7 +10,7 @@ namespace OneBusAway.ViewModels
     {
         public HelpPageViewModel()
         {
-            this.HeaderViewModel.SubText = "Help";
+            this.HeaderViewModel.SubText = "HELP";
         }
 
     }
