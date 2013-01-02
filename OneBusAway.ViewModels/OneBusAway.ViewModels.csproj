@@ -55,7 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusStopControlViewModel.cs" />
+    <Compile Include="RouteTimelineControlViewModel.cs" />
     <Compile Include="SearchResultsControlViewModel.cs" />
+    <Compile Include="StopAndRoutesPageViewModel.cs" />
     <Compile Include="StopSelectedEventArgs.cs" />
     <Compile Include="TimeTableControlViewModel.cs" />
     <Compile Include="TimeTablePageViewModel.cs" />

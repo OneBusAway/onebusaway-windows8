@@ -191,5 +191,18 @@ namespace OneBusAway.DataAccess
             return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
                     select new TrackingData(serverTime, stopId, stopName, arrivalAndDepartureElement)).ToArray();
         }
+
+        /// <summary>
+        /// Gets the trip data for a specific trip.
+        /// </summary>
+        public async Task GetTripDetailsAsync(string vehicleId)
+        {
+            var helper = this.Factory.CreateHelper(ObaMethod.trip_for_vehicle);
+            helper.SetId(vehicleId);
+
+            XDocument doc = await helper.SendAndRecieveAsync();
+
+            // to do
+        }
     }
 }

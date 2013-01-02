@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,18 +23,39 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class StopAndRoutesPage : Page
     {
+        private StopAndRoutesPageViewModel viewModel;
+
         public StopAndRoutesPage()
         {
             this.InitializeComponent();
+            this.viewModel = (StopAndRoutesPageViewModel)this.DataContext;
         }
 
         /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
+        /// Tries and restores the view model from the navigation controller stack.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref this.viewModel))
+            {
+                this.DataContext = this.viewModel;
+            }
+            else
+            {
+                this.viewModel.RouteTimelineControlViewModel.TrackingData = e.Parameter as TrackingData;
+            }
+
+            await this.viewModel.RouteTimelineControlViewModel.GetTripDetailsAsync();
+            base.OnNavigatedTo(e);
+        }
+
+        /// <summary>
+        /// Persist the view model.
+        /// </summary>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            NavigationController.TryPersistViewModel(e.NavigationMode, this.viewModel);
+            base.OnNavigatedFrom(e);
         }
     }
 }

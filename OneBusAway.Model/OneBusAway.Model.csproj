@@ -51,6 +51,7 @@
     <Compile Include="ObaService\RouteData.cs" />
     <Compile Include="ObaService\ScheduleStopTime.cs" />
     <Compile Include="ObaService\StopRouteSchedule.cs" />
+    <Compile Include="ObaService\TripDetails.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObaService\Route.cs" />

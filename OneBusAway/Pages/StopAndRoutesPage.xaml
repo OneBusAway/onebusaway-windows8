@@ -1,13 +1,58 @@
-﻿<Page
-    x:Class="OneBusAway.Pages.StopAndRoutesPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:OneBusAway.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+﻿<Page x:Class="OneBusAway.Pages.StopAndRoutesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:OneBusAway.Pages"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodel="using:OneBusAway.ViewModels"
+      xmlns:ctrls="using:OneBusAway.Controls"
+      xmlns:conv="using:OneBusAway.Converters"
+      mc:Ignorable="d">
 
-    <Grid>
+    <UserControl.DataContext>
+        <viewmodel:StopAndRoutesPageViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="45*" />
+            <ColumnDefinition Width="55*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ctrls:HeaderControl Grid.ColumnSpan="2"
+                             Grid.Row="0"
+                             DataContext="{Binding HeaderViewModel}" />
+
+        <ctrls:RouteTimelineControl Grid.Column="0"
+                                    Grid.Row="1"
+                                    Margin="80,30,20,20"
+                                    DataContext="{Binding RouteTimelineControlViewModel}" />
+
+        <ctrls:MapControl x:Name="timeTablePageMap"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          CenterOnUserLocation="True"
+                          ClearBusStopsOnZoomOut="False"
+                          DataContext="{Binding MapControlViewModel}"
+                          Shapes="{Binding Shapes}"
+                          MapView="{Binding MapView, Mode=TwoWay}"
+                          BusStops="{Binding BusStops}"
+                          SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
 
     </Grid>
+
 </Page>

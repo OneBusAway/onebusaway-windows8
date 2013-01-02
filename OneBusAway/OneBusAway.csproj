@@ -129,6 +129,9 @@
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RouteTimelineControl.xaml.cs">
+      <DependentUpon>RouteTimelineControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SearchResultsControl.xaml.cs">
       <DependentUpon>SearchResultsControl.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RoutesAndStopsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RouteTimelineControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
