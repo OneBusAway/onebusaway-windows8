@@ -49,8 +49,13 @@ namespace OneBusAway
         /// Command fires the go back command.
         /// </summary>
         private ObservableCommand goBackCommand;
-
+                
         private ObservableCommand addToFavoritesCommand;
+
+        /// <summary>
+        /// Command used to go to the stop and routes page.
+        /// </summary>
+        private ObservableCommand goToStopAndRoutesPageCommand;
 
         /// <summary>
         /// This is a stack of states that have been persisted to the navigation controller.
@@ -79,6 +84,9 @@ namespace OneBusAway
 
             this.AddToFavoritesCommand = new ObservableCommand();
             this.AddToFavoritesCommand.Executed += OnAddToFavoritesCommandExecuted;
+
+            this.GoToStopAndRoutesPageCommand = new ObservableCommand();
+            this.GoToStopAndRoutesPageCommand.Executed += OnGoToStopAndRoutesPageCommandExecuted;
 
             this.persistedStates = new Stack<ViewModelBase>();
         }
@@ -180,6 +188,23 @@ namespace OneBusAway
                 SetProperty(ref this.addToFavoritesCommand, value);
             }
         }
+
+
+        /// <summary>
+        /// Returns the goToStopAndRoutesPageCommand.
+        /// </summary>
+        public ObservableCommand GoToStopAndRoutesPageCommand
+        {
+            get
+            {
+                return this.goToStopAndRoutesPageCommand;
+            }
+            set
+            {
+                SetProperty(ref this.goToStopAndRoutesPageCommand, value);
+            }
+        }
+
 
         /// <summary>
         /// Attempts to retreive the view model type T from the navigation stack.
@@ -317,6 +342,21 @@ namespace OneBusAway
                     }
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Called when we go to the stop and routes page.
+        /// </summary>
+        private Task OnGoToStopAndRoutesPageCommandExecuted(object arg1, object arg2)
+        {
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                currentFrame.Navigate(typeof(StopAndRoutesPage), arg2);
+            }
+
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>

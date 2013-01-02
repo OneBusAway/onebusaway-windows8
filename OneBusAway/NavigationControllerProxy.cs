@@ -99,5 +99,17 @@ namespace OneBusAway
                 return NavigationController.Instance.AddToFavoritesCommand;
             }
         }
+
+        /// <summary>
+        /// Returns the go to stop and routes page command.
+        /// </summary>
+        public ObservableCommand GoToStopAndRoutesPageCommand
+        {
+            get
+            {
+                return NavigationController.Instance.GoToStopAndRoutesPageCommand;
+            }
+        }
+
     }
 }

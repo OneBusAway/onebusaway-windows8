@@ -46,17 +46,22 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Returns the distinct routes from the real time data.
         /// </summary>
-        public string[] DistinctRoutes
+        public TrackingData[] DistinctRoutes
         {
             get
             {
                 if (this.realTimeData == null)
                 {
-                    return new string[] { };
+                    return new TrackingData[] { };
                 }
 
-                return (from trackingData in this.realTimeData
-                        select trackingData.Route.ShortName).Distinct().ToArray();
+                // Find all of the unique routes and order them by the ones that are predicted to come sooner:
+                var query = from trackingData in this.realTimeData
+                            where trackingData.PredictedArrivalTime > DateTime.Now
+                            group trackingData by trackingData.Route.Id into groupedRoutes
+                            select groupedRoutes.OrderBy(gr => gr.PredictedArrivalTime).First();
+
+                return query.ToArray();
             }
         }
 
