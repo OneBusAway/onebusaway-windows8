@@ -25,7 +25,7 @@ namespace OneBusAway.ViewModels
         {
             this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
             this.MapControlViewModel = new MapControlViewModel();
-            this.HeaderViewModel.SubText = "Search Results";
+            this.HeaderViewModel.SubText = "SEARCH RESULTS";
         }
 
         public SearchResultsControlViewModel SearchResultsControlViewModel
