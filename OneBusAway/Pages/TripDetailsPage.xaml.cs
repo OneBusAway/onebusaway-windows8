@@ -21,14 +21,14 @@ namespace OneBusAway.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class StopAndRoutesPage : Page
+    public sealed partial class TripDetailsPage : Page
     {
-        private StopAndRoutesPageViewModel viewModel;
+        private TripDetailsPageViewModel viewModel;
 
-        public StopAndRoutesPage()
+        public TripDetailsPage()
         {
             this.InitializeComponent();
-            this.viewModel = (StopAndRoutesPageViewModel)this.DataContext;
+            this.viewModel = (TripDetailsPageViewModel)this.DataContext;
         }
 
         /// <summary>
@@ -42,10 +42,20 @@ namespace OneBusAway.Pages
             }
             else
             {
-                this.viewModel.RouteTimelineControlViewModel.TrackingData = e.Parameter as TrackingData;
+                var tripViewModel = this.viewModel.TripTimelineControlViewModel;
+                var mapViewModel = this.viewModel.MapControlViewModel;
+
+                TrackingData trackingData = (TrackingData)e.Parameter;
+                tripViewModel.TrackingData = trackingData;;
+
+                // get the trip details:
+                await tripViewModel.GetTripDetailsAsync();                
+
+                // Copy bus data into the map control:
+                mapViewModel.BusStops = tripViewModel.TripDetails.TripStops.Cast<Stop>().ToList();
+                mapViewModel.SelectStop(trackingData.StopId);
             }
 
-            await this.viewModel.RouteTimelineControlViewModel.GetTripDetailsAsync();
             base.OnNavigatedTo(e);
         }
 

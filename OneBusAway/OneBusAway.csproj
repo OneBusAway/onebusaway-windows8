@@ -129,8 +129,8 @@
     <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
       <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RouteTimelineControl.xaml.cs">
-      <DependentUpon>RouteTimelineControl.xaml</DependentUpon>
+    <Compile Include="Controls\TripTimelineControl.xaml.cs">
+      <DependentUpon>TripTimelineControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SearchResultsControl.xaml.cs">
       <DependentUpon>SearchResultsControl.xaml</DependentUpon>
@@ -157,17 +157,14 @@
     <Compile Include="Pages\HelpPage.xaml.cs">
       <DependentUpon>HelpPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\RouteMapPage.xaml.cs">
-      <DependentUpon>RouteMapPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SearchResultsPage.xaml.cs">
       <DependentUpon>SearchResultsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\StopAndRoutesPage.xaml.cs">
-      <DependentUpon>StopAndRoutesPage.xaml</DependentUpon>
+    <Compile Include="Pages\TripDetailsPage.xaml.cs">
+      <DependentUpon>TripDetailsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\TimeTablePage.xaml.cs">
       <DependentUpon>TimeTablePage.xaml</DependentUpon>
@@ -232,7 +229,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\RouteTimelineControl.xaml">
+    <Page Include="Controls\TripTimelineControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -252,10 +249,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\RouteMapPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -264,7 +257,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\StopAndRoutesPage.xaml">
+    <Page Include="Pages\TripDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

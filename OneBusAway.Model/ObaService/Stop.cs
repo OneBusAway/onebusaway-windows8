@@ -21,11 +21,16 @@ namespace OneBusAway.Model
         private string code;
         private Route[] routes;
 
-        public Stop()
+        protected Stop()
         {
         }
                 
         public Stop(XElement stopElement)
+        {
+            ParseStopElement(stopElement);
+        }
+
+        protected void ParseStopElement(XElement stopElement)
         {
             // Xml for a stop:
             //<stop>

@@ -85,8 +85,8 @@ namespace OneBusAway
             this.AddToFavoritesCommand = new ObservableCommand();
             this.AddToFavoritesCommand.Executed += OnAddToFavoritesCommandExecuted;
 
-            this.GoToStopAndRoutesPageCommand = new ObservableCommand();
-            this.GoToStopAndRoutesPageCommand.Executed += OnGoToStopAndRoutesPageCommandExecuted;
+            this.GoToTripDetailsPageCommand = new ObservableCommand();
+            this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
 
             this.persistedStates = new Stack<ViewModelBase>();
         }
@@ -191,9 +191,9 @@ namespace OneBusAway
 
 
         /// <summary>
-        /// Returns the goToStopAndRoutesPageCommand.
+        /// Returns the trip details command.
         /// </summary>
-        public ObservableCommand GoToStopAndRoutesPageCommand
+        public ObservableCommand GoToTripDetailsPageCommand
         {
             get
             {
@@ -348,12 +348,12 @@ namespace OneBusAway
         /// <summary>
         /// Called when we go to the stop and routes page.
         /// </summary>
-        private Task OnGoToStopAndRoutesPageCommandExecuted(object arg1, object arg2)
+        private Task OnGoToTripDetailsPageCommandExecuted(object arg1, object arg2)
         {
             var currentFrame = Window.Current.Content as Frame;
             if (currentFrame != null)
             {
-                currentFrame.Navigate(typeof(StopAndRoutesPage), arg2);
+                currentFrame.Navigate(typeof(TripDetailsPage), arg2);
             }
 
             return Task.FromResult<object>(null);

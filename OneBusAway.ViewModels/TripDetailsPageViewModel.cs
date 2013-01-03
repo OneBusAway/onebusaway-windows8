@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace OneBusAway.ViewModels
 {
     /// <summary>
-    /// View model for hte stop and routes page.
+    /// View model for the trip details page.
     /// </summary>
-    public class StopAndRoutesPageViewModel : PageViewModelBase
+    public class TripDetailsPageViewModel : PageViewModelBase
     {
         /// <summary>
         /// View model for the map.
@@ -19,16 +19,19 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// View model for the route timeline control.
         /// </summary>
-        private RouteTimelineControlViewModel routeTimelineControlViewModel;
+        private TripTimelineControlViewModel routeTimelineControlViewModel;
 
         /// <summary>
         /// Creates the view model.
         /// </summary>
-        public StopAndRoutesPageViewModel()
+        public TripDetailsPageViewModel()
         {
-            this.HeaderViewModel.SubText = "ROUTE MAP";
+            this.HeaderViewModel.SubText = "ROUTE MAP";            
+            this.TripTimelineControlViewModel = new TripTimelineControlViewModel();
+
             this.MapControlViewModel = new MapControlViewModel();
-            this.RouteTimelineControlViewModel = new RouteTimelineControlViewModel();
+            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
+            this.MapControlViewModel.StopSelected += OnStopSelected;
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Returns the route timeline control view model.
         /// </summary>
-        public RouteTimelineControlViewModel RouteTimelineControlViewModel
+        public TripTimelineControlViewModel TripTimelineControlViewModel
         {
             get
             {
@@ -59,6 +62,13 @@ namespace OneBusAway.ViewModels
             {
                 SetProperty(ref this.routeTimelineControlViewModel, value);
             }
+        }
+
+        /// <summary>
+        /// Called when the user selects a stop on the map.
+        /// </summary>
+        private void OnStopSelected(object sender, StopSelectedEventArgs e)
+        {
         }
     }
 }

@@ -199,12 +199,12 @@ namespace OneBusAway.DataAccess
         {
             var helper = this.Factory.CreateHelper(ObaMethod.trip_details);
             helper.SetId(tripId);
-            helper.AddToQueryString("includeSchedule", "false");
 
             XDocument doc = await helper.SendAndRecieveAsync();
+            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
             XElement entryElement = doc.Descendants("entry").First();
-            return new TripDetails(entryElement);
+            return new TripDetails(entryElement, serverTime);
         }
     }
 }

@@ -159,7 +159,7 @@ namespace OneBusAway.DataAccess
                     }
 
                     // If we keep getting 401s (permission denied), then we just need to keep retrying.
-                    await Task.Delay(500);
+                    await Task.Delay(100);
                 }
             }
 

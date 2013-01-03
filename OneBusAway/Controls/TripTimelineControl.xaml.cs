@@ -16,9 +16,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace OneBusAway.Controls
 {
-    public sealed partial class RouteTimelineControl : UserControl
+    public sealed partial class TripTimelineControl : UserControl
     {
-        public RouteTimelineControl()
+        public TripTimelineControl()
         {
             this.InitializeComponent();
         }

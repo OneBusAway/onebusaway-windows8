@@ -18,21 +18,13 @@ namespace OneBusAway.Model
         private string tripId;
         private string closestStopId;
         private string nextStopId;
+        private TripStop[] tripStops;
 
         /// <summary>
         /// Creates the trip details.
         /// </summary>
-        public TripDetails(XElement entryElement)
+        public TripDetails(XElement entryElement, DateTime serverTime)
         {
-            this.TripId = entryElement.GetFirstElementValue<string>("tripId");
-            this.VehicleId = entryElement.GetFirstElementValue<string>("vehicleId");
-            this.ClosestStopId = entryElement.GetFirstElementValue<string>("closestStop");
-            this.NextStopId = entryElement.GetFirstElementValue<string>("nextStop");
-
-            var lastKnownLocationElement = entryElement.Descendants("lastKnownLocation").First();
-            this.KnownLatitude = lastKnownLocationElement.GetFirstElementValue<double>("lat");
-            this.KnownLongitude = lastKnownLocationElement.GetFirstElementValue<double>("lon");
-
             //<entry class="tripDetails">
             //    <tripId>40_21580184</tripId>
             //    <serviceDate>1357113600000</serviceDate>
@@ -63,6 +55,32 @@ namespace OneBusAway.Model
             //    <vehicleId>40_9616</vehicleId>
             //    </status>
             //</entry>
+            this.TripId = entryElement.GetFirstElementValue<string>("tripId");
+            this.VehicleId = entryElement.GetFirstElementValue<string>("vehicleId");
+            this.ClosestStopId = entryElement.GetFirstElementValue<string>("closestStop");
+            this.NextStopId = entryElement.GetFirstElementValue<string>("nextStop");
+
+            var lastKnownLocationElement = entryElement.Descendants("lastKnownLocation").First();
+            this.KnownLatitude = lastKnownLocationElement.GetFirstElementValue<double>("lat");
+            this.KnownLongitude = lastKnownLocationElement.GetFirstElementValue<double>("lon");
+
+            this.TripStops = (from tripStopElement in entryElement.Descendants("tripStopTime")
+                              select new TripStop(tripStopElement, serverTime)).ToArray();
+        }
+
+        /// <summary>
+        /// Returns an array of trip stops.
+        /// </summary>
+        public TripStop[] TripStops
+        {
+            get
+            {
+                return this.tripStops;
+            }
+            set
+            {
+                SetProperty(ref this.tripStops, value);
+            }
         }
 
         public double KnownLatitude

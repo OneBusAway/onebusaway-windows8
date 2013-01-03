@@ -1,4 +1,4 @@
-﻿<Page x:Class="OneBusAway.Pages.StopAndRoutesPage"
+﻿<Page x:Class="OneBusAway.Pages.TripDetailsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:OneBusAway.Pages"
@@ -10,7 +10,7 @@
       mc:Ignorable="d">
 
     <UserControl.DataContext>
-        <viewmodel:StopAndRoutesPageViewModel />
+        <viewmodel:TripDetailsPageViewModel />
     </UserControl.DataContext>
 
     <UserControl.Resources>
@@ -37,20 +37,24 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <ctrls:RouteTimelineControl Grid.Column="0"
-                                    Grid.Row="1"
-                                    Margin="80,30,20,20"
-                                    DataContext="{Binding RouteTimelineControlViewModel}" />
+        <ScrollViewer Grid.Column="0"
+                      Grid.Row="1"
+                      VerticalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <ctrls:TripTimelineControl Margin="80,30,20,0"
+                                       DataContext="{Binding TripTimelineControlViewModel}" />
+        </ScrollViewer>
 
         <ctrls:MapControl x:Name="timeTablePageMap"
                           Grid.Row="1"
                           Grid.Column="1"
                           CenterOnUserLocation="True"
-                          ClearBusStopsOnZoomOut="False"
+                          ClearBusStopsOnZoomOut="False"                          
                           DataContext="{Binding MapControlViewModel}"
                           Shapes="{Binding Shapes}"
-                          MapView="{Binding MapView, Mode=TwoWay}"
                           BusStops="{Binding BusStops}"
+                          MapView="{Binding MapView, Mode=TwoWay}"                          
                           SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
 
     </Grid>

@@ -101,13 +101,13 @@ namespace OneBusAway
         }
 
         /// <summary>
-        /// Returns the go to stop and routes page command.
+        /// Returns the go to trip details page command.
         /// </summary>
-        public ObservableCommand GoToStopAndRoutesPageCommand
+        public ObservableCommand GoToTripDetailsPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToStopAndRoutesPageCommand;
+                return NavigationController.Instance.GoToTripDetailsPageCommand;
             }
         }
 
