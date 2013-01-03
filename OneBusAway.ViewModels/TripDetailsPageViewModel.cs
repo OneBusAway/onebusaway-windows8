@@ -26,7 +26,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public TripDetailsPageViewModel()
         {
-            this.HeaderViewModel.SubText = "ROUTE MAP";            
+            this.HeaderViewModel.SubText = "TRIP DETAILS";            
             this.TripTimelineControlViewModel = new TripTimelineControlViewModel();
 
             this.MapControlViewModel = new MapControlViewModel();

@@ -57,7 +57,6 @@ namespace OneBusAway.ViewModels
 
                 // Find all of the unique routes and order them by the ones that are predicted to come sooner:
                 var query = from trackingData in this.realTimeData
-                            where trackingData.PredictedArrivalTime > DateTime.Now
                             group trackingData by trackingData.Route.Id into groupedRoutes
                             select groupedRoutes.OrderBy(gr => gr.PredictedArrivalTime).First();
 

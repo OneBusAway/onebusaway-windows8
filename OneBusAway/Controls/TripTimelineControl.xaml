@@ -13,7 +13,7 @@
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:StringFormatConverter x:Key="stringFormatConverter" />
-        <conv:IsCurrentHourToVisibilityConverter x:Key="isCurrentHourToVisibilityConverter" />
+        <conv:BoolToObaGreenConverter x:Key="boolToObaGreenConverter" />
     </UserControl.Resources>
 
     <Grid Background="White">
@@ -63,7 +63,7 @@
                            TextAlignment="Center"
                            FontSize="12"
                            FontWeight="Bold"
-                           Margin="10,2,0,2">STATUS</TextBlock>
+                           Margin="0,2,0,2">STATUS</TextBlock>
 
                 <TextBlock Grid.Column="2"
                            Grid.Row="0"
@@ -81,6 +81,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,5,0,5"
+                          Height="30"                          
                           Background="#F3F3F3">
                         
                         <Grid.ColumnDefinitions>
@@ -88,25 +89,25 @@
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
                         
                         <TextBlock Grid.Column="0"
                                    Grid.Row="0"
                                    Margin="10,2,0,2"
-                                   Text="{Binding ArrivalTime, Converter={StaticResource timeToTextConverter}}"                                   
+                                   VerticalAlignment="Center"
+                                   Text="{Binding ArrivalTime, Converter={StaticResource timeToTextConverter},  ConverterParameter='hh:mm tt'}"
                                    Foreground="Black" />
 
                         <TextBlock Grid.Column="1"
                                    Grid.Row="0"
                                    TextAlignment="Center"
+                                   VerticalAlignment="Center"
                                    Margin="0,2,0,2"
-                                   Foreground="Gray">&#x2B24;</TextBlock>
+                                   Foreground="{Binding HasReachedStop, Converter={StaticResource boolToObaGreenConverter}, ConverterParameter=True}">&#x2B24;</TextBlock>
 
                         <TextBlock Grid.Column="2"
                                    Grid.Row="0"
-                                   Margin="0,2,0,2"
+                                   Margin="10,2,0,2"
+                                   VerticalAlignment="Center"
                                    Text="{Binding Name}"
                                    Foreground="Black" />
 

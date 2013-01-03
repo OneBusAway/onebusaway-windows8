@@ -13,6 +13,8 @@ namespace OneBusAway.Model
     public class TripStop : Stop
     {
         private DateTime arrivalTime;
+        private bool hasReachedStop;
+        private bool isNextStop;
 
         /// <summary>
         /// Creates the trip stop.
@@ -54,6 +56,30 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.arrivalTime, value);
+            }
+        }
+
+        public bool HasReachedStop
+        {
+            get
+            {
+                return this.hasReachedStop;
+            }
+            set
+            {
+                SetProperty(ref this.hasReachedStop, value);
+            }
+        }
+
+        private bool IsNextStop
+        {
+            get
+            {
+                return this.isNextStop;
+            }
+            set
+            {
+                SetProperty(ref this.isNextStop, value);
             }
         }
     }

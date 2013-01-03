@@ -16,15 +16,8 @@ namespace OneBusAway.Converters
                 DateTime time = (DateTime)value;
                 if (time > DateTime.MinValue)
                 {
-                    bool includeAMPM = true;
-                    if (parameter != null)
-                    {
-                        Boolean.TryParse(parameter as string, out includeAMPM);
-                    }
-
-                    return (includeAMPM)
-                        ? time.ToString("h:mm tt")
-                        : time.ToString("h:mm");
+                    string format = (string)parameter;
+                    return time.ToString(format);
                 }
             }
 

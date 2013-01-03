@@ -38,10 +38,15 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <ctrls:TimeTableControl Grid.Column="0"
-                                Grid.Row="1" 
-                                Margin="80,30,20,20" 
-                                DataContext="{Binding TimeTableControlViewModel}" />
+        <ScrollViewer Grid.Column="0"
+                      Grid.Row="1" 
+                      HorizontalScrollBarVisibility="Hidden"
+                      HorizontalScrollMode="Disabled"
+                      VerticalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Auto">
+            <ctrls:TimeTableControl Margin="80,30,20,20" 
+                                    DataContext="{Binding TimeTableControlViewModel}" />
+        </ScrollViewer>
 
         <ctrls:MapControl x:Name="timeTablePageMap"
                           Grid.Row="1"

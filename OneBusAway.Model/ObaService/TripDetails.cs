@@ -66,6 +66,18 @@ namespace OneBusAway.Model
 
             this.TripStops = (from tripStopElement in entryElement.Descendants("tripStopTime")
                               select new TripStop(tripStopElement, serverTime)).ToArray();
+
+            // We need to mark the trip stops according to the real time data:
+            bool hasReachedStop = true;
+            foreach (var tripStop in this.TripStops)
+            {
+                if(string.Equals(tripStop.StopId, this.NextStopId, StringComparison.OrdinalIgnoreCase))
+                {
+                    hasReachedStop = false;
+                }
+
+                tripStop.HasReachedStop = hasReachedStop;
+            }
         }
 
         /// <summary>

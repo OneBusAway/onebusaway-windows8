@@ -86,7 +86,7 @@
                             BorderThickness="1">
                         <Button Style="{StaticResource CommandableButton}"
                                 AutomationProperties.Name="{Binding Route.ShortName}"
-                                Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
+                                Command="{Binding GoToTimeTablePageCommand, Source={StaticResource navigationProxy}}"
                                 CommandParameter="{Binding}"
                                 Width="40"
                                 Height="40" />

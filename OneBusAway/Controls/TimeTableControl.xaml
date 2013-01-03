@@ -77,47 +77,42 @@
             </Grid>
         </StackPanel>
 
-        <ScrollViewer Grid.Column="0"
+        <ItemsControl Grid.Column="0"
                       Grid.Row="1"
                       BorderThickness="0"
-                      HorizontalScrollMode="Disabled"
-                      VerticalScrollMode="Auto"
-                      VerticalScrollBarVisibility="Hidden">
-            <ItemsControl BorderThickness="0"
-                          ItemsSource="{Binding ScheduleData}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0,5,0,5"
+                      ItemsSource="{Binding ScheduleData}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,5,0,5"
                                 BorderBrush="{StaticResource obaGreen}"
                                 BorderThickness="{Binding Converter={StaticResource isCurrentHourToVisibilityConverter}, ConverterParameter=2}">
-                            <ItemsControl HorizontalAlignment="Stretch"
+                        <ItemsControl HorizontalAlignment="Stretch"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                           ItemsSource="{Binding}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapGrid Orientation="Horizontal"
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapGrid Orientation="Horizontal"
                                                   Background="#F3F3F3"
-                                                  ItemWidth="80" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Foreground="Black"
+                                                  ItemWidth="40" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Foreground="Black"
                                                    FontSize="12"
-                                                   Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter=false}"
-                                                   Margin="20,5,20,5"
+                                                   Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}"
+                                                   Margin="10,5,0,5"
                                                    FontWeight="{Binding Converter={StaticResource timeToFontWeightConverter}}"
                                                    TextAlignment="Left" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <TextBlock Grid.Column="0"
                    Grid.Row="1"
                    HorizontalAlignment="Center"
@@ -126,7 +121,7 @@
                    Margin="20"
                    Visibility="{Binding ScheduleAvailable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
                    Foreground="Black">NO SCHEDULE DATA AVAILABLE</TextBlock>
-        
+
     </Grid>
 
 </UserControl>
