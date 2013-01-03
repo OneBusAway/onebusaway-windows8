@@ -51,9 +51,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task GetTripDetailsAsync()
         {
-            //this.obaDataAccess.GetTripDetails
-
-            await Task.Delay(10);
+            await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
         }
     }
 }

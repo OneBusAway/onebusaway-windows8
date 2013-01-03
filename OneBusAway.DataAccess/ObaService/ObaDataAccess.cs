@@ -195,14 +195,16 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Gets the trip data for a specific trip.
         /// </summary>
-        public async Task GetTripDetailsAsync(string vehicleId)
+        public async Task<TripDetails> GetTripDetailsAsync(string tripId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.trip_for_vehicle);
-            helper.SetId(vehicleId);
+            var helper = this.Factory.CreateHelper(ObaMethod.trip_details);
+            helper.SetId(tripId);
+            helper.AddToQueryString("includeSchedule", "false");
 
             XDocument doc = await helper.SendAndRecieveAsync();
 
-            // to do
+            XElement entryElement = doc.Descendants("entry").First();
+            return new TripDetails(entryElement);
         }
     }
 }
