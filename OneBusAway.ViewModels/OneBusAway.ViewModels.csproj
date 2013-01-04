@@ -125,6 +125,8 @@
   <ItemGroup>
     <Compile Include="AllRoutesCache.cs" />
     <Compile Include="BusStopControlViewModel.cs" />
+    <Compile Include="RouteSelectedEventArgs.cs" />
+    <Compile Include="SearchRouteResultViewModel.cs" />
     <Compile Include="TripTimelineControlViewModel.cs" />
     <Compile Include="SearchResultsControlViewModel.cs" />
     <Compile Include="TripDetailsPageViewModel.cs" />

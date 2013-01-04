@@ -40,15 +40,20 @@
                              Grid.ColumnSpan="2"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <ctrls:SearchResultsControl Grid.Column="0"
-                                    Grid.Row="1"
-                                    DataContext="{Binding SearchResultsControlViewModel}"
-                                    Margin="80,30,20,20" />
+        <ScrollViewer Grid.Column="0"
+                      Grid.Row="1"
+                      BorderThickness="0"
+                      HorizontalScrollMode="Disabled"
+                      VerticalScrollMode="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <ctrls:SearchResultsControl DataContext="{Binding SearchResultsControlViewModel}"
+                                        Margin="80,20,20,0" />
+        </ScrollViewer>
 
         <ctrls:MapControl Grid.Row="1"
                           Grid.Column="1"
                           CenterOnUserLocation="True"
-                          ClearBusStopsOnZoomOut="False"
+                          ClearBusStopsOnZoomOut="False"                          
                           DataContext="{Binding MapControlViewModel}"
                           Shapes="{Binding Shapes}"
                           MapView="{Binding MapView, Mode=TwoWay}"

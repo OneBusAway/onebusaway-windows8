@@ -1,4 +1,5 @@
-﻿using OneBusAway.Model;
+﻿using OneBusAway.DataAccess;
+using OneBusAway.Model;
 using OneBusAway.Model.BingService;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,23 @@ namespace OneBusAway.ViewModels
     {
         private SearchResultsControlViewModel searchResultsControlViewModel;
         private MapControlViewModel mapControlViewModel;
+        private ObaDataAccess obaDataAccess;
 
         /// <summary>
         /// Creates the search results page view model.
         /// </summary>
         public SearchResultsViewModel()
         {
-            this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
-            this.MapControlViewModel = new MapControlViewModel();
             this.HeaderViewModel.SubText = "SEARCH RESULTS";
+
+            this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
+            this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
+
+            this.MapControlViewModel = new MapControlViewModel();
+            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
+            this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
+
+            this.obaDataAccess = new ObaDataAccess();
         }
 
         public SearchResultsControlViewModel SearchResultsControlViewModel
@@ -58,6 +67,31 @@ namespace OneBusAway.ViewModels
         public async Task SearchAsync(string queryText)
         {
             await this.SearchResultsControlViewModel.Search(queryText);
+        }
+
+        /// <summary>
+        /// Called when the user selects a route's search result.
+        /// </summary>
+        private async void OnSearchResultsControlViewModelRouteSelected(object sender, RouteSelectedEventArgs e)
+        {
+            var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
+
+            this.MapControlViewModel.BusStops = (from route in routes
+                                                 from stop in route.Stops
+                                                 select stop).ToList();
+
+            this.MapControlViewModel.Shapes = (from route in routes
+                                               from shape in route.Shapes
+                                               select shape).ToList();
+
+            this.MapControlViewModel.ZoomToRouteShape();
+        }
+
+        /// <summary>
+        /// When the user selects a bus stop, see if we can navigate to a page to display the route / stop combination.
+        /// </summary>
+        private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        {
         }
     }
 }
