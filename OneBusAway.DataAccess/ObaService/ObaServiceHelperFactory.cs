@@ -129,16 +129,7 @@ namespace OneBusAway.DataAccess
                         this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
                         this.request.Method = this.httpMethod.ToString();
 
-                        var response = await this.request.GetResponseAsync();
-                        var responseStream = response.GetResponseStream();
-
-                        XDocument doc = null;
-
-                        using (var streamReader = new StreamReader(responseStream))
-                        {
-                            string xml = await streamReader.ReadToEndAsync();
-                            doc = XDocument.Parse(xml);
-                        }
+                        XDocument doc = await WebRequestQueue.SendAsync(request);
 
                         // Verify that OBA sent us a valid document and that it's status code is 200:                
                         int returnCode = doc.Root.GetFirstElementValue<int>("code");
@@ -159,7 +150,7 @@ namespace OneBusAway.DataAccess
                     }
 
                     // If we keep getting 401s (permission denied), then we just need to keep retrying.
-                    await Task.Delay(100);
+                    await Task.Delay(20);
                 }
             }
 

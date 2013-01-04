@@ -122,6 +122,7 @@
     <Compile Include="ObaService\IObaServiceHelper.cs" />
     <Compile Include="ObaService\ObaDataAccess.cs" />
     <Compile Include="ObaService\ObaException.cs" />
+    <Compile Include="ObaService\WebRequestQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObaService\ObaServiceHelperFactory.cs" />
   </ItemGroup>
