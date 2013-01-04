@@ -31,8 +31,7 @@ namespace OneBusAway.ViewModels
             this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
 
             this.MapControlViewModel = new MapControlViewModel();
-            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
-            this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
+            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;            
 
             this.obaDataAccess = new ObaDataAccess();
         }
@@ -85,13 +84,6 @@ namespace OneBusAway.ViewModels
                                                select shape).ToList();
 
             this.MapControlViewModel.ZoomToRouteShape();
-        }
-
-        /// <summary>
-        /// When the user selects a bus stop, see if we can navigate to a page to display the route / stop combination.
-        /// </summary>
-        private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
-        {
         }
     }
 }

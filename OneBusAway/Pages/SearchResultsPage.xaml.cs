@@ -1,4 +1,5 @@
-﻿using OneBusAway.ViewModels;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,8 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
             searchResultsViewModel = (SearchResultsViewModel)this.DataContext;
+
+            this.searchResultsViewModel.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;        
         }
 
         /// <summary>
@@ -63,6 +66,14 @@ namespace OneBusAway.Pages
         {
             NavigationController.TryPersistViewModel(e.NavigationMode, this.searchResultsViewModel);
             base.OnNavigatedFrom(e);
+        }
+
+        /// <summary>
+        /// When the user selects a bus stop, see if we can navigate to a page to display the route / stop combination.
+        /// </summary>
+        private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        {
+            NavigationController.Instance.GoToMainPageCommand.Execute(e);
         }
     }
 }

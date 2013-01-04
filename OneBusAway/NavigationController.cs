@@ -272,7 +272,7 @@ namespace OneBusAway
                 }
                 else
                 {
-                    currentFrame.Navigate(typeof(MainPage));
+                    currentFrame.Navigate(typeof(MainPage), arg2);
                 }
             }
         }
@@ -363,8 +363,6 @@ namespace OneBusAway
         /// If the user clicks 'back' or 'favorites' while they are on the main page, then we don't really
         /// go back...we just change the display so that favorites are being shown.
         /// </summary>
-        /// <param name="currentFrame"></param>
-        /// <returns></returns>
         private async Task DisplayMainPageFavorites(Frame currentFrame)
         {
             var page = currentFrame.Content as MainPage;

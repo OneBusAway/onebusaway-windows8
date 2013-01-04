@@ -49,8 +49,22 @@ namespace OneBusAway.Pages
             } 
             else
             {
-                await this.mainPageViewModel.MapControlViewModel.FindUserLocationAsync();
-                await this.mainPageViewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                StopSelectedEventArgs stopSelectedEventArgs = e.Parameter as StopSelectedEventArgs;
+
+                if (stopSelectedEventArgs == null)
+                {
+                    await this.mainPageViewModel.MapControlViewModel.FindUserLocationAsync();
+                    await this.mainPageViewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                }
+                else
+                {
+                    await this.mainPageViewModel.NavigateDirectlyToStop(
+                        stopSelectedEventArgs.Latitude,
+                        stopSelectedEventArgs.Longitude,
+                        stopSelectedEventArgs.SelectedStopId,
+                        stopSelectedEventArgs.StopName,
+                        stopSelectedEventArgs.Direction);
+                }
             }
 
             base.OnNavigatedTo(e);

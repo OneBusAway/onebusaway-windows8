@@ -82,7 +82,7 @@ namespace OneBusAway.ViewModels
 
                 if (this.RefreshBusStopsOnMapViewChanged && value.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
                 {
-                    RefreshStopsForLocationAsync();
+                    var ignored = RefreshStopsForLocationAsync();
                 }
             }
         }
@@ -145,20 +145,26 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public async void RefreshStopsForLocationAsync()
+        public async Task RefreshStopsForLocationAsync()
         {
-            try
-            {
-                var output = await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude, mapView.BoundsHeight, mapView.BoundsWidth);
-
-                BusStops = output.ToList();
-            }
-            catch (Exception)
-            {
-                // TODO
-            }
+            this.BusStops = (await this.obaDataAccess.GetStopsForLocationAsync(
+                mapView.MapCenter.Latitude,
+                mapView.MapCenter.Longitude,
+                mapView.BoundsHeight,
+                mapView.BoundsWidth)).ToList();
         }
-        
+
+        /// <summary>
+        /// Sets the map view and refreshes stops around that view asynchronously.
+        /// </summary>
+        public async Task RefreshStopsForLocationAsync(MapView mapView)
+        {
+            SetProperty(ref this.mapView, mapView);
+            MapView.Current = mapView;
+
+            this.BusStops = (await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude)).ToList();
+        }
+
         /// <summary>
         /// Called when a stop is selected.
         /// </summary>
@@ -266,10 +272,10 @@ namespace OneBusAway.ViewModels
             double originY = maxEast + (eastWestSpan / 2.0);
 
             this.MapView = new MapView(
-                new Point(originX, originY), 
-                this.mapView.ZoomLevel, 
-                northSouthSpan, 
-                eastWestSpan, 
+                new Point(originX, originY),
+                this.mapView.ZoomLevel,
+                northSouthSpan,
+                eastWestSpan,
                 true);
         }
     }
