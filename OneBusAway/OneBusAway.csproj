@@ -142,6 +142,8 @@
       <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
+    <Compile Include="Converters\BoolToFontWeightConverter.cs" />
+    <Compile Include="Converters\BoolToThicknessConverter.cs" />
     <Compile Include="Converters\BoolToObaGreenConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\IsCurrentHourToVisibilityConverter.cs" />

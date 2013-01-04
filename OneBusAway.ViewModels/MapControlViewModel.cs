@@ -15,6 +15,7 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class MapControlViewModel : ViewModelBase
     {
+        private ObaDataAccess obaDataAccess;
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
         private List<Stop> busStops;
@@ -30,6 +31,7 @@ namespace OneBusAway.ViewModels
         public MapControlViewModel()
         {
             this.mapView = MapView.Current;
+            this.obaDataAccess = new ObaDataAccess();
             this.RefreshBusStopsOnMapViewChanged = true;
         }
 
@@ -139,7 +141,7 @@ namespace OneBusAway.ViewModels
         {
             try
             {
-                var output = await new ObaDataAccess().GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude, mapView.BoundsHeight, mapView.BoundsWidth);
+                var output = await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude, mapView.BoundsHeight, mapView.BoundsWidth);
 
                 BusStops = output.ToList();
             }
@@ -187,6 +189,15 @@ namespace OneBusAway.ViewModels
             {
                 SelectStop(selectedStop);
             }
+        }
+
+        /// <summary>
+        /// Finds the shape of a route by its id and headsign and then displays it.
+        /// </summary>
+        public async Task FindRouteShapeAsync(string routeId, string tripHeadsign)
+        {
+            var routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, tripHeadsign);
+            this.Shapes = routeData.Shapes.ToList();
         }
     }
 }

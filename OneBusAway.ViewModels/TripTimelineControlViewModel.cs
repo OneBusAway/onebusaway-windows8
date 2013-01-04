@@ -29,6 +29,16 @@ namespace OneBusAway.ViewModels
         private ObaDataAccess obaDataAccess;
 
         /// <summary>
+        /// The currently selected stop.
+        /// </summary>
+        private TripStop selectedStop;
+
+        /// <summary>
+        /// This event is fired when the user selects a stop on the time table view model.
+        /// </summary>
+        public event EventHandler<StopSelectedEventArgs> StopSelected;
+
+        /// <summary>
         /// Creates the control.
         /// </summary>
         public TripTimelineControlViewModel()
@@ -72,6 +82,45 @@ namespace OneBusAway.ViewModels
         public async Task GetTripDetailsAsync()
         {
             this.TripDetails = await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
+        }
+
+        /// <summary>
+        /// Selects a stop.
+        /// </summary>
+        public void SelectStop(string stopId)
+        {
+            if (selectedStop != null)
+            {
+                selectedStop.IsSelectedStop = false;
+            }
+
+            this.selectedStop = (from tripStop in this.tripDetails.TripStops
+                                 where string.Equals(stopId, tripStop.StopId, StringComparison.OrdinalIgnoreCase)
+                                 select tripStop).FirstOrDefault();
+
+            if (this.selectedStop != null)
+            {
+                this.selectedStop.IsSelectedStop = true;
+            }
+        }
+
+        /// <summary>
+        /// Called when the user selects a new stop.
+        /// </summary>
+        public void SelectNewStop(TripStop stop)
+        {
+            // This stop is already selected:
+            if (this.selectedStop != null && string.Equals(this.selectedStop.StopId, stop.StopId, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            this.SelectStop(stop.StopId);
+            var stopSelected = this.StopSelected;
+            if (stopSelected != null)
+            {
+                stopSelected(this, new StopSelectedEventArgs(stop.Name, stop.StopId, stop.Direction));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="OneBusAway.Controls.TripTimelineControl"
+             x:Name="root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,6 +15,26 @@
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:StringFormatConverter x:Key="stringFormatConverter" />
         <conv:BoolToObaGreenConverter x:Key="boolToObaGreenConverter" />
+        <conv:BoolToFontWeightConverter x:Key="boolToFontWeightConverter" />
+        <conv:BoolToThicknessConverter x:Key="boolToThicknessConverter" />
+        <Style x:Key="CommandableButton"
+                   TargetType="ButtonBase">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
+                                       Foreground="Black"
+                                       FontWeight="Bold"
+                                       Margin="10,2,0,2"
+                                       FontSize="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid Background="White">
@@ -31,26 +52,26 @@
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center">
-            
+
             <TextBlock FontSize="22"
                        FontWeight="Bold"
                        Foreground="{StaticResource obaGreen}"
                        Text="{Binding TrackingData.Route.ShortName, Converter={StaticResource stringFormatConverter}, ConverterParameter='BUS {0}'}" />
-            
+
             <TextBlock FontSize="14"
                        FontWeight="Bold"
                        Foreground="Black"
                        Text="{Binding TrackingData.TripHeadsign}" />
-            
+
             <Grid Margin="0,10,0,0"                  
                   Background="{StaticResource obaGreen}">
-                
+
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="65" />
                     <ColumnDefinition Width="60" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Grid.Column="0"
                            Grid.Row="0"
                            TextAlignment="Left"
@@ -73,48 +94,82 @@
                            Margin="10,2,0,2">DESTINATION</TextBlock>
             </Grid>
         </StackPanel>
-        
+
         <ItemsControl Grid.Column="0"
                       Grid.Row="1"
                       ItemsSource="{Binding TripDetails.TripStops}">
-            
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,5,0,5"
-                          Height="30"                          
-                          Background="#F3F3F3">
-                        
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Grid.Column="0"
+
+                    <Grid>
+
+                        <Grid Height="30"
+                              Margin="0,5,0,5"
+                              Background="#F3F3F3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65" />
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
                                    Grid.Row="0"
                                    Margin="10,2,0,2"
                                    VerticalAlignment="Center"
+                                   FontSize="12"
+                                   FontWeight="{Binding HasReachedStop, Converter={StaticResource boolToFontWeightConverter}, ConverterParameter=True}"
                                    Text="{Binding ArrivalTime, Converter={StaticResource timeToTextConverter},  ConverterParameter='hh:mm tt'}"
                                    Foreground="Black" />
 
-                        <TextBlock Grid.Column="1"
+                            <TextBlock Grid.Column="1"
                                    Grid.Row="0"
                                    TextAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="0,2,0,2"
+                                   FontSize="12"
                                    Foreground="{Binding HasReachedStop, Converter={StaticResource boolToObaGreenConverter}, ConverterParameter=True}">&#x2B24;</TextBlock>
 
-                        <TextBlock Grid.Column="2"
+                            <Button Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="10,2,0,2"
+                                    Style="{StaticResource CommandableButton}"
+                                    Click="OnStopClicked"
+                                    AutomationProperties.Name="{Binding Name}" />
+
+                        </Grid>
+
+                        <!-- Border displays the selected border -->
+                        <Border Margin="0,3,0,3"
+                            BorderThickness="{Binding IsSelectedStop, Converter={StaticResource boolToThicknessConverter}, ConverterParameter=2}"
+                            BorderBrush="{StaticResource obaGreen}">
+                        </Border>
+
+                        <!-- Displays the bus icon for the last stop -->
+                        <Grid Visibility="{Binding IsClosestStop, Converter={StaticResource boolToVisibilityConverter}}">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65" />
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="1"
                                    Grid.Row="0"
-                                   Margin="10,2,0,2"
+                                   Height="26"
+                                   Width="27"
+                                   HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Text="{Binding Name}"
-                                   Foreground="Black" />
+                                   Source="ms-appx:///Assets/transparentbus.png" />
+
+                        </Grid>
 
                     </Grid>
+
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-            
+
         </ItemsControl>
 
     </Grid>

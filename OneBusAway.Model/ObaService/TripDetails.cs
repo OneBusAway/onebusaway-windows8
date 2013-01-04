@@ -76,6 +76,11 @@ namespace OneBusAway.Model
                     hasReachedStop = false;
                 }
 
+                if (string.Equals(tripStop.StopId, this.ClosestStopId, StringComparison.OrdinalIgnoreCase))
+                {
+                    tripStop.IsClosestStop = true;
+                }
+
                 tripStop.HasReachedStop = hasReachedStop;
             }
         }

@@ -29,6 +29,8 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
             this.viewModel = (TripDetailsPageViewModel)this.DataContext;
+            this.viewModel.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
+            this.viewModel.TripTimelineControlViewModel.StopSelected += OnTripTimelineControlViewModelStopSelected;
         }
 
         /// <summary>
@@ -49,11 +51,13 @@ namespace OneBusAway.Pages
                 tripViewModel.TrackingData = trackingData;;
 
                 // get the trip details:
-                await tripViewModel.GetTripDetailsAsync();                
+                await tripViewModel.GetTripDetailsAsync();
+                tripViewModel.SelectStop(trackingData.StopId);
 
                 // Copy bus data into the map control:
                 mapViewModel.BusStops = tripViewModel.TripDetails.TripStops.Cast<Stop>().ToList();
                 mapViewModel.SelectStop(trackingData.StopId);
+                await mapViewModel.FindRouteShapeAsync(trackingData.RouteId, trackingData.TripHeadsign);
             }
 
             base.OnNavigatedTo(e);
@@ -66,6 +70,22 @@ namespace OneBusAway.Pages
         {
             NavigationController.TryPersistViewModel(e.NavigationMode, this.viewModel);
             base.OnNavigatedFrom(e);
+        }
+
+        /// <summary>
+        /// Update the selected stop on the map view model.
+        /// </summary>
+        private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        {
+            this.viewModel.TripTimelineControlViewModel.SelectStop(e.SelectedStopId);
+        }
+
+        /// <summary>
+        /// Update the selected stop on the trip details view model.
+        /// </summary>
+        private void OnTripTimelineControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        {
+            this.viewModel.MapControlViewModel.SelectStop(e.SelectedStopId);
         }
     }
 }

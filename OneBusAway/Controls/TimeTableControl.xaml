@@ -84,8 +84,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="0,5,0,5"
-                                BorderBrush="{StaticResource obaGreen}"
-                                BorderThickness="{Binding Converter={StaticResource isCurrentHourToVisibilityConverter}, ConverterParameter=2}">
+                            BorderBrush="{StaticResource obaGreen}"
+                            BorderThickness="{Binding Converter={StaticResource isCurrentHourToVisibilityConverter}, ConverterParameter=2}">
                         <ItemsControl HorizontalAlignment="Stretch"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"

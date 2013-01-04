@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +23,22 @@ namespace OneBusAway.Controls
         public TripTimelineControl()
         {
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Called when the user selects a stop.
+        /// </summary>
+        private void OnStopClicked(object sender, RoutedEventArgs e)
+        {
+            var viewModel = this.DataContext as TripTimelineControlViewModel;
+            if (viewModel != null)
+            {
+                var stop = ((Button)sender).DataContext as TripStop;
+                if (stop != null)
+                {
+                    viewModel.SelectNewStop(stop);
+                }
+            }
         }
     }
 }
