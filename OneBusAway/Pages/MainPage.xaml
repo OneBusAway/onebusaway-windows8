@@ -38,27 +38,22 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <Grid Grid.Column="0"
-              Grid.Row="1"
-              Margin="80,30,20,20">
+        <ScrollViewer Grid.Column="0"
+                      Grid.Row="1"
+                      VerticalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <StackPanel Margin="80,30,20,0">
 
-            <ctrls:RoutesAndStopsControl Grid.Column="0"
-                                         Grid.Row="0"
-                                         DataContext="{Binding RoutesAndStopsViewModel}" />
+                <ctrls:RoutesAndStopsControl DataContext="{Binding RoutesAndStopsViewModel}" />
 
-            <ctrls:RouteMapsAndSchedulesControl Grid.Column="0"
-                                                Grid.Row="1"
-                                                DataContext="{Binding RoutesAndStopsViewModel}" />
+                <ctrls:RouteMapsAndSchedulesControl Margin="0,20,0,30"
+                                                    DataContext="{Binding RoutesAndStopsViewModel}" />
 
-        </Grid>
+            </StackPanel>
+
+        </ScrollViewer>
 
         <ctrls:MapControl x:Name="mainPageMap"
                           Grid.Row="1"
