@@ -57,7 +57,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-            </Style>            
+            </Style>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -138,12 +138,11 @@
         </Grid>
 
         <ItemsControl Grid.Column="0"
-                      Grid.Row="3"
-                      Margin="0,5,0,0"
+                      Grid.Row="3"                      
                       ItemsSource="{Binding RealTimeData}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Background="#FFF0F0F0">
+                    <Grid Background="#FFF0F0F0" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="4*" />
@@ -155,22 +154,21 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50" />
-                            <RowDefinition Height="6" />
                         </Grid.RowDefinitions>
                         <Rectangle Grid.Row="0"
-                                    Grid.Column="0"
-                                    Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
+                                   Grid.Column="0"
+                                   Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
                         <TextBlock Grid.Row="0"
-                                    Grid.Column="2"
-                                    Text="{Binding Route.ShortName}"
-                                    TextTrimming="None"
-                                    TextWrapping="Wrap"
-                                    Foreground="Black"
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    TextAlignment="Left"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center" />
+                                   Grid.Column="2"
+                                   Text="{Binding Route.ShortName}"
+                                   TextTrimming="None"
+                                   TextWrapping="Wrap"
+                                   Foreground="Black"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   TextAlignment="Left"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center" />
                         <Button Grid.Row="0"
                                 Grid.Column="3"
                                 Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
@@ -184,41 +182,35 @@
                                 Command="{Binding AddToFavoritesCommand, Source={StaticResource navigationProxy}}"
                                 CommandParameter="{Binding StopAndRoute}" />
                         <TextBlock Grid.Row="0"
-                                    Grid.Column="5"
-                                    Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm tt'}"
-                                    FontSize="14"
-                                    FontWeight="SemiBold"
-                                    Foreground="Black"
-                                    TextAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center" />
+                                   Grid.Column="5"
+                                   Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm tt'}"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
                         <Grid Grid.Row="0"
-                                Grid.Column="6"
-                                Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="5*" />
-                                <RowDefinition Height="5*" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0"
-                                        Text="{Binding PredictedArrivalInMinutes}"
-                                        Foreground="White"
-                                        FontSize="20"
-                                        FontWeight="Bold"
-                                        TextAlignment="Center"
+                              Grid.Column="6"
+                              Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
+                            <StackPanel VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom" />
-                            <TextBlock Grid.Row="1"
-                                        Text="{Binding Status}"
-                                        Foreground="White"
-                                        FontSize="11"
-                                        TextAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top" />
+                                        Orientation="Vertical">
+                                <TextBlock Text="{Binding PredictedArrivalInMinutes}"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Bottom" />
+                                <TextBlock Text="{Binding Status}"
+                                           Foreground="White"
+                                           FontSize="11"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top" />
+                            </StackPanel>
                         </Grid>
-                        <Rectangle Grid.Row="1"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="8"
-                                    Fill="White"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

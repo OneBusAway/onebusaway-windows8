@@ -14,7 +14,7 @@
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:TimeToFontWeightConverter x:Key="timeToFontWeightConverter" />
         <conv:StringFormatConverter x:Key="stringFormatConverter" />
-        <conv:IsCurrentHourToVisibilityConverter x:Key="isCurrentHourToVisibilityConverter" />
+        <conv:IsCurrentHourToThicknessConverter x:Key="isCurrentHourToThicknessConverter" />
     </UserControl.Resources>
 
     <Grid Background="White">
@@ -83,13 +83,14 @@
                       ItemsSource="{Binding ScheduleData}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="0,5,0,5"
-                            BorderBrush="{StaticResource obaGreen}"
-                            BorderThickness="{Binding Converter={StaticResource isCurrentHourToVisibilityConverter}, ConverterParameter=2}">
+
+                    <Grid>
+
                         <ItemsControl HorizontalAlignment="Stretch"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                          ItemsSource="{Binding}">
+                                      Margin="0,5,0,0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ItemsSource="{Binding}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapGrid Orientation="Horizontal"
@@ -108,7 +109,12 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </Border>
+
+                        <Border Margin="0,5,0,0"
+                                BorderBrush="{StaticResource obaGreen}"
+                                BorderThickness="{Binding Converter={StaticResource isCurrentHourToThicknessConverter}, ConverterParameter=2}" />
+
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
