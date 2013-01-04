@@ -172,6 +172,16 @@
 
         </ItemsControl>
 
+        <ProgressRing Grid.Row="1"
+                      Grid.Column="0"
+                      VerticalAlignment="Top"
+                      Margin="10"
+                      Width="50"
+                      Height="50"
+                      IsActive="True"
+                      Foreground="Black"
+                      Visibility="{Binding IsLoadingTripDetails, Converter={StaticResource boolToVisibilityConverter}}" />
+
     </Grid>
 
 </UserControl>

@@ -17,6 +17,7 @@ namespace OneBusAway.ViewModels
         private string routeDescription;
         private string stopDescription;
         private bool? scheduleAvailable;
+        private bool isLoadingSchedule;
         private DateTime[][] scheduleData;
 
         private ObaDataAccess obaDataAccess;
@@ -27,6 +28,7 @@ namespace OneBusAway.ViewModels
         public TimeTableControlViewModel()
         {
             this.scheduleAvailable = null;
+            this.IsLoadingSchedule = true;
             this.obaDataAccess = new ObaDataAccess();
         }
 
@@ -51,6 +53,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.scheduleAvailable, value);
+            }
+        }
+
+        public bool IsLoadingSchedule
+        {
+            get
+            {
+                return this.isLoadingSchedule;
+            }
+            set
+            {
+                SetProperty(ref this.isLoadingSchedule, value);
             }
         }
 
@@ -113,9 +127,13 @@ namespace OneBusAway.ViewModels
             }
             catch (ArgumentException)
             {
-                // No schedule available for this stop:
-                this.ScheduleAvailable = false;
+                // No schedule available for this stop:   
+                this.ScheduleAvailable = false;                
                 this.ScheduleData = null;
+            }
+            finally
+            {
+                this.IsLoadingSchedule = false;
             }
         }
     }

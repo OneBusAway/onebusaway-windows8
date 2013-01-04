@@ -113,14 +113,26 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <TextBlock Grid.Column="0"
-                   Grid.Row="1"
-                   HorizontalAlignment="Center"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   Margin="20"
-                   Visibility="{Binding ScheduleAvailable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
-                   Foreground="Black">NO SCHEDULE DATA AVAILABLE</TextBlock>
+        <Grid Grid.Row="1"
+              Grid.Column="0"
+              Margin="20"
+              Visibility="{Binding IsLoadingSchedule, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       Visibility="{Binding ScheduleAvailable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
+                       Foreground="Black">NO SCHEDULE DATA AVAILABLE</TextBlock>
+        </Grid>
+
+        <ProgressRing Grid.Row="1"
+                      Grid.Column="0"
+                      VerticalAlignment="Top"
+                      Margin="10"
+                      Width="50"
+                      Height="50"
+                      IsActive="True"
+                      Foreground="Black"
+                      Visibility="{Binding IsLoadingSchedule, Converter={StaticResource boolToVisibilityConverter}}" />
 
     </Grid>
 

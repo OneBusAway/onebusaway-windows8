@@ -34,6 +34,11 @@ namespace OneBusAway.ViewModels
         private TripStop selectedStop;
 
         /// <summary>
+        /// True when we are loading trip details.  Used to show the progress ring.
+        /// </summary>
+        private bool isLoadingTripDetails;
+
+        /// <summary>
         /// This event is fired when the user selects a stop on the time table view model.
         /// </summary>
         public event EventHandler<StopSelectedEventArgs> StopSelected;
@@ -44,6 +49,22 @@ namespace OneBusAway.ViewModels
         public TripTimelineControlViewModel()
         {
             this.obaDataAccess = new ObaDataAccess();
+            this.IsLoadingTripDetails = true;
+        }
+
+        /// <summary>
+        /// Set to false once we are done loading trip details.
+        /// </summary>
+        public bool IsLoadingTripDetails
+        {
+            get
+            {
+                return this.isLoadingTripDetails;
+            }
+            set
+            {
+                SetProperty(ref this.isLoadingTripDetails, value);
+            }
         }
 
         /// <summary>
@@ -80,8 +101,9 @@ namespace OneBusAway.ViewModels
         /// Gets the trip details for the tracking data.
         /// </summary>
         public async Task GetTripDetailsAsync()
-        {
+        {            
             this.TripDetails = await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
+            this.IsLoadingTripDetails = false;
         }
 
         /// <summary>
