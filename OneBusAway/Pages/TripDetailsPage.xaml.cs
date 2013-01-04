@@ -85,7 +85,12 @@ namespace OneBusAway.Pages
         /// </summary>
         private void OnTripTimelineControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
         {
-            this.viewModel.MapControlViewModel.SelectStop(e.SelectedStopId);
+            var mapViewModel = this.viewModel.MapControlViewModel;
+            mapViewModel.SelectStop(e.SelectedStopId);            
+
+            var mapCenter = mapViewModel.MapView;
+            mapViewModel.MapView = new MapView(new Model.Point(e.Latitude, e.Longitude), mapCenter.ZoomLevel, true);
+
         }
     }
 }

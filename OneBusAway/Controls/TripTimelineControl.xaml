@@ -16,7 +16,7 @@
         <conv:StringFormatConverter x:Key="stringFormatConverter" />
         <conv:BoolToObaGreenConverter x:Key="boolToObaGreenConverter" />
         <conv:BoolToFontWeightConverter x:Key="boolToFontWeightConverter" />
-        <conv:BoolToThicknessConverter x:Key="boolToThicknessConverter" />
+        <conv:BoolToThicknessConverter x:Key="boolToThicknessConverter" />        
         <Style x:Key="CommandableButton"
                    TargetType="ButtonBase">
             <Setter Property="Template">

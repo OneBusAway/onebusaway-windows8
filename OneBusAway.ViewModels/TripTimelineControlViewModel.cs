@@ -119,7 +119,7 @@ namespace OneBusAway.ViewModels
             var stopSelected = this.StopSelected;
             if (stopSelected != null)
             {
-                stopSelected(this, new StopSelectedEventArgs(stop.Name, stop.StopId, stop.Direction));
+                stopSelected(this, new StopSelectedEventArgs(stop.Name, stop.StopId, stop.Direction, stop.Latitude, stop.Longitude));
             }
         }
     }

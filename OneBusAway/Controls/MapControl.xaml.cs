@@ -233,14 +233,31 @@ namespace OneBusAway.Controls
             var mapControl = d as MapControl;
             var newValue = e.NewValue as MapView;
 
-            if (newValue.MapCenter.Latitude != mapControl.map.Center.Latitude ||
-                newValue.MapCenter.Longitude != mapControl.map.Center.Longitude)
+            if (newValue.MapCenter.Latitude == mapControl.map.Center.Latitude &&
+                newValue.MapCenter.Longitude == mapControl.map.Center.Longitude)
             {
-                mapControl.map.Center = new Location(newValue.MapCenter.Latitude, newValue.MapCenter.Longitude);
+                return;
             }
 
-            if (newValue.ZoomLevel != mapControl.map.ZoomLevel)
+            var newLocation = new Location(newValue.MapCenter.Latitude, newValue.MapCenter.Longitude);
+
+            if (newValue.AnimateChange)
             {
+                if (newValue.BoundsWidth != 0 && newValue.BoundsHeight != 0)
+                {
+                    mapControl.map.SetView(new LocationRect(newLocation, newValue.BoundsWidth, newValue.BoundsHeight));
+                    newValue.AnimateChange = false;
+                }
+                else
+                {
+                    mapControl.map.SetView(newLocation, newValue.ZoomLevel, MapAnimationDuration.Default);
+                }
+
+                newValue.AnimateChange = false;
+            }
+            else
+            {
+                mapControl.map.Center = newLocation;
                 mapControl.map.ZoomLevel = newValue.ZoomLevel;
             }
         }
@@ -266,7 +283,7 @@ namespace OneBusAway.Controls
                 foreach (var shape in shapes)
                 {
                     MapPolyline polyline = new MapPolyline();
-                    polyline.Color = Color.FromArgb(255, 0x78, 0xAA, 0x36);
+                    polyline.Color = Color.FromArgb(255, 0x4f, 0x64, 0xba);
                     polyline.Width = 6;
 
                     foreach (var point in shape.Points)

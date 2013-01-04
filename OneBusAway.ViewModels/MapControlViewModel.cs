@@ -128,13 +128,21 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task FindUserLocationAsync()
         {
-            Geolocator geolocator = new Geolocator();
-            var position = await geolocator.GetGeopositionAsync();
+            try
+            {
+                Geolocator geolocator = new Geolocator();
+                var position = await geolocator.GetGeopositionAsync();
 
-            var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
-            
-            this.UserLocation = userLocation;
-            this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
+                var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
+
+                this.UserLocation = userLocation;
+                this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // the user didn't give us permission to use their location. Nothing we can do here
+                // so just zoom out to show the whole freakin' world =)
+            }
         }
 
         public async void RefreshStopsForLocationAsync()
@@ -160,9 +168,11 @@ namespace OneBusAway.ViewModels
             if (stopSelected != null)
             {
                 this.SelectedBusStop = busStopViewModel;
-                stopSelected(this, new StopSelectedEventArgs(busStopViewModel.StopName, 
+                stopSelected(this, new StopSelectedEventArgs(busStopViewModel.StopName,
                     busStopViewModel.StopId,
-                    busStopViewModel.Direction));
+                    busStopViewModel.Direction,
+                    busStopViewModel.Latitude,
+                    busStopViewModel.Longitude));
             }
         }
 
@@ -198,6 +208,69 @@ namespace OneBusAway.ViewModels
         {
             var routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, tripHeadsign);
             this.Shapes = routeData.Shapes.ToList();
+        }
+
+        /// <summary>
+        /// Zoomns the map to show the entire shape of the route.
+        /// </summary>
+        public void ZoomToRouteShape()
+        {
+            // No shapes set - there's nothing we can do here.
+            if (this.shapes == null || this.shapes.Count == 0)
+            {
+                return;
+            }
+
+            double maxWest = double.MinValue;
+            double maxEast = double.MaxValue;
+            double maxNorth = double.MinValue;
+            double maxSouth = double.MaxValue;
+
+            foreach (var shape in this.shapes)
+            {
+                foreach (var point in shape.Points)
+                {
+                    if (maxWest < point.Longitude)
+                    {
+                        maxWest = point.Longitude;
+                    }
+
+                    if (maxEast > point.Longitude)
+                    {
+                        maxEast = point.Longitude;
+                    }
+
+                    if (maxNorth < point.Latitude)
+                    {
+                        maxNorth = point.Latitude;
+                    }
+
+                    if (maxSouth > point.Latitude)
+                    {
+                        maxSouth = point.Latitude;
+                    }
+                }
+            }
+
+            // Calculate the span of the view, plus a little fudge factor as a border:
+            maxNorth += .01;
+            maxSouth -= .01;
+            maxWest += .01;
+            maxEast -= .01;
+
+            double northSouthSpan = (maxNorth - maxSouth);
+            double eastWestSpan = (maxWest - maxEast);
+
+            // Determine the origin:
+            double originX = maxSouth + (northSouthSpan / 2.0);
+            double originY = maxEast + (eastWestSpan / 2.0);
+
+            this.MapView = new MapView(
+                new Point(originX, originY), 
+                this.mapView.ZoomLevel, 
+                northSouthSpan, 
+                eastWestSpan, 
+                true);
         }
     }
 }

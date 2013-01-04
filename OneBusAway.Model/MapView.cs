@@ -8,18 +8,20 @@ namespace OneBusAway.Model
 {
     public class MapView
     {
-        public MapView(Point mapCenter, double zoomLevel)
+        public MapView(Point mapCenter, double zoomLevel, bool animateChange = false)
         {
             MapCenter = mapCenter;
             ZoomLevel = zoomLevel;
+            AnimateChange = animateChange;
         }
 
-        public MapView(Point mapCenter, double zoomLevel, double boundsHeight, double boundsWidth)
+        public MapView(Point mapCenter, double zoomLevel, double boundsHeight, double boundsWidth, bool animateChange = false)
         {
             MapCenter = mapCenter;
             ZoomLevel = zoomLevel;
             BoundsHeight = boundsHeight;
             BoundsWidth = boundsWidth;
+            AnimateChange = animateChange;
         }
 
         /// <summary>
@@ -39,5 +41,7 @@ namespace OneBusAway.Model
         public double BoundsHeight { get; set; }
 
         public double BoundsWidth { get; set; }
+
+        public bool AnimateChange { get; set; }
     }
 }

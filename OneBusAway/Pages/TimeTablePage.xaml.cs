@@ -57,6 +57,8 @@ namespace OneBusAway.Pages
                     await this.timeTablePageViewModel.SetRouteAndStopData(trackingData);
                     await this.timeTablePageViewModel.GetRouteData(trackingData);
                 }
+
+                this.timeTablePageViewModel.MapControlViewModel.ZoomToRouteShape();
             }
 
             base.OnNavigatedTo(e);
