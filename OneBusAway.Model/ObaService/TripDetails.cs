@@ -60,9 +60,12 @@ namespace OneBusAway.Model
             this.ClosestStopId = entryElement.GetFirstElementValue<string>("closestStop");
             this.NextStopId = entryElement.GetFirstElementValue<string>("nextStop");
 
-            var lastKnownLocationElement = entryElement.Descendants("lastKnownLocation").First();
-            this.KnownLatitude = lastKnownLocationElement.GetFirstElementValue<double>("lat");
-            this.KnownLongitude = lastKnownLocationElement.GetFirstElementValue<double>("lon");
+            var lastKnownLocationElement = entryElement.Descendants("lastKnownLocation").FirstOrDefault();
+            if (lastKnownLocationElement != null)
+            {
+                this.KnownLatitude = lastKnownLocationElement.GetFirstElementValue<double>("lat");
+                this.KnownLongitude = lastKnownLocationElement.GetFirstElementValue<double>("lon");
+            }
 
             this.TripStops = (from tripStopElement in entryElement.Descendants("tripStopTime")
                               select new TripStop(tripStopElement, serverTime)).ToArray();
