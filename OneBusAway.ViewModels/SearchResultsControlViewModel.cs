@@ -32,13 +32,7 @@ namespace OneBusAway.ViewModels
         /// This is a list of all of the possible routes that the user could search for.
         /// </summary>
         private static List<Route> allResults = new List<Route>();
-
-        /// <summary>
-        /// This task represents the work that has to happen with OBA before 
-        /// we can respond to results.
-        /// </summary>
-        private static Task allResultsTask;
-
+        
         /// <summary>
         /// This bool is true until we're done loading routes from OBA.
         /// </summary>
@@ -50,7 +44,7 @@ namespace OneBusAway.ViewModels
         public SearchResultsControlViewModel()
         {
             this.obaDataAccess = new ObaDataAccess();
-            this.IsLoadingRoutes = (allResultsTask == null || !allResultsTask.IsCompleted);
+            this.IsLoadingRoutes = AllRoutesCache.IsCacheUpToDate();
         }
 
         /// <summary>
@@ -88,20 +82,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task Search(string query)
         {
-            // If this is null, then let's try and populate the list of all routes:
-            if (allResultsTask == null)
-            {
-                lock (searchLock)
-                {
-                    if (allResultsTask == null)
-                    {
-                        allResultsTask = GetAllResults();
-                    }
-                }
-            }
-
-            // Wait for the all results to task to finish. If it's already finished then we'll just skip this.
-            await allResultsTask;
+            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            this.IsLoadingRoutes = false;
 
             if (string.IsNullOrEmpty(query))
             {
@@ -110,24 +92,11 @@ namespace OneBusAway.ViewModels
             else
             {
                 // Let's filter the results!
-                this.SearchResults = (from result in allResults
+                this.SearchResults = (from result in listOfAllRoutes
                                       where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
                                          || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
                                       select result).ToArray();
             }
-        }
-
-        /// <summary>
-        /// Gets all of the results.
-        /// </summary>
-        private async Task GetAllResults()
-        {
-            foreach (Agency agency in await this.obaDataAccess.GetAllAgencies())
-            {
-                allResults.AddRange(await this.obaDataAccess.GetAllRouteIdsForAgency(agency));
-            }
-
-            this.IsLoadingRoutes = false;
         }
     }
 }

@@ -15,5 +15,10 @@ namespace OneBusAway.ViewModels
         /// Default map zoom when map control is loaded on any page
         /// </summary>
         public const double DefaultMapZoom = 12;
+
+        /// <summary>
+        /// The name of the route data cache file.
+        /// </summary>
+        public const string CacheFileName = "RouteData.xml";
     }
 }

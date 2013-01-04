@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Devices.Geolocation;
@@ -34,6 +35,9 @@ namespace OneBusAway
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            
+            // Queue a task to refresh the search cache:
+            Task.Run(() => AllRoutesCache.EnsureUpToDateAsync());
         }
 
         /// <summary>
