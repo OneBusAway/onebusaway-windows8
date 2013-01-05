@@ -55,9 +55,9 @@ namespace OneBusAway.Tests
         {
             #region BingDataAccessTests
 
-            List<Location> locations = await BingMapsServiceHelper.GetLocationByQuery("5th & Pine", Utilities.Confidence.High, userPosition);
-            List<Location> locations1 = await BingMapsServiceHelper.GetLocationByQuery("5th & Pine, seattle", Confidence.High, userPosition);
-            List<Location> locations2 = await BingMapsServiceHelper.GetLocationByQuery("Space Needle", Confidence.High);
+            //List<Location> locations = await BingMapsServiceHelper.GetLocationByQuery("5th & Pine", Utilities.Confidence.High, userPosition);
+            //List<Location> locations1 = await BingMapsServiceHelper.GetLocationByQuery("5th & Pine, seattle", Confidence.High, userPosition);
+            //List<Location> locations2 = await BingMapsServiceHelper.GetLocationByQuery("Space Needle", Confidence.High);
             
             #endregion
         }

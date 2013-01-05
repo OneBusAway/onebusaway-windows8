@@ -1,5 +1,7 @@
 ﻿using OneBusAway.DataAccess;
+using OneBusAway.DataAccess.BingService;
 using OneBusAway.Model;
+using OneBusAway.Model.BingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +26,15 @@ namespace OneBusAway.ViewModels
         private SearchRouteResultViewModel[] searchResults;
 
         /// <summary>
+        /// List of locations obtained by querying Bing maps service
+        /// </summary>
+        private List<SearchLocationResultViewModel> bingMapsSearchResults;
+
+        /// <summary>
         /// This is a list of all of the possible routes that the user could search for.
         /// </summary>
         private static List<Route> allResults = new List<Route>();
-        
+
         /// <summary>
         /// This bool is true until we're done loading routes from OBA.
         /// </summary>
@@ -36,12 +43,17 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// This is the selected search result.
         /// </summary>
-        private SearchRouteResultViewModel selectedResult;
+        private object selectedResult;
 
         /// <summary>
         /// Fires whenever a user selects a new route.
         /// </summary>
         public event EventHandler<RouteSelectedEventArgs> RouteSelected;
+
+        /// <summary>
+        /// Fires when a user selects a location from the search results
+        /// </summary>
+        public event EventHandler<LocationSelectedEventArgs> LocationSelected;
 
         /// <summary>
         /// Creates the search results control view model.
@@ -73,6 +85,7 @@ namespace OneBusAway.ViewModels
                 }
 
                 SetProperty(ref this.searchResults, value);
+                FirePropertyChanged("SearchResultsExist");
 
                 // Add new event handlers:
                 if (this.searchResults != null)
@@ -82,6 +95,28 @@ namespace OneBusAway.ViewModels
                         result.RouteSelected += OnResultRouteSelected;
                     }
                 }
+            }
+        }
+
+        public bool SearchResultsExist
+        {
+            get
+            {
+                return (SearchResults != null && SearchResults.Count() > 0)
+                    || (BingMapsSearchResults != null && BingMapsSearchResults.Count > 0);
+            }
+        }
+
+        public List<SearchLocationResultViewModel> BingMapsSearchResults
+        {
+            get
+            {
+                return this.bingMapsSearchResults;
+            }
+            set
+            {
+                SetProperty(ref this.bingMapsSearchResults, value);
+                FirePropertyChanged("SearchResultsExist");
             }
         }
 
@@ -103,22 +138,34 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches all agencies for all bus numbers.
         /// </summary>
-        public async Task Search(string query)
+        public async Task Search(string query, OneBusAway.Model.Point userLocation = null)
         {
-            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
-            this.IsLoadingRoutes = false;
+            try
+            {
+                var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+                this.IsLoadingRoutes = false;
 
-            if (string.IsNullOrEmpty(query))
-            {
-                this.SearchResults = new SearchRouteResultViewModel[] { };
+                if (string.IsNullOrEmpty(query))
+                {
+                    this.SearchResults = new SearchRouteResultViewModel[] { };
+                }
+                else
+                {
+                    // Let's filter the results!
+                    this.SearchResults = (from result in listOfAllRoutes
+                                          where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                             || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                          select new SearchRouteResultViewModel(result)).ToArray();
+
+                    var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
+
+                    this.BingMapsSearchResults = (from result in bingMapResults
+                                                  select new SearchLocationResultViewModel(result, SearchLocationResultViewModel_LocationSelected)).ToList();
+                }
             }
-            else
+            catch 
             {
-                // Let's filter the results!
-                this.SearchResults = (from result in listOfAllRoutes
-                                      where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                         || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                      select new SearchRouteResultViewModel(result)).ToArray();
+                
             }
         }
 
@@ -127,10 +174,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         private void OnResultRouteSelected(object sender, RouteSelectedEventArgs e)
         {
-            if (this.selectedResult != null)
-            {
-                this.selectedResult.IsSelected = false;
-            }
+            ResetSelectedResult();
 
             this.selectedResult = sender as SearchRouteResultViewModel;
 
@@ -138,6 +182,34 @@ namespace OneBusAway.ViewModels
             if (routeSelected != null)
             {
                 routeSelected(this, e);
+            }
+        }
+
+        void SearchLocationResultViewModel_LocationSelected(object sender, LocationSelectedEventArgs e)
+        {
+            ResetSelectedResult();
+
+            this.selectedResult = sender as SearchLocationResultViewModel;
+
+            var locationSelected = this.LocationSelected;
+            if (locationSelected != null)
+            {
+                locationSelected(this, e);
+            }
+        }
+
+        private void ResetSelectedResult()
+        {
+            if (this.selectedResult != null)
+            {
+                if (this.selectedResult is SearchLocationResultViewModel)
+                {
+                    (selectedResult as SearchLocationResultViewModel).IsSelected = false;
+                }
+                else if (this.selectedResult is SearchRouteResultViewModel)
+                {
+                    (selectedResult as SearchRouteResultViewModel).IsSelected = false;
+                }
             }
         }
     }

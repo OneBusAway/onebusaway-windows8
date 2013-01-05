@@ -1,4 +1,5 @@
 ﻿using OneBusAway.Model.BingService;
+//using OneBusAway.Model.BingService;
 using OneBusAway.Utilities;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace OneBusAway.DataAccess.BingService
         /// <param name="minimumConfidence">Minimum confidence by which to filter the search results</param>
         /// <param name="userPosition">User's location that is used to improve search results</param>
         /// <returns></returns>
-        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, Windows.Devices.Geolocation.Geoposition userPosition = null)
+        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, OneBusAway.Model.Point userPosition = null)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -42,7 +43,7 @@ namespace OneBusAway.DataAccess.BingService
 
             if (userPosition != null)
             {
-                queryParameters.Add(UtilitiesConstants.Parameter_UserLocation, userPosition.Coordinate.Latitude + "," + userPosition.Coordinate.Longitude);
+                queryParameters.Add(UtilitiesConstants.Parameter_UserLocation, userPosition.Latitude + "," + userPosition.Longitude);
             }
 
             string url = Helpers.CreateServiceUrl(UtilitiesConstants.BingLocationServiceBaseAddress, queryParameters);

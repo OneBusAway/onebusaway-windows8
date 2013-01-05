@@ -47,7 +47,7 @@
                       VerticalScrollMode="Auto"
                       VerticalScrollBarVisibility="Auto">
             <ctrls:SearchResultsControl DataContext="{Binding SearchResultsControlViewModel}"
-                                        Margin="80,20,20,0" />
+                                        Margin="0,20,0,0" />
         </ScrollViewer>
 
         <ctrls:MapControl Grid.Row="1"

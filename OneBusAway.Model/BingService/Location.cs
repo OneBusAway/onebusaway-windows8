@@ -21,5 +21,13 @@ namespace OneBusAway.Model.BingService
 
         [DataMember(Name = "address")]
         public Address Address { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return Name;
+            }
+        }
     }
 }

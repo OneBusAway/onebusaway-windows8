@@ -29,12 +29,13 @@ namespace OneBusAway.ViewModels
 
             this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
             this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
+            this.SearchResultsControlViewModel.LocationSelected += SearchResultsControlViewModel_LocationSelected;
 
             this.MapControlViewModel = new MapControlViewModel();
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;            
 
             this.obaDataAccess = new ObaDataAccess();
-        }
+        }        
 
         public SearchResultsControlViewModel SearchResultsControlViewModel
         {
@@ -64,8 +65,8 @@ namespace OneBusAway.ViewModels
         /// Searches asynchronously for a stop with the given name.
         /// </summary>
         public async Task SearchAsync(string queryText)
-        {
-            await this.SearchResultsControlViewModel.Search(queryText);
+        {            
+            await this.SearchResultsControlViewModel.Search(queryText, MapControlViewModel.UserLocation);
         }
 
         /// <summary>
@@ -84,6 +85,20 @@ namespace OneBusAway.ViewModels
                                                select shape).ToList();
 
             this.MapControlViewModel.ZoomToRouteShape();
+        }
+
+        /// <summary>
+        /// Called when the user selects a location as the search result
+        /// </summary>
+        /// <param name="sender">SearchResultsControlViewModel</param>
+        /// <param name="e">SearchLocationResultViewModel</param>
+        void SearchResultsControlViewModel_LocationSelected(object sender, LocationSelectedEventArgs e)
+        {
+            var point = new OneBusAway.Model.Point(e.Location.Point.Coordinates[0], e.Location.Point.Coordinates[1]);
+            this.MapControlViewModel.MapView = new MapView(point, ViewModelConstants.DefaultMapZoom);
+
+            this.MapControlViewModel.BusStops = null;
+            this.MapControlViewModel.Shapes = null;
         }
     }
 }
