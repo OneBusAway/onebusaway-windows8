@@ -36,12 +36,11 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// The location to base the view model on.
         /// </summary>
-        public SearchLocationResultViewModel(Location location, EventHandler<LocationSelectedEventArgs> locationSelectedEventHandler)
+        public SearchLocationResultViewModel(Location location)
         {
             this.Location = location;
             this.SelectedCommand = new ObservableCommand();
             this.SelectedCommand.Executed += OnSelectedCommandExecuted;
-            this.LocationSelected += locationSelectedEventHandler;
         }
 
         /// <summary>

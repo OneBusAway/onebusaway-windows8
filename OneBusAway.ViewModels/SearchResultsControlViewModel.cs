@@ -28,7 +28,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// List of locations obtained by querying Bing maps service
         /// </summary>
-        private List<SearchLocationResultViewModel> bingMapsSearchResults;
+        private SearchLocationResultViewModel[] bingMapsSearchResults;
 
         /// <summary>
         /// This is a list of all of the possible routes that the user could search for.
@@ -103,11 +103,11 @@ namespace OneBusAway.ViewModels
             get
             {
                 return (SearchResults != null && SearchResults.Count() > 0)
-                    || (BingMapsSearchResults != null && BingMapsSearchResults.Count > 0);
+                    || (BingMapsSearchResults != null && BingMapsSearchResults.Length > 0);
             }
         }
 
-        public List<SearchLocationResultViewModel> BingMapsSearchResults
+        public SearchLocationResultViewModel[] BingMapsSearchResults
         {
             get
             {
@@ -115,8 +115,24 @@ namespace OneBusAway.ViewModels
             }
             set
             {
+                if (this.bingMapsSearchResults != null)
+                {
+                    foreach (var result in this.bingMapsSearchResults)
+                    {
+                        result.LocationSelected -= OnSearchLocationResultViewModelLocationSelected;
+                    }
+                }
+
                 SetProperty(ref this.bingMapsSearchResults, value);
                 FirePropertyChanged("SearchResultsExist");
+
+                if (this.bingMapsSearchResults != null)
+                {
+                    foreach (var result in this.bingMapsSearchResults)
+                    {
+                        result.LocationSelected += OnSearchLocationResultViewModelLocationSelected;
+                    }
+                }
             }
         }
 
@@ -147,7 +163,8 @@ namespace OneBusAway.ViewModels
 
                 if (string.IsNullOrEmpty(query))
                 {
-                    this.SearchResults = new SearchRouteResultViewModel[] { };
+                    this.SearchResults = null;
+                    this.BingMapsSearchResults = null;
                 }
                 else
                 {
@@ -158,14 +175,14 @@ namespace OneBusAway.ViewModels
                                           select new SearchRouteResultViewModel(result)).ToArray();
 
                     var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
-
                     this.BingMapsSearchResults = (from result in bingMapResults
-                                                  select new SearchLocationResultViewModel(result, SearchLocationResultViewModel_LocationSelected)).ToList();
+                                                  select new SearchLocationResultViewModel(result)).ToArray();
+
                 }
             }
-            catch 
+            catch
             {
-                
+
             }
         }
 
@@ -185,7 +202,10 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        void SearchLocationResultViewModel_LocationSelected(object sender, LocationSelectedEventArgs e)
+        /// <summary>
+        /// Called when the user selects an address from the bing search results.
+        /// </summary>
+        void OnSearchLocationResultViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
         {
             ResetSelectedResult();
 
@@ -198,6 +218,9 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        /// <summary>
+        /// Resets the last selected item from the search results control.
+        /// </summary>
         private void ResetSelectedResult()
         {
             if (this.selectedResult != null)

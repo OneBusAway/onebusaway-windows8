@@ -29,7 +29,7 @@ namespace OneBusAway.ViewModels
 
             this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
             this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
-            this.SearchResultsControlViewModel.LocationSelected += SearchResultsControlViewModel_LocationSelected;
+            this.SearchResultsControlViewModel.LocationSelected += OnSearchResultsControlViewModelLocationSelected;
 
             this.MapControlViewModel = new MapControlViewModel();
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;            
@@ -74,6 +74,13 @@ namespace OneBusAway.ViewModels
         /// </summary>
         private async void OnSearchResultsControlViewModelRouteSelected(object sender, RouteSelectedEventArgs e)
         {
+            // If this is true then the user just clicked from a location-based search. Clear old bus stops!
+            if (this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
+            {
+                this.MapControlViewModel.BusStops = null;
+                this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
+            }            
+
             var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
 
             this.MapControlViewModel.BusStops = (from route in routes
@@ -92,13 +99,18 @@ namespace OneBusAway.ViewModels
         /// </summary>
         /// <param name="sender">SearchResultsControlViewModel</param>
         /// <param name="e">SearchLocationResultViewModel</param>
-        void SearchResultsControlViewModel_LocationSelected(object sender, LocationSelectedEventArgs e)
+        void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
         {
+            if (!this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
+            {
+                this.MapControlViewModel.BusStops = null;
+                this.MapControlViewModel.Shapes = null;
+                this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = true;
+            }
+            
             var point = new OneBusAway.Model.Point(e.Location.Point.Coordinates[0], e.Location.Point.Coordinates[1]);
-            this.MapControlViewModel.MapView = new MapView(point, ViewModelConstants.DefaultMapZoom);
-
-            this.MapControlViewModel.BusStops = null;
-            this.MapControlViewModel.Shapes = null;
+            this.MapControlViewModel.UserLocation = point;
+            this.MapControlViewModel.MapView = new MapView(point, ViewModelConstants.ZoomedInMapZoom, true);            
         }
     }
 }

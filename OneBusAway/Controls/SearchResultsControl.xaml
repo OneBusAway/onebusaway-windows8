@@ -17,66 +17,93 @@
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <conv:StringFormatConverter x:Key="stringFormatConverter" />
             <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+            <Style x:Key="CommandableButton"
+                   TargetType="ButtonBase">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
+                                           Foreground="Black"
+                                           FontWeight="Bold"
+                                           Margin="10,2,0,2"
+                                           FontSize="12"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
 
-        <StackPanel Orientation="Vertical">
-            <ItemsControl BorderThickness="0"
-                          ItemsSource="{Binding SearchResults}"
-                          Margin="80,20,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="5*" />
+        </Grid.RowDefinitions>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                    <Grid Margin="0,10,0,0">
+        <ItemsControl Grid.Column="0"
+                      Grid.Row="0"
+                      BorderThickness="0"
+                      ItemsSource="{Binding SearchResults}">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="80,10,0,20">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
                         <!-- hilight rectangle -->
                         <Rectangle Grid.Column="0"
                                    Grid.Row="0"
                                    Grid.ColumnSpan="2"
                                    Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}"
-                                   Fill="#FFF0F0F0" />                            
-                        
-                            <Grid Grid.Column="0"
-                                  Grid.Row="0"
+                                   Fill="#FFF0F0F0" />
+
+                        <Grid Grid.Column="0"
+                              Grid.Row="0"
                               Margin="4"
                               VerticalAlignment="Center">
 
-                                <Ellipse Width="60"
-                                         Height="60"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Fill="{StaticResource obaGreen}" />
-                                
-                                <Image Height="26"
-                                       Width="27"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Source="ms-appx:///Assets/transparentbus.png" />
+                            <Ellipse Width="60"
+                                     Height="60"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Fill="{StaticResource obaGreen}" />
 
-                            </Grid>
+                            <Image Height="26"
+                                   Width="27"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Source="ms-appx:///Assets/transparentbus.png" />
+
+                        </Grid>
 
                         <Button Grid.Column="1"
-                                        Grid.Row="0"
+                                Grid.Row="0"
                                 VerticalAlignment="Center"
-                                Command="{Binding SelectedCommand}"                                
+                                Command="{Binding SelectedCommand}"
                                 Margin="20,4,4,4">
-                            
+
                             <Button.Template>
                                 <ControlTemplate>
                                     <ContentPresenter />
                                 </ControlTemplate>
                             </Button.Template>
-                            
+
                             <StackPanel>
                                 <TextBlock Text="{Binding Route.ShortName, Converter={StaticResource stringFormatConverter}, ConverterParameter='ROUTE {0}'}"
                                            FontSize="20"
@@ -91,48 +118,59 @@
                                            Foreground="Gray" />
                             </StackPanel>
 
-                        </Button>     
-                        
+                        </Button>
+
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid Grid.Column="0"
+              Grid.Row="1"
+              Background="#FFE5E5E5"
+              VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       Margin="80,20,0,0"
+                       Text="ADDRESS"
+                       Foreground="Black"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       Visibility="{Binding BingMapsSearchResults, Converter={StaticResource arrayToVisibilityConverter}}"/>
+            <ItemsControl Grid.Row="1"
+                          BorderThickness="0"
+                          Margin="90,0,0,0"
+                          ItemsSource="{Binding BingMapsSearchResults}"
+                          Background="Green">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,10,0,0">
+                            <Button Style="{StaticResource CommandableButton}"
+                                    AutomationProperties.Name="{Binding Location.FullName}"
+                                    Command="{Binding SelectedCommand}"
+                                    FontWeight="SemiBold"
+                                    FontSize="14"
+                                    Foreground="Black" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Grid Background="#FFE5E5E5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Margin="80,30,0,0" Text="Did you mean?" Foreground="Black" FontSize="18" FontWeight="Bold"/>
-                <TextBlock Grid.Row="1" Margin="80,20,0,0" Text="ADDRESS" Foreground="Black" FontSize="14" FontWeight="Bold"/>
-                <ItemsControl Grid.Row="2" BorderThickness="0"
-                              ItemsSource="{Binding BingMapsSearchResults}"
-                              Background="Green"
-                              Margin="80,20,0,20" Padding="0,10,0,10">
+        </Grid>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <HyperlinkButton Content="{Binding Location.FullName}" Command="{Binding SelectedCommand}" Foreground="Black" FontWeight="SemiBold"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
-        </StackPanel>
-        
-        <!-- sneaky wy to do a multi binding :) If we are not loading routes and there are no -->
+
+        <!-- sneaky way to do a multi binding :) If we are not loading routes and there are no -->
         <!-- results then the NO RESULTS block is displayed -->
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Margin="40"
+              Margin="80,20,20,0"
               Visibility="{Binding IsLoadingRoutes, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
             <TextBlock Foreground="Black"
-                       FontSize="18"
-                       HorizontalAlignment="Center"
+                       FontSize="14"
+                       HorizontalAlignment="Left"
                        FontWeight="Bold"
                        Visibility="{Binding SearchResultsExist,Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
                        Text="NO RESULTS" />
@@ -149,8 +187,8 @@
                           Height="50"
                           IsActive="True"
                           Foreground="Black" />
-        </StackPanel>        
-        
+        </StackPanel>
+
     </Grid>
 
 </UserControl>

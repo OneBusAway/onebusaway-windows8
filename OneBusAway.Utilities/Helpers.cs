@@ -128,37 +128,27 @@ namespace OneBusAway.Utilities
         /// <returns></returns>
         public static List<T> FilterResults<T>(Response response, Confidence minimumConfidence) where T : Location
         {
-            if (response.ResourceSets.First().EstimatedTotal > 0)
-            {
-                List<T> results = new List<T>();
+            List<T> results = new List<T>();
+            ResourceSet resourceSet = response.ResourceSets[0];
 
-                var applicableResources = response.ResourceSets.First().Resources.Where(x =>
+            if (resourceSet.EstimatedTotal > 0)
+            {
+                foreach (T location in resourceSet.Resources.OfType<T>())
                 {
                     Confidence confidence;
-                    if (Enum.TryParse(x.Confidence, out confidence) && confidence >= minimumConfidence)
+                    if (Enum.TryParse(location.Confidence, out confidence) && confidence >= minimumConfidence)
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                });
-
-                foreach (var resource in applicableResources)
-                {
-                    if (resource is T)
-                    {
-                        results.Add(resource as T);
+                        // Filter results to Washington State, USA:
+                        if (string.Equals("United States", location.Address.CountryRegion, StringComparison.OrdinalIgnoreCase) &&
+                            location.FullName.Contains("WA"))
+                        {
+                            results.Add(location);
+                        }
                     }
                 }
+            }
 
-                return results;
-            }
-            else
-            {
-                return null;
-            }
+            return results;
         }
     }
 }
