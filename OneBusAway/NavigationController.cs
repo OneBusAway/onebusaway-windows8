@@ -361,14 +361,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
-            //var currentFrame = Window.Current.Content as Frame;
-            //if (currentFrame != null)
-            //{
-            //    currentFrame.Navigate(typeof(HelpPage));
-            //}
-
-            //return Task.FromResult<object>(null);
-            throw new NotImplementedException();
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -417,7 +410,7 @@ namespace OneBusAway
 
                     if (page != null)
                     {
-                        var viewModel = (RealTimePageViewModel)page.DataContext;
+                        var viewModel = (RealTimePageControlViewModel)page.DataContext;
                         TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
                         viewModel.RoutesAndStopsViewModel.RealTimeData = null;
                         viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;

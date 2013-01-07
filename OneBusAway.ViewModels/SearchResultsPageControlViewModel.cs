@@ -14,7 +14,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the search results page.
     /// </summary>
-    public class SearchResultsViewModel : PageViewModelBase
+    public class SearchResultsPageControlViewModel : PageViewModelBase
     {
         private SearchResultsControlViewModel searchResultsControlViewModel;
         private ObaDataAccess obaDataAccess;
@@ -22,7 +22,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Creates the search results page view model.
         /// </summary>
-        public SearchResultsViewModel()
+        public SearchResultsPageControlViewModel()
         {
             this.HeaderViewModel.SubText = "SEARCH RESULTS";
 

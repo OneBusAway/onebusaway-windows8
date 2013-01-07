@@ -25,7 +25,7 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// The view model
         /// </summary>
-        private FavoritesPageViewModel viewModel;
+        private FavoritesPageControlViewModel viewModel;
 
         /// <summary>
         /// Creates the control.
@@ -33,7 +33,7 @@ namespace OneBusAway.PageControls
         public FavoritesPageControl()
         {
             this.InitializeComponent();
-            this.viewModel = new FavoritesPageViewModel();
+            this.viewModel = new FavoritesPageControlViewModel();
             this.viewModel.StopSelected += OnViewModelStopSelected;
         }
 
@@ -53,6 +53,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public async Task InitializeAsync(object parameter)
         {
+            this.viewModel.MapControlViewModel.Shapes = null;
             this.viewModel.MapControlViewModel.UnSelectStop();
 
             await Favorites.Initialize();

@@ -24,7 +24,7 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// This is the view model for the real time page.
         /// </summary>
-        private RealTimePageViewModel viewModel;
+        private RealTimePageControlViewModel viewModel;
 
         /// <summary>
         /// Creates the real time page control.
@@ -32,7 +32,7 @@ namespace OneBusAway.PageControls
         public RealTimePageControl()
         {
             this.InitializeComponent();
-            this.viewModel = new RealTimePageViewModel();
+            this.viewModel = new RealTimePageControlViewModel();
         }
 
         /// <summary>
@@ -69,6 +69,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public Task RestoreAsync()
         {
+            this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
         }
 

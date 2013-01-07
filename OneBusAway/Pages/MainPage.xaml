@@ -38,7 +38,7 @@
         <ScrollViewer Grid.Column="0"
                       Grid.Row="1"
                       x:Name="scrollViewer"
-                      VerticalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Auto"
                       VerticalScrollMode="Auto"
                       HorizontalScrollBarVisibility="Disabled" />
 

@@ -24,7 +24,7 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// View model for the search results page.
         /// </summary>
-        private SearchResultsViewModel viewModel;
+        private SearchResultsPageControlViewModel viewModel;
 
         /// <summary>
         /// Creates the control.
@@ -32,8 +32,8 @@ namespace OneBusAway.PageControls
         public SearchResultsPageControl()
         {
             this.InitializeComponent();
-
-            this.viewModel = new SearchResultsViewModel();
+            
+            this.viewModel = new SearchResultsPageControlViewModel();
             this.viewModel.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;        
         }
 
@@ -50,6 +50,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public async Task InitializeAsync(object parameter)
         {
+            this.viewModel.MapControlViewModel.Shapes = null;
             await this.viewModel.MapControlViewModel.FindUserLocationAsync();
 
             var queryText = parameter as string;
@@ -64,6 +65,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public Task RestoreAsync()
         {
+            this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
         }
 

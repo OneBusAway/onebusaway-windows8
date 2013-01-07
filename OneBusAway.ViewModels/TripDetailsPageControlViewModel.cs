@@ -9,7 +9,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the trip details page.
     /// </summary>
-    public class TripDetailsPageViewModel : PageViewModelBase
+    public class TripDetailsPageControlViewModel : PageViewModelBase
     {
         /// <summary>
         /// View model for the route timeline control.
@@ -19,7 +19,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Creates the view model.
         /// </summary>
-        public TripDetailsPageViewModel()
+        public TripDetailsPageControlViewModel()
         {
             this.HeaderViewModel.SubText = "TRIP DETAILS";            
             this.TripTimelineControlViewModel = new TripTimelineControlViewModel();

@@ -142,7 +142,7 @@
                        Visibility="{Binding BingMapsSearchResults, Converter={StaticResource arrayToVisibilityConverter}}"/>
             <ItemsControl Grid.Row="1"
                           BorderThickness="0"
-                          Margin="90,0,0,0"
+                          Margin="90,0,0,30"
                           ItemsSource="{Binding BingMapsSearchResults}"
                           Background="Green">
 

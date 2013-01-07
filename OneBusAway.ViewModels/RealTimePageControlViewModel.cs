@@ -15,12 +15,12 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the main page.
     /// </summary>
-    public class RealTimePageViewModel : PageViewModelBase
+    public class RealTimePageControlViewModel : PageViewModelBase
     {
         private RoutesAndStopsControlViewModel routesAndStopsViewModel;        
         private ObaDataAccess obaDataAccess;
         
-        public RealTimePageViewModel()
+        public RealTimePageControlViewModel()
         {
             this.HeaderViewModel.SubText = "REAL TIME";
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();

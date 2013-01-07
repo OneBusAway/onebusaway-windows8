@@ -12,7 +12,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the time table page.
     /// </summary>
-    public class TimeTablePageViewModel : PageViewModelBase
+    public class TimeTablePageControlViewModel : PageViewModelBase
     {
         /// <summary>
         /// The view model for the time table page control.
@@ -32,7 +32,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Creates the time table view model.
         /// </summary>
-        public TimeTablePageViewModel()
+        public TimeTablePageControlViewModel()
         {
             this.HeaderViewModel.SubText = "TIMETABLE";
             this.obaDataAccess = new ObaDataAccess();

@@ -25,7 +25,7 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// The view model for the trip details.
         /// </summary>
-        private TripDetailsPageViewModel viewModel;
+        private TripDetailsPageControlViewModel viewModel;
 
         /// <summary>
         /// Creates the control.
@@ -34,7 +34,7 @@ namespace OneBusAway.PageControls
         {
             this.InitializeComponent();
 
-            this.viewModel = new TripDetailsPageViewModel();
+            this.viewModel = new TripDetailsPageControlViewModel();
             this.viewModel.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
             this.viewModel.TripTimelineControlViewModel.StopSelected += OnTripTimelineControlViewModelStopSelected;
         }
@@ -57,7 +57,7 @@ namespace OneBusAway.PageControls
         {
             var tripViewModel = this.viewModel.TripTimelineControlViewModel;
             var mapViewModel = this.viewModel.MapControlViewModel;
-
+            
             TrackingData trackingData = (TrackingData)parameter;
             tripViewModel.TrackingData = trackingData;
 
@@ -77,6 +77,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public Task RestoreAsync()
         {
+            this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
         }
 

@@ -25,7 +25,7 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// The view model for the time table page.
         /// </summary>
-        private TimeTablePageViewModel viewModel;
+        private TimeTablePageControlViewModel viewModel;
 
         /// <summary>
         /// Creates the page control.
@@ -33,7 +33,7 @@ namespace OneBusAway.PageControls
         public TimeTablePageControl()
         {
             this.InitializeComponent();
-            this.viewModel = new TimeTablePageViewModel();
+            this.viewModel = new TimeTablePageControlViewModel();
         }
 
         /// <summary>
@@ -69,6 +69,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public Task RestoreAsync()
         {
+            this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
         }
     }

@@ -9,7 +9,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the favorites page.
     /// </summary>
-    public class FavoritesPageViewModel : PageViewModelBase
+    public class FavoritesPageControlViewModel : PageViewModelBase
     {
         /// <summary>
         /// View model for the routes and stops control.
@@ -24,7 +24,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Creates the favorites view model.
         /// </summary>
-        public FavoritesPageViewModel()
+        public FavoritesPageControlViewModel()
         {
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
             this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
