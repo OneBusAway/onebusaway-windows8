@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="AllRoutesCache.cs" />
     <Compile Include="BusStopControlViewModel.cs" />
+    <Compile Include="FavoritesPageViewModel.cs" />
     <Compile Include="LocationSelectedEventArgs.cs" />
     <Compile Include="SearchLocationResultViewModel.cs" />
     <Compile Include="RouteSelectedEventArgs.cs" />
@@ -139,7 +140,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HeaderControlViewModel.cs" />
     <Compile Include="HelpPageViewModel.cs" />
-    <Compile Include="MainPageViewModel.cs" />
+    <Compile Include="RealTimePageViewModel.cs" />
     <Compile Include="MapControlViewModel.cs" />
     <Compile Include="ObservableCommand.cs" />
     <Compile Include="PageViewModelBase.cs" />

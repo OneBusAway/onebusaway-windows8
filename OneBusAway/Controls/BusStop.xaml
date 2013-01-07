@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="OneBusAway.Controls.BusStop"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:OneBusAway.Controls"
+             xmlns:local="using:OneBusAway"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:conv="using:OneBusAway.Converters"
@@ -13,10 +13,11 @@
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <conv:StringEqualsToVisibilityConverter x:Key="stringEqualsToVisibilityConverter" />
         <conv:MapViewToVisibilityConverter x:Key="mapViewToVisibilityConverter" />
+        <local:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
     <Grid>
-        <Canvas Visibility="{Binding MapControlViewModel.MapView, Converter={StaticResource mapViewToVisibilityConverter}}">
+        <Canvas Visibility="{Binding MapView, Converter={StaticResource mapViewToVisibilityConverter}, Source={StaticResource navigationProxy}}">
             <Image Name="bus"
                    Height="28"
                    Width="28"

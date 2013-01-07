@@ -17,7 +17,6 @@ namespace OneBusAway.ViewModels
     public class SearchResultsViewModel : PageViewModelBase
     {
         private SearchResultsControlViewModel searchResultsControlViewModel;
-        private MapControlViewModel mapControlViewModel;
         private ObaDataAccess obaDataAccess;
 
         /// <summary>
@@ -31,9 +30,7 @@ namespace OneBusAway.ViewModels
             this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
             this.SearchResultsControlViewModel.LocationSelected += OnSearchResultsControlViewModelLocationSelected;
 
-            this.MapControlViewModel = new MapControlViewModel();
-            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;            
-
+            this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
             this.obaDataAccess = new ObaDataAccess();
         }        
 
@@ -49,18 +46,6 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public MapControlViewModel MapControlViewModel
-        {
-            get
-            {
-                return this.mapControlViewModel;
-            }
-            set
-            {
-                SetProperty(ref this.mapControlViewModel, value);
-            }
-        }
-        
         /// <summary>
         /// Searches asynchronously for a stop with the given name.
         /// </summary>
@@ -99,7 +84,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         /// <param name="sender">SearchResultsControlViewModel</param>
         /// <param name="e">SearchLocationResultViewModel</param>
-        void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
+        private void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
         {
             if (!this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
             {

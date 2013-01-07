@@ -15,21 +15,25 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the main page.
     /// </summary>
-    public class MainPageViewModel : PageViewModelBase
+    public class RealTimePageViewModel : PageViewModelBase
     {
-        private RoutesAndStopsControlViewModel routesAndStopsViewModel;
-        private MapControlViewModel mapControlViewModel;
+        private RoutesAndStopsControlViewModel routesAndStopsViewModel;        
         private ObaDataAccess obaDataAccess;
         
-        public MainPageViewModel()
+        public RealTimePageViewModel()
         {
+            this.HeaderViewModel.SubText = "REAL TIME";
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
-            this.MapControlViewModel = new MapControlViewModel();
+
+            this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelectedAsync;
             this.obaDataAccess = new ObaDataAccess();
         }
 
         #region Public Properties
 
+        /// <summary>
+        /// The view model for the routes and stops page.
+        /// </summary>
         public RoutesAndStopsControlViewModel RoutesAndStopsViewModel
         {
             get
@@ -39,27 +43,6 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.routesAndStopsViewModel, value);
-            }
-        }
-
-        public MapControlViewModel MapControlViewModel
-        {
-            get
-            {
-                return this.mapControlViewModel;
-            }
-            set
-            {                
-                SetProperty(ref this.mapControlViewModel, value);
-                this.mapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;
-            }
-        }
-
-        public string BingMapCredentials
-        {
-            get
-            {
-                return UtilitiesConstants.BingMapCredentials;
             }
         }
 
@@ -77,8 +60,6 @@ namespace OneBusAway.ViewModels
                 stopName,
                 selectedStopId,
                 direction);
-            
-            this.HeaderViewModel.SubText = "REAL TIME";
         }
 
         #endregion
@@ -87,10 +68,9 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Called when the user selects a stop.
         /// </summary>
-        private async void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
+        protected async void OnMapControlViewModelStopSelectedAsync(object sender, StopSelectedEventArgs e)
         {
-            await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);
-            this.HeaderViewModel.SubText = "REAL TIME";
+            await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);            
         }
 
         #endregion

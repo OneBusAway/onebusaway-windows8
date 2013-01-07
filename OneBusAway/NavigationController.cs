@@ -1,5 +1,6 @@
 ﻿using Bing.Maps;
 using OneBusAway.Model;
+using OneBusAway.PageControls;
 using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
@@ -24,11 +25,16 @@ namespace OneBusAway
         /// The one & only instance.
         /// </summary>
         private static NavigationController instance = new NavigationController();
+        
+        /// <summary>
+        /// Command to go to the favorites page.
+        /// </summary>
+        private ObservableCommand goToFavoritesPageCommand;
 
         /// <summary>
-        /// Command to go to the main page.
+        /// Command to go to the real time page.
         /// </summary>
-        private ObservableCommand goToMainPageCommand;
+        private ObservableCommand goToRealTimePageCommand;
 
         /// <summary>
         /// Command to go to the help page.
@@ -50,6 +56,9 @@ namespace OneBusAway
         /// </summary>
         private ObservableCommand goBackCommand;
                 
+        /// <summary>
+        /// Adds a favorite.
+        /// </summary>
         private ObservableCommand addToFavoritesCommand;
 
         /// <summary>
@@ -58,9 +67,21 @@ namespace OneBusAway
         private ObservableCommand goToStopAndRoutesPageCommand;
 
         /// <summary>
-        /// This is a stack of states that have been persisted to the navigation controller.
+        /// This is the page control that is currently on display.  It is NOT kept in the stack because
+        /// we only keep page controls in the stack that we have to go back to, and the current control
+        /// can only be navigated back to if we go to another page first.
         /// </summary>
-        private Stack<ViewModelBase> persistedStates;
+        private IPageControl currentPageControl;
+
+        /// <summary>
+        /// This is a stack of page controls that we have navigated to so far.
+        /// </summary>
+        private Stack<IPageControl> pageControls;
+
+        /// <summary>
+        /// The current map view.
+        /// </summary>
+        private MapView mapView;
         
         /// <summary>
         /// Creates the controller.
@@ -70,8 +91,11 @@ namespace OneBusAway
             this.GoBackCommand = new ObservableCommand();
             this.GoBackCommand.Executed += OnGoBackCommandExecuted;
 
-            this.GoToMainPageCommand = new ObservableCommand();
-            this.GoToMainPageCommand.Executed += OnGoToMainPageCommandExecuted;
+            this.GoToFavoritesPageCommand = new ObservableCommand();
+            this.GoToFavoritesPageCommand.Executed += OnGoToFavoritesPageCommandExecuted;
+
+            this.GoToRealTimePageCommand = new ObservableCommand();
+            this.GoToRealTimePageCommand.Executed += OnGoToRealTimePageCommandExecuted;
 
             this.GoToHelpPageCommand = new ObservableCommand();
             this.GoToHelpPageCommand.Executed += OnGoToHelpPageCommandExecuted;
@@ -88,7 +112,19 @@ namespace OneBusAway
             this.GoToTripDetailsPageCommand = new ObservableCommand();
             this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
 
-            this.persistedStates = new Stack<ViewModelBase>();
+            this.pageControls = new Stack<IPageControl>();
+        }
+
+        /// <summary>
+        /// Returns the main page.  Since we only have one page in the app, this is OK.
+        /// </summary>
+        private static MainPage MainPage
+        {
+            get
+            {
+                var currentFrame = Window.Current.Content as Frame;
+                return (MainPage)currentFrame.Content;
+            }
         }
 
         /// <summary>
@@ -99,6 +135,32 @@ namespace OneBusAway
             get
             {
                 return instance;
+            }
+        }
+
+        /// <summary>
+        /// Returns the map view of the current map.
+        /// </summary>
+        public MapView MapView
+        {
+            get
+            {
+                return this.mapView;
+            }
+            set
+            {
+                SetProperty(ref this.mapView, value);
+            }
+        }
+
+        /// <summary>
+        /// Returns the canGoBack bool.
+        /// </summary>
+        public bool CanGoBack
+        {
+            get
+            {
+                return (this.pageControls.Count > 0);
             }
         }
 
@@ -118,17 +180,32 @@ namespace OneBusAway
         }
 
         /// <summary>
-        /// Returns the main page command.
+        /// Command goes to the favorites page.
         /// </summary>
-        public ObservableCommand GoToMainPageCommand
+        public ObservableCommand GoToFavoritesPageCommand
         {
             get
             {
-                return this.goToMainPageCommand;
+                return this.goToFavoritesPageCommand;
             }
             set
             {
-                SetProperty(ref this.goToMainPageCommand, value);
+                SetProperty(ref this.goToFavoritesPageCommand, value);
+            }
+        }
+
+        /// <summary>
+        /// Returns the real time command.
+        /// </summary>
+        public ObservableCommand GoToRealTimePageCommand
+        {
+            get
+            {
+                return this.goToRealTimePageCommand;
+            }
+            set
+            {
+                SetProperty(ref this.goToRealTimePageCommand, value);
             }
         }        
 
@@ -189,7 +266,6 @@ namespace OneBusAway
             }
         }
 
-
         /// <summary>
         /// Returns the trip details command.
         /// </summary>
@@ -205,38 +281,31 @@ namespace OneBusAway
             }
         }
 
-
         /// <summary>
-        /// Attempts to retreive the view model type T from the navigation stack.
+        /// Navigates to a page control.
         /// </summary>
-        public static bool TryRestoreViewModel<T>(NavigationMode navigationMode, ref T viewModel)
-            where T : ViewModelBase
+        public async Task<T> NavigateToPageControlAsync<T>(object parameter)
+            where T : IPageControl, new()
         {
-            if (NavigationController.Instance.persistedStates.Count > 0 && navigationMode == NavigationMode.Back)
-            {
-                viewModel = (T)NavigationController.Instance.persistedStates.Pop();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+            T newPageControl = Activator.CreateInstance<T>();
 
-        /// <summary>
-        /// Attempts to persist a view model of type T in the navigation stack.
-        /// </summary>
-        public static bool TryPersistViewModel<T>(NavigationMode navigationMode, T viewModel)
-            where T : ViewModelBase
-        {
-            // Persist the state for later:
-            if (navigationMode != NavigationMode.Back)
+            if (this.currentPageControl != null)
             {
-                NavigationController.Instance.persistedStates.Push(viewModel);
-                return true;
+                newPageControl.ViewModel.MapControlViewModel.CopyFrom(this.currentPageControl.ViewModel.MapControlViewModel);
+            }
+                        
+            NavigationController.MainPage.SetPageView(newPageControl);
+            await newPageControl.InitializeAsync(parameter);
+
+            if (this.currentPageControl != null)
+            {
+                this.pageControls.Push(currentPageControl);
             }
 
-            return false;
+            this.currentPageControl = newPageControl;
+
+            this.FirePropertyChanged("CanGoBack");
+            return newPageControl;
         }
 
         /// <summary>
@@ -244,37 +313,47 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoBackCommandExecuted(object arg1, object arg2)
         {
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                if (currentFrame.CanGoBack)
-                {
-                    currentFrame.GoBack();
-                }
-                else if (currentFrame.CurrentSourcePageType == typeof(MainPage))
-                {
-                    await DisplayMainPageFavorites(currentFrame);
-                }
-            }
+            var previousPageControl = this.pageControls.Pop();
+            await previousPageControl.RestoreAsync();
+
+            this.currentPageControl = previousPageControl;            
+            MainPage.SetPageView(previousPageControl);
+
+            this.FirePropertyChanged("CanGoBack");
+        }
+
+        /// <summary>
+        /// Attempts to retreive the view model type T from the navigation stack.
+        /// </summary>
+        public static bool TryRestoreViewModel<T>(NavigationMode navigationMode, ref T viewModel)
+            where T : ViewModelBase
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Attempts to persist a view model of type T in the navigation stack.
+        /// </summary>
+        public static bool TryPersistViewModel<T>(NavigationMode navigationMode, T viewModel)
+            where T : PageViewModelBase
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Called when the go to favorites page is exeucted.
+        /// </summary>
+        private async Task OnGoToFavoritesPageCommandExecuted(object arg1, object arg2)
+        {
+            await this.NavigateToPageControlAsync<FavoritesPageControl>(arg2);
         }
 
         /// <summary>
         /// Called when the go to main page command is executed.
         /// </summary>
-        private async Task OnGoToMainPageCommandExecuted(object arg1, object arg2)
+        private async Task OnGoToRealTimePageCommandExecuted(object arg1, object arg2)
         {
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
-                {
-                    await DisplayMainPageFavorites(currentFrame);
-                }
-                else
-                {
-                    currentFrame.Navigate(typeof(MainPage), arg2);
-                }
-            }
+            await this.NavigateToPageControlAsync<RealTimePageControl>(arg2);
         }
 
         /// <summary>
@@ -282,13 +361,14 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                currentFrame.Navigate(typeof(HelpPage));
-            }
+            //var currentFrame = Window.Current.Content as Frame;
+            //if (currentFrame != null)
+            //{
+            //    currentFrame.Navigate(typeof(HelpPage));
+            //}
 
-            return Task.FromResult<object>(null);
+            //return Task.FromResult<object>(null);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -305,15 +385,17 @@ namespace OneBusAway
         /// <summary>
         /// Called when we go to the time table page.
         /// </summary>
-        private Task OnGoToTimeTablePageCommandExecuted(object arg1, object arg2)
-        {
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                currentFrame.Navigate(typeof(TimeTablePage), arg2);
-            }
+        private async Task OnGoToTimeTablePageCommandExecuted(object arg1, object arg2)
+        {            
+            await this.NavigateToPageControlAsync<TimeTablePageControl>(arg2);
+        }
 
-            return Task.FromResult<object>(null);
+        /// <summary>
+        /// Called when we go to the stop and routes page.
+        /// </summary>
+        private async Task OnGoToTripDetailsPageCommandExecuted(object arg1, object arg2)
+        {
+            await this.NavigateToPageControlAsync<TripDetailsPageControl>(arg2);
         }
 
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
@@ -335,43 +417,12 @@ namespace OneBusAway
 
                     if (page != null)
                     {
-                        var viewModel = (MainPageViewModel)page.DataContext;
+                        var viewModel = (RealTimePageViewModel)page.DataContext;
                         TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
                         viewModel.RoutesAndStopsViewModel.RealTimeData = null;
                         viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
                     }
                 }
-            }
-        }
-
-
-        /// <summary>
-        /// Called when we go to the stop and routes page.
-        /// </summary>
-        private Task OnGoToTripDetailsPageCommandExecuted(object arg1, object arg2)
-        {
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                currentFrame.Navigate(typeof(TripDetailsPage), arg2);
-            }
-
-            return Task.FromResult<object>(null);
-        }
-
-        /// <summary>
-        /// If the user clicks 'back' or 'favorites' while they are on the main page, then we don't really
-        /// go back...we just change the display so that favorites are being shown.
-        /// </summary>
-        private async Task DisplayMainPageFavorites(Frame currentFrame)
-        {
-            var page = currentFrame.Content as MainPage;
-            if (page != null)
-            {
-                var viewModel = (MainPageViewModel)page.DataContext;
-                await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
-                viewModel.MapControlViewModel.SelectedBusStop = null;
-                viewModel.HeaderViewModel.SubText = null;
             }
         }
     }

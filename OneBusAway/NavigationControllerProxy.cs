@@ -38,6 +38,32 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns the map view of the current map.
+        /// </summary>
+        public MapView MapView
+        {
+            get
+            {
+                return NavigationController.Instance.MapView;
+            }
+            set
+            {
+                NavigationController.Instance.MapView = value;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the user can go backwards.
+        /// </summary>
+        public bool CanGoBack
+        {
+            get
+            {
+                return NavigationController.Instance.CanGoBack;
+            }
+        }
+
+        /// <summary>
         /// Return the go back command.
         /// </summary>
         public ObservableCommand GoBackCommand
@@ -49,13 +75,24 @@ namespace OneBusAway
         }
 
         /// <summary>
-        /// Returns the main page command.
+        /// Returns the go to favorites page command.
         /// </summary>
-        public ObservableCommand GoToMainPageCommand
+        public ObservableCommand GoToFavoritesPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToMainPageCommand;
+                return NavigationController.Instance.GoToFavoritesPageCommand;
+            }
+        }
+
+        /// <summary>
+        /// Returns the real time page command.
+        /// </summary>
+        public ObservableCommand GoToRealTimePageCommand
+        {
+            get
+            {
+                return NavigationController.Instance.GoToRealTimePageCommand;
             }
         }
 

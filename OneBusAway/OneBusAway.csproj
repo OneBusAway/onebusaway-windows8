@@ -157,6 +157,22 @@
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
     <Compile Include="NavigationController.cs" />
     <Compile Include="NavigationControllerProxy.cs" />
+    <Compile Include="PageControls\IPageControl.cs" />
+    <Compile Include="PageControls\FavoritesPageControl.xaml.cs">
+      <DependentUpon>FavoritesPageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageControls\RealTimePageControl.xaml.cs">
+      <DependentUpon>RealTimePageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageControls\SearchResultsPageControl.xaml.cs">
+      <DependentUpon>SearchResultsPageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageControls\TripDetailsPageControl.xaml.cs">
+      <DependentUpon>TripDetailsPageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageControls\TimeTablePageControl.xaml.cs">
+      <DependentUpon>TimeTablePageControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HelpPage.xaml.cs">
       <DependentUpon>HelpPage.xaml</DependentUpon>
     </Compile>
@@ -245,6 +261,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\UserLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageControls\FavoritesPageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageControls\RealTimePageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageControls\SearchResultsPageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageControls\TripDetailsPageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageControls\TimeTablePageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

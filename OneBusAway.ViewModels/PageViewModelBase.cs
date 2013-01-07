@@ -13,9 +13,18 @@ namespace OneBusAway.ViewModels
         /// </summary>
         private HeaderControlViewModel headerControlVM;
 
+        /// <summary>
+        /// Map control view model for all pages.
+        /// </summary>
+        private MapControlViewModel mapControlViewModel;
+
+        /// <summary>
+        /// Creates the base class.
+        /// </summary>
         public PageViewModelBase()
         {
             this.HeaderViewModel = new HeaderControlViewModel();
+            this.MapControlViewModel = new MapControlViewModel();
         }
 
         public HeaderControlViewModel HeaderViewModel
@@ -27,6 +36,21 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.headerControlVM, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the map control view model.
+        /// </summary>
+        public virtual MapControlViewModel MapControlViewModel
+        {
+            get
+            {
+                return this.mapControlViewModel;
+            }
+            set
+            {
+                SetProperty(ref this.mapControlViewModel, value);
             }
         }
     }

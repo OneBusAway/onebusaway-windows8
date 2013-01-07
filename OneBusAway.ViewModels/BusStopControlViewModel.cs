@@ -18,34 +18,17 @@ namespace OneBusAway.ViewModels
         private string stopName;
         private double latitude;
         private double longitude;
-        private MapControlViewModel mapControlViewModel;
 
         /// <summary>
         /// Creates the view model.
         /// </summary>
-        public BusStopControlViewModel(MapControlViewModel mapControlViewModel, Stop stop)
+        public BusStopControlViewModel(Stop stop)
         {
-            this.MapControlViewModel = mapControlViewModel;
             this.StopId = stop.StopId;
             this.StopName = stop.Name;            
             this.Latitude = stop.Latitude;
             this.Longitude = stop.Longitude;
             this.Direction = stop.Direction;
-        }
-
-        /// <summary>
-        /// Returns the owner map control view model.
-        /// </summary>
-        public MapControlViewModel MapControlViewModel
-        {
-            get
-            {
-                return this.mapControlViewModel;
-            }
-            set
-            {
-                SetProperty(ref this.mapControlViewModel, value);
-            }
         }
 
         public double Latitude

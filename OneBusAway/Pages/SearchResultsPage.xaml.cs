@@ -73,7 +73,7 @@ namespace OneBusAway.Pages
         /// </summary>
         private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
         {
-            NavigationController.Instance.GoToMainPageCommand.Execute(e);
+            NavigationController.Instance.GoToRealTimePageCommand.Execute(e);
         }
     }
 }

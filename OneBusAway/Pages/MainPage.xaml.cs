@@ -2,12 +2,14 @@
 using OneBusAway.Controls;
 using OneBusAway.DataAccess;
 using OneBusAway.Model;
+using OneBusAway.PageControls;
 using OneBusAway.Utilities;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -27,13 +29,9 @@ namespace OneBusAway.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainPageViewModel mainPageViewModel;
-
         public MainPage()
         {
             this.InitializeComponent();
-
-            this.mainPageViewModel = (MainPageViewModel)this.DataContext; 
         }
 
         /// <summary>
@@ -41,42 +39,24 @@ namespace OneBusAway.Pages
         /// </summary>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await Favorites.Initialize();
-
-            if (NavigationController.TryRestoreViewModel(e.NavigationMode, ref mainPageViewModel))
+            // We should only get a parameter if we've been invoked from the start screen to search.
+            // In that case, don't navigate to the favorites page control.
+            if (e.NavigationMode == NavigationMode.New && string.IsNullOrEmpty(e.Parameter as string))
             {
-                this.DataContext = mainPageViewModel;
-            } 
-            else
-            {
-                StopSelectedEventArgs stopSelectedEventArgs = e.Parameter as StopSelectedEventArgs;
-
-                if (stopSelectedEventArgs == null)
-                {
-                    await this.mainPageViewModel.MapControlViewModel.FindUserLocationAsync();
-                    await this.mainPageViewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
-                }
-                else
-                {
-                    await this.mainPageViewModel.NavigateDirectlyToStop(
-                        stopSelectedEventArgs.Latitude,
-                        stopSelectedEventArgs.Longitude,
-                        stopSelectedEventArgs.SelectedStopId,
-                        stopSelectedEventArgs.StopName,
-                        stopSelectedEventArgs.Direction);
-                }
+                await NavigationController.Instance.NavigateToPageControlAsync<FavoritesPageControl>(null);
             }
 
             base.OnNavigatedTo(e);
         }
 
         /// <summary>
-        /// Invoked when the user navigates from this page.
+        /// Sets the page view.  All we need to do here is replace the content in the 
+        /// scroll viewer and set the data context.
         /// </summary>
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        public void SetPageView(IPageControl pageControl)
         {
-            NavigationController.TryPersistViewModel(e.NavigationMode, this.mainPageViewModel);
-            base.OnNavigatedFrom(e);
+            this.scrollViewer.Content = pageControl;
+            this.DataContext = pageControl.ViewModel;
         }
     }
 }

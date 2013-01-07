@@ -400,7 +400,7 @@ namespace OneBusAway.Controls
                     // If we're not already displaying this bus stop then add it to the list:
                     if (!mapControl.displayedBusStopLookup.Contains(stop.StopId))
                     {
-                        BusStopControlViewModel busStopControlViewModel = new BusStopControlViewModel(mapControlViewModel, stop);
+                        BusStopControlViewModel busStopControlViewModel = new BusStopControlViewModel(stop);
 
                         if (mapControlViewModel.SelectedBusStop != null)
                         {
@@ -437,6 +437,8 @@ namespace OneBusAway.Controls
                 map.ZoomLevel, 
                 map.Bounds.Height, 
                 map.Bounds.Width);
+
+            NavigationController.Instance.MapView = this.MapView;
         }         
     }
 }

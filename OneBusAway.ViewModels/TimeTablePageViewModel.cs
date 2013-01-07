@@ -18,12 +18,7 @@ namespace OneBusAway.ViewModels
         /// The view model for the time table page control.
         /// </summary>
         private TimeTableControlViewModel timeTableControlViewModel;
-
-        /// <summary>
-        /// The view model for the map control.
-        /// </summary>
-        private MapControlViewModel mapControlViewModel;
-
+        
         /// <summary>
         /// Get shape data for the route.
         /// </summary>
@@ -43,7 +38,6 @@ namespace OneBusAway.ViewModels
             this.obaDataAccess = new ObaDataAccess();
             this.TimeTableControlViewModel = new TimeTableControlViewModel();
 
-            this.MapControlViewModel = new MapControlViewModel();
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
             this.MapControlViewModel.StopSelected += OnStopSelectedAsync;
         }
@@ -60,21 +54,6 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.timeTableControlViewModel, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets / sets the map control view model.
-        /// </summary>
-        public MapControlViewModel MapControlViewModel
-        {
-            get
-            {
-                return this.mapControlViewModel;
-            }
-            set
-            {
-                SetProperty(ref this.mapControlViewModel, value);
             }
         }
 
@@ -96,9 +75,9 @@ namespace OneBusAway.ViewModels
         public async Task GetRouteData(TrackingData trackingData)
         {
             RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.TripHeadsign);
-            this.mapControlViewModel.BusStops = routeData.Stops.ToList();
-            this.mapControlViewModel.Shapes = routeData.Shapes.ToList();
-            this.mapControlViewModel.SelectStop(trackingData.StopId);            
+            this.MapControlViewModel.BusStops = routeData.Stops.ToList();
+            this.MapControlViewModel.Shapes = routeData.Shapes.ToList();
+            this.MapControlViewModel.SelectStop(trackingData.StopId);            
         }
 
         /// <summary>
@@ -108,7 +87,7 @@ namespace OneBusAway.ViewModels
         {
             this.TimeTableControlViewModel.StopDescription = e.StopName;
             await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.trackingData.RouteId);
-            this.mapControlViewModel.SelectStop(e.SelectedStopId);            
+            this.MapControlViewModel.SelectStop(e.SelectedStopId);            
         }
     }
 }

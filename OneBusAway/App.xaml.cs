@@ -1,4 +1,5 @@
-﻿using OneBusAway.Pages;
+﻿using OneBusAway.PageControls;
+using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace OneBusAway
             var frame = Window.Current.Content as Frame;
             if (frame != null)
             {
-                var searchResultsPage = frame.Content as SearchResultsPage;
+                var searchResultsPage = frame.Content as MainPage;
                 if (searchResultsPage != null)
                 {
                     var viewModel = searchResultsPage.DataContext as SearchResultsViewModel;
@@ -119,13 +120,13 @@ namespace OneBusAway
         {
         }
 
-        void App_QuerySubmitted(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQuerySubmittedEventArgs args)
+        async void App_QuerySubmitted(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQuerySubmittedEventArgs args)
         {
             var frame = Window.Current.Content as Frame;
 
             if (frame != null)
             {
-                frame.Navigate(typeof(SearchResultsPage), args.QueryText);
+                await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText);
             }
         }
 
@@ -151,7 +152,7 @@ namespace OneBusAway
         {
             // TODO: Register the Windows.ApplicationModel.Search.SearchPane.GetForCurrentView().QuerySubmitted
             // event in OnWindowCreated to speed up searches once the application is already running
-
+            
             // If the Window isn't already using Frame navigation, insert our own Frame
             var previousContent = Window.Current.Content;
             var frame = previousContent as Frame;
@@ -181,8 +182,10 @@ namespace OneBusAway
                 }
             }
 
-            frame.Navigate(typeof(SearchResultsPage), args.QueryText);
+            frame.Navigate(typeof(MainPage), args.QueryText);
+
             Window.Current.Content = frame;
+            await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText);
 
             // Ensure the current window is active
             Window.Current.Activate();

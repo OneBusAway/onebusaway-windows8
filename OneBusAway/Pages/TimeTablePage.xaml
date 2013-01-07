@@ -50,14 +50,7 @@
 
         <ctrls:MapControl x:Name="timeTablePageMap"
                           Grid.Row="1"
-                          Grid.Column="1"
-                          CenterOnUserLocation="True"
-                          ClearBusStopsOnZoomOut="False"
-                          DataContext="{Binding MapControlViewModel}"
-                          Shapes="{Binding Shapes}"
-                          MapView="{Binding MapView, Mode=TwoWay}"
-                          BusStops="{Binding BusStops}" 
-                          SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}"/>
+                          Grid.Column="1" />
 
     </Grid>
     

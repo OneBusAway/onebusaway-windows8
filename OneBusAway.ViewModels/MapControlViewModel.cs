@@ -36,6 +36,17 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Copies data from another map control view model.
+        /// </summary>
+        public void CopyFrom(MapControlViewModel other)
+        {
+            this.userLocation = other.userLocation;
+            this.busStops = other.busStops;
+            this.mapView = other.mapView;
+            this.shapes = other.shapes;
+        }
+
+        /// <summary>
         /// When true, the control will refresh bus stops when the map moves. When false, it will use a static list.
         /// </summary>
         public bool RefreshBusStopsOnMapViewChanged
@@ -128,20 +139,24 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task FindUserLocationAsync()
         {
-            try
+            // If we already have a location, don't get it again:
+            if (this.UserLocation == null)
             {
-                Geolocator geolocator = new Geolocator();
-                var position = await geolocator.GetGeopositionAsync();
+                try
+                {
+                    Geolocator geolocator = new Geolocator();
+                    var position = await geolocator.GetGeopositionAsync();
 
-                var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
+                    var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
 
-                this.UserLocation = userLocation;
-                this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // the user didn't give us permission to use their location. Nothing we can do here
-                // so just zoom out to show the whole freakin' world =)
+                    this.UserLocation = userLocation;
+                    this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // the user didn't give us permission to use their location. Nothing we can do here
+                    // so just zoom out to show the whole freakin' world =)
+                }
             }
         }
 
@@ -163,6 +178,18 @@ namespace OneBusAway.ViewModels
             MapView.Current = mapView;
 
             this.BusStops = (await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude)).ToList();
+        }
+
+        /// <summary>
+        /// Unselects the currently selected stop.
+        /// </summary>
+        public void UnSelectStop()
+        {
+            if (this.SelectedBusStop != null)
+            {
+                this.SelectedBusStop.IsSelected = false;
+                this.SelectedBusStop = null;
+            }
         }
 
         /// <summary>
@@ -188,7 +215,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public void SelectStop(Stop stop)
         {
-            this.SelectedBusStop = new BusStopControlViewModel(this, stop);
+            this.SelectedBusStop = new BusStopControlViewModel(stop);
         }
 
         /// <summary>

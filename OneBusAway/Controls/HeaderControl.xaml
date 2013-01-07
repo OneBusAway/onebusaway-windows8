@@ -50,7 +50,7 @@
                     Style="{StaticResource BackButtonStyle}"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
-                    Visibility="{Binding HasSubText, Converter={StaticResource boolToVisibilityConverter}}"
+                    Visibility="{Binding CanGoBack, Source={StaticResource navigationControllerProxy}, Converter={StaticResource boolToVisibilityConverter}}"
                     Command="{Binding GoBackCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,0,-7" />
 
@@ -122,7 +122,7 @@
             
             <Button Grid.Column="0"
                     Grid.Row="0"
-                    Command="{Binding GoToMainPageCommand, Source={StaticResource navigationControllerProxy}}"
+                    Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="40,0,40,0">FAVORITES</Button>
             
             <Button Grid.Column="1"

@@ -35,7 +35,7 @@
         <Setter Property="FontSize"
                 Value="12" />
     </Style>
-
+    
     <!-- RichTextBlock styles -->
 
     <Style x:Key="BasicRichTextStyle" TargetType="RichTextBlock">
