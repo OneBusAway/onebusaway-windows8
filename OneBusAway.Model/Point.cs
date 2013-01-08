@@ -47,5 +47,52 @@ namespace OneBusAway.Model
                 SetProperty(ref this.longitude, value);
             }
         }
+
+        public static bool operator ==(Point a, Point b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Point a, Point b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            return Equals(obj as Point);
+        }
+
+        public bool Equals(Point point)
+        {
+            if ((object)point == null)
+            {
+                return false;
+            }
+
+            return  Latitude == point.Latitude && Longitude == point.Longitude;
+        }
+
+        public override int GetHashCode()
+        {
+            return Latitude.GetHashCode() ^ Longitude.GetHashCode();
+        }
     }
 }

@@ -316,7 +316,7 @@ namespace OneBusAway
             var previousPageControl = this.pageControls.Pop();
             await previousPageControl.RestoreAsync();
 
-            this.currentPageControl = previousPageControl;            
+            this.currentPageControl = previousPageControl;
             MainPage.SetPageView(previousPageControl);
 
             this.FirePropertyChanged("CanGoBack");
@@ -394,8 +394,10 @@ namespace OneBusAway
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
         {
             StopAndRoutePair pair = (StopAndRoutePair)arg2;
-            bool added = await Favorites.Add(pair);
+            bool added = Favorites.Add(pair);
             if (!added) return;
+
+            await Favorites.Persist();
 
             var md = new Windows.UI.Popups.MessageDialog("You have successfully pinned this to your favorites.", "Success!");
             md.Commands.Add(new Windows.UI.Popups.UICommand("Close"));
