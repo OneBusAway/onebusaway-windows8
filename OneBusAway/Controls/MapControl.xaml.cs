@@ -33,7 +33,10 @@ namespace OneBusAway.Controls
 
             this.userLocationIcon = new UserLocationIcon();
 
-            map.ViewChangeEnded += OnMapViewChangeEnded;            
+            // Setting MapCenter to null will center the map to Puget Sound and set the default Zoom level.
+            this.MapCenter = null;
+
+            map.ViewChangeEnded += OnMapViewChangeEnded;
         }
 
         public string BingMapCredentials
