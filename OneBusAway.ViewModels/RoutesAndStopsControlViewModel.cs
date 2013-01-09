@@ -138,8 +138,7 @@ namespace OneBusAway.ViewModels
             List<TrackingData> trackingData = new List<TrackingData>();
 
             //  TO DO: Load favorites from some storage location...somewhere.
-            var favs = Model.Favorites.Get();// new List<StopAndRoutePair>();
-            //favs.Add(new StopAndRoutePair("1_75403", "1_67"));
+            var favs = Model.Favorites.Get();
 
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;

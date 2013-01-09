@@ -394,14 +394,21 @@ namespace OneBusAway
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
         {
             StopAndRoutePair pair = (StopAndRoutePair)arg2;
-            bool added = Favorites.Add(pair);
-            if (!added) return;
+
+            if (Favorites.IsFavorite(pair))
+            {
+                bool removed = Favorites.Remove(pair);
+            }
+            else
+            {
+                bool added = Favorites.Add(pair);
+            }
 
             await Favorites.Persist();
 
-            var md = new Windows.UI.Popups.MessageDialog("You have successfully pinned this to your favorites.", "Success!");
-            md.Commands.Add(new Windows.UI.Popups.UICommand("Close"));
-            await md.ShowAsync();
+            //var md = new Windows.UI.Popups.MessageDialog("You have successfully pinned this to your favorites.", "Success!");
+            //md.Commands.Add(new Windows.UI.Popups.UICommand("Close"));
+            //await md.ShowAsync();
 
             var currentFrame = Window.Current.Content as Frame;
             if (currentFrame != null)
@@ -411,11 +418,24 @@ namespace OneBusAway
                     var page = currentFrame.Content as MainPage;
 
                     if (page != null)
-                    {
-                        var viewModel = (RealTimePageControlViewModel)page.DataContext;
-                        TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
-                        viewModel.RoutesAndStopsViewModel.RealTimeData = null;
-                        viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
+                    {                        
+                        if (page.DataContext is RealTimePageControlViewModel)
+                        {
+                            RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
+                            TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
+                            viewModel.RoutesAndStopsViewModel.RealTimeData = null;
+                            viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
+                        }
+                        else if (page.DataContext is FavoritesPageControlViewModel)
+                        {
+                            FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)page.DataContext;
+                            viewModel.RoutesAndStopsViewModel.RealTimeData = null;
+                            await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                        }
+                        else
+                        {
+                            throw new Exception("NavigationController.OnAddToFavoritesCommandExecuted: shouldn't get here!");
+                        }
                     }
                 }
             }
