@@ -461,7 +461,7 @@ namespace OneBusAway
             }
         }
 
-        private async Task OnFilterByRouteCommandExecuted(object arg1, object arg2)
+        private Task OnFilterByRouteCommandExecuted(object arg1, object arg2)
         {
             Route route = (Route)arg2;
 
@@ -490,6 +490,8 @@ namespace OneBusAway
                     }
                 }
             }
+
+            return Task.FromResult<object>(null);
         }
     }
 }

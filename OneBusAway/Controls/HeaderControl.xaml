@@ -53,19 +53,21 @@
                     Visibility="{Binding CanGoBack, Source={StaticResource navigationControllerProxy}, Converter={StaticResource boolToVisibilityConverter}}"
                     Command="{Binding GoBackCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,0,-7" />
-
+            
             <TextBlock Grid.Column="1"
                        Grid.Row="0"
                        FontWeight="Bold"
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
                        Opacity=".5"
+                       Margin="10,0,0,0"
                        Visibility="{Binding HasSubText, Converter={StaticResource boolToVisibilityConverter}}"
                        FontSize="14">ONE BUS AWAY</TextBlock>
 
             <TextBlock Grid.Column="1"
                        Grid.Row="1"
                        FontWeight="Bold"
+                       Margin="10,0,0,0"
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
                        FontSize="34"
