@@ -137,6 +137,14 @@ namespace OneBusAway
             }
         }
 
+        public ObservableCommand FilterByRouteCommand
+        {
+            get
+            {
+                return NavigationController.Instance.FilterByRouteCommand;
+            }
+        }
+
         /// <summary>
         /// Returns the go to trip details page command.
         /// </summary>

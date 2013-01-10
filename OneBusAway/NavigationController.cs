@@ -62,6 +62,11 @@ namespace OneBusAway
         private ObservableCommand addToFavoritesCommand;
 
         /// <summary>
+        /// Filters the realtime data by a given route.
+        /// </summary>
+        private ObservableCommand filterByRouteCommand;
+
+        /// <summary>
         /// Command used to go to the stop and routes page.
         /// </summary>
         private ObservableCommand goToStopAndRoutesPageCommand;
@@ -108,6 +113,9 @@ namespace OneBusAway
 
             this.AddToFavoritesCommand = new ObservableCommand();
             this.AddToFavoritesCommand.Executed += OnAddToFavoritesCommandExecuted;
+
+            this.FilterByRouteCommand = new ObservableCommand();
+            this.FilterByRouteCommand.Executed += OnFilterByRouteCommandExecuted;
 
             this.GoToTripDetailsPageCommand = new ObservableCommand();
             this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
@@ -263,6 +271,18 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.addToFavoritesCommand, value);
+            }
+        }
+
+        public ObservableCommand FilterByRouteCommand
+        {
+            get
+            {
+                return this.filterByRouteCommand;
+            }
+            set
+            {
+                SetProperty(ref this.filterByRouteCommand, value);
             }
         }
 
@@ -435,6 +455,37 @@ namespace OneBusAway
                         else
                         {
                             throw new Exception("NavigationController.OnAddToFavoritesCommandExecuted: shouldn't get here!");
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task OnFilterByRouteCommandExecuted(object arg1, object arg2)
+        {
+            Route route = (Route)arg2;
+
+            var currentFrame = Window.Current.Content as Frame;
+            if (currentFrame != null)
+            {
+                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
+                {
+                    var page = currentFrame.Content as MainPage;
+
+                    if (page != null)
+                    {
+                        if (page.DataContext is RealTimePageControlViewModel)
+                        {
+                            RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
+                            viewModel.RoutesAndStopsViewModel.FilterByRouteAsync(route);
+                        }
+                        else if (page.DataContext is FavoritesPageControlViewModel)
+                        {
+                            // do we ever need to filter favorites?
+                        }
+                        else
+                        {
+                            throw new Exception("NavigationController.FilterByRouteCommandExecuted: shouldn't get here!");
                         }
                     }
                 }

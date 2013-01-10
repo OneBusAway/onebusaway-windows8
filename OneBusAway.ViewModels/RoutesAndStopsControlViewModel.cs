@@ -170,5 +170,22 @@ namespace OneBusAway.ViewModels
             this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
             this.LastUpdated = DateTime.Now;
         }
+
+        public void FilterByRouteAsync(Route route)
+        {
+            TrackingData[] tdataArray = this.RealTimeData;
+            this.RealTimeData = null;
+            List<TrackingData> tdataList = new List<TrackingData>();
+
+            foreach (TrackingData tdata in tdataArray)
+            {
+                if (string.Equals(tdata.Route.Id, route.Id, StringComparison.OrdinalIgnoreCase))
+                {
+                    tdataList.Add(tdata);
+                }
+            }
+
+            this.RealTimeData = tdataList.ToArray();
+        }
     }
 }

@@ -58,6 +58,26 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="CommandableButton3"
+                   TargetType="ButtonBase">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
+                                           TextTrimming="None"
+                                           TextWrapping="Wrap"
+                                           Foreground="Black"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           TextAlignment="Left"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -158,17 +178,12 @@
                         <Rectangle Grid.Row="0"
                                    Grid.Column="0"
                                    Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
-                        <TextBlock Grid.Row="0"
-                                   Grid.Column="2"
-                                   Text="{Binding Route.ShortName}"
-                                   TextTrimming="None"
-                                   TextWrapping="Wrap"
-                                   Foreground="Black"
-                                   FontSize="14"
-                                   FontWeight="Bold"
-                                   TextAlignment="Left"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center" />
+                        <Button Grid.Row="0"
+                                Grid.Column="2"
+                                Style="{StaticResource CommandableButton3}"
+                                Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
+                                CommandParameter="{Binding Route}"
+                                AutomationProperties.Name="{Binding Route.ShortName}" />
                         <Button Grid.Row="0"
                                 Grid.Column="3"
                                 Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
