@@ -6,7 +6,7 @@
              xmlns:ctrls="using:OneBusAway.Controls"
              xmlns:trig="using:OneBusAway.Triggers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -19,6 +19,7 @@
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <conv:StringFormatConverter x:Key="stringFormatConverter" />
             <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+            <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
             <local:NavigationControllerProxy x:Key="navigationProxy" />
             <Style x:Key="CommandableButton"
                    TargetType="ButtonBase">
@@ -123,7 +124,7 @@
                                            FontSize="20"
                                            FontWeight="Bold"
                                            Foreground="{StaticResource obaGreen}" />
-                                <TextBlock Text="{Binding Route.Description}"
+                                <TextBlock Text="{Binding Route.Description, Converter={StaticResource capitalLetterConverter}}"
                                            FontSize="14"
                                            Foreground="Black" />
                                 <TextBlock Text="{Binding Route.Agency.Name, Converter={StaticResource stringFormatConverter}, ConverterParameter='Operated by {0}'}"
@@ -167,7 +168,7 @@
                         <DataTemplate>
                             <Grid Margin="0,10,0,0">
                                 <Button Style="{StaticResource CommandableButton}"
-                                        AutomationProperties.Name="{Binding Location.FullName}"
+                                        AutomationProperties.Name="{Binding Location.FullName, Converter={StaticResource capitalLetterConverter}}"
                                         Command="{Binding SelectedCommand}"
                                         FontWeight="SemiBold"
                                         FontSize="14"

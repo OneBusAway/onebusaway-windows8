@@ -17,6 +17,7 @@
         <conv:BoolToObaGreenConverter x:Key="boolToObaGreenConverter" />
         <conv:BoolToFontWeightConverter x:Key="boolToFontWeightConverter" />
         <conv:BoolToThicknessConverter x:Key="boolToThicknessConverter" />        
+        <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
         <Style x:Key="CommandableButton"
                    TargetType="ButtonBase">
             <Setter Property="Template">
@@ -61,7 +62,7 @@
             <TextBlock FontSize="14"
                        FontWeight="Bold"
                        Foreground="Black"
-                       Text="{Binding TrackingData.TripHeadsign}" />
+                       Text="{Binding TrackingData.TripHeadsign, Converter={StaticResource capitalLetterConverter}}" />
 
             <Grid Margin="0,10,0,0"                  
                   Background="{StaticResource obaGreen}">
@@ -136,7 +137,7 @@
                                     Margin="10,2,0,2"
                                     Style="{StaticResource CommandableButton}"
                                     Click="OnStopClicked"
-                                    AutomationProperties.Name="{Binding Name}" />
+                                    AutomationProperties.Name="{Binding Name, Converter={StaticResource capitalLetterConverter}}" />
 
                         </Grid>
 

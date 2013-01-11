@@ -149,6 +149,7 @@
     <Compile Include="Converters\BoolToThicknessConverter.cs" />
     <Compile Include="Converters\BoolToObaGreenConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\CapitalLetterConverter.cs" />
     <Compile Include="Converters\IsCurrentHourToThicknessConverter.cs" />
     <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
     <Compile Include="Converters\StopAndRouteToFavoriteColorConverter.cs" />
