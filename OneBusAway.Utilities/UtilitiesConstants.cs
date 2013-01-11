@@ -64,5 +64,10 @@ namespace OneBusAway.Utilities
         /// Default longitude in case user position can't be found. Defaulting to Puget Sound area
         /// </summary>
         public const double DefaultLongitude = -122.97295385181809;
+
+        /// <summary>
+        /// Default numer of seconds that we will keep the cache result for live data. Defaulting to 5 minutes
+        /// </summary>
+        public const int DefaultCacheAge = 3000;
     }
 }

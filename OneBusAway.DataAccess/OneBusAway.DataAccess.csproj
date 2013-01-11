@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="BingService\BingMapsServiceHelper.cs" />
     <Compile Include="ObaService\IObaServiceHelper.cs" />
+    <Compile Include="ObaService\ObaCache.cs" />
     <Compile Include="ObaService\ObaDataAccess.cs" />
     <Compile Include="ObaService\ObaException.cs" />
     <Compile Include="ObaService\WebRequestQueue.cs" />

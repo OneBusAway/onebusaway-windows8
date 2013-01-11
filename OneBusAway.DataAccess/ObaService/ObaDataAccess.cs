@@ -85,9 +85,17 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Agency[]> GetAllAgencies()
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.agencies_with_coverage);
+            ObaMethod method = ObaMethod.agencies_with_coverage;
+            XDocument doc = await ObaCache.GetCache(method, "AllAgencies", expectedCacheAge: 5*24*60*60 /* 5 days */);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, "AllAgencies", doc);
+            }
+
             return (from agencyWithCoverageElement in doc.Descendants("agency")
                     select new Agency(agencyWithCoverageElement)).ToArray();
         }
@@ -97,10 +105,18 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Route[]> GetAllRouteIdsForAgency(Agency agency)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.routes_for_agency);
-            helper.SetId(agency.Id);
+            ObaMethod method = ObaMethod.routes_for_agency;
+            XDocument doc = await ObaCache.GetCache(method, agency.Id, expectedCacheAge: 5 * 24 * 60 * 60 /* 5 days */);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(agency.Id);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, agency.Id, doc);
+            }
+
             return (from routeElement in doc.Descendants("route")
                     select new Route(routeElement)
                     {
@@ -113,10 +129,18 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Route[]> GetRoutesForStopAsync(string stopId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stop);
-            helper.SetId(stopId);
+            ObaMethod method = ObaMethod.stop;
+            XDocument doc = await ObaCache.GetCache(method, stopId, expectedCacheAge: 24 * 60 * 60 /* 1 day */);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(stopId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, stopId, doc);
+            }
+
             return (from routeElement in doc.Descendants("route")
                     select new Route(routeElement)).ToArray();
         }
@@ -126,10 +150,17 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Stop[]> GetStopsForRouteAsync(string routeId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
-            helper.SetId(routeId);
+            ObaMethod method = ObaMethod.stops_for_route;
+            XDocument doc = await ObaCache.GetCache(method, routeId);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(routeId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, routeId, doc);
+            }
 
             // Find all of the stops in the payload that have this route id:
             return (from stopElement in doc.Descendants("stop")
@@ -141,10 +172,17 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<StopRouteSchedule> GetScheduleForStopAndRoute(string stopId, string routeId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.schedule_for_stop);
-            helper.SetId(stopId);
+            ObaMethod method = ObaMethod.schedule_for_stop;
+            XDocument doc = await ObaCache.GetCache(method, stopId);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(stopId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, stopId, doc);
+            }
 
             // Find all of the stops in the payload that have this route id:
 
@@ -167,10 +205,18 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<RouteData[]> GetRouteDataAsync(string routeId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
-            helper.SetId(routeId);
+            ObaMethod method = ObaMethod.stops_for_route;
+            XDocument doc = await ObaCache.GetCache(method, routeId);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(routeId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, routeId, doc);
+            }
+
             XElement dataElement = doc.Descendants("data").First();
 
             string[] firstStops = (from stopGroupsElement in dataElement.Descendants("stopGroup")
@@ -185,10 +231,18 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<RouteData> GetRouteDataAsync(string routeId, string stopId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
-            helper.SetId(routeId);
-            
-            XDocument doc = await helper.SendAndRecieveAsync();
+            ObaMethod method = ObaMethod.stops_for_route;
+            XDocument doc = await ObaCache.GetCache(method, routeId);
+
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(routeId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, routeId, doc);
+            }
+
             XElement dataElement = doc.Descendants("data").First();
             return new RouteData(dataElement, stopId);
         }
@@ -198,10 +252,18 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.arrivals_and_departures_for_stop);
-            helper.SetId(stopId);
+            ObaMethod method = ObaMethod.arrivals_and_departures_for_stop;
+            XDocument doc = await ObaCache.GetCache(method, stopId, expectedCacheAge: 120 /* 2 minutes */);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(stopId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, stopId, doc);
+            }
+
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
             string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");
@@ -216,10 +278,17 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<TripDetails> GetTripDetailsAsync(string tripId)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.trip_details);
-            helper.SetId(tripId);
+            ObaMethod method = ObaMethod.trip_details;
+            XDocument doc = await ObaCache.GetCache(method, tripId);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(tripId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, tripId, doc);
+            }
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
             XElement entryElement = doc.Descendants("entry").First();
