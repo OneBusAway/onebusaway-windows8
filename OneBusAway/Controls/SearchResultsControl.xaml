@@ -1,8 +1,10 @@
 ﻿<UserControl x:Class="OneBusAway.Controls.SearchResultsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:OneBusAway.Controls"
+             xmlns:local="using:OneBusAway"
              xmlns:conv="using:OneBusAway.Converters"
+             xmlns:ctrls="using:OneBusAway.Controls"
+             xmlns:trig="using:OneBusAway.Triggers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -17,6 +19,7 @@
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <conv:StringFormatConverter x:Key="stringFormatConverter" />
             <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+            <local:NavigationControllerProxy x:Key="navigationProxy" />
             <Style x:Key="CommandableButton"
                    TargetType="ButtonBase">
                 <Setter Property="Template">
@@ -35,9 +38,18 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </ResourceDictionary>
     </UserControl.Resources>
+
+    <!-- Triggers and Visual States -->
+    <trig:TriggerManager.Triggers>
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="True"
+                      VisualState="IsSnapped" />
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="False"
+                      VisualState="Default" />
+    </trig:TriggerManager.Triggers>
 
     <Grid>
 
@@ -49,14 +61,16 @@
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Column="0"
+        <ItemsControl x:Name="resultsItemControl"
+                      Grid.Column="0"
                       Grid.Row="0"
                       BorderThickness="0"
+                      Margin="80,0,40,0"
                       ItemsSource="{Binding SearchResults}">
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="80,10,0,20">
+                    <Grid Margin="0,10,0,20">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -123,48 +137,52 @@
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+
         </ItemsControl>
 
         <Grid Grid.Column="0"
               Grid.Row="1"
               Background="#FFE5E5E5"
               VerticalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0"
-                       Margin="80,20,0,0"
-                       Text="ADDRESS"
-                       Foreground="Black"
-                       FontSize="14"
-                       FontWeight="Bold"
-                       Visibility="{Binding BingMapsSearchResults, Converter={StaticResource arrayToVisibilityConverter}}"/>
-            <ItemsControl Grid.Row="1"
-                          BorderThickness="0"
-                          Margin="90,0,0,30"
-                          ItemsSource="{Binding BingMapsSearchResults}"
-                          Background="Green">
+            <Grid x:Name="searchResultsGrid"
+                  Margin="80,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Margin="0,20,0,0"
+                           Text="ADDRESS"
+                           Foreground="Black"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Visibility="{Binding BingMapsSearchResults, Converter={StaticResource arrayToVisibilityConverter}}" />
+                <ItemsControl Grid.Row="1"
+                              BorderThickness="0"
+                              Margin="10,0,0,30"
+                              ItemsSource="{Binding BingMapsSearchResults}"
+                              Background="Green">
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="0,10,0,0">
-                            <Button Style="{StaticResource CommandableButton}"
-                                    AutomationProperties.Name="{Binding Location.FullName}"
-                                    Command="{Binding SelectedCommand}"
-                                    FontWeight="SemiBold"
-                                    FontSize="14"
-                                    Foreground="Black" />
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,10,0,0">
+                                <Button Style="{StaticResource CommandableButton}"
+                                        AutomationProperties.Name="{Binding Location.FullName}"
+                                        Command="{Binding SelectedCommand}"
+                                        FontWeight="SemiBold"
+                                        FontSize="14"
+                                        Foreground="Black" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Grid>
-
 
         <!-- sneaky way to do a multi binding :) If we are not loading routes and there are no -->
         <!-- results then the NO RESULTS block is displayed -->
-        <Grid Grid.Row="0"
+        <Grid x:Name="noResultsGrid"
+              Grid.Row="0"
               Grid.Column="0"
               Margin="80,20,20,0"
               Visibility="{Binding IsLoadingRoutes, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
@@ -188,6 +206,31 @@
                           IsActive="True"
                           Foreground="Black" />
         </StackPanel>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default" />
+                <VisualState x:Name="IsSnapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsItemControl"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchResultsGrid"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsGrid"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
     </Grid>
 

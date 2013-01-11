@@ -14,6 +14,7 @@ using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -57,6 +58,14 @@ namespace OneBusAway.Pages
         {
             this.scrollViewer.Content = pageControl;
             this.DataContext = pageControl.ViewModel;
+        }
+
+        /// <summary>
+        /// Called when the size of the page changes.
+        /// </summary>
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            NavigationController.Instance.IsSnapped = (ApplicationView.Value == ApplicationViewState.Snapped);
         }
     }
 }

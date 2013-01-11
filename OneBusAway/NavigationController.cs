@@ -87,6 +87,11 @@ namespace OneBusAway
         /// The current map view.
         /// </summary>
         private MapView mapView;
+
+        /// <summary>
+        /// True when the app is in a snapped state.
+        /// </summary>
+        private bool isSnapped;
         
         /// <summary>
         /// Creates the controller.
@@ -143,6 +148,21 @@ namespace OneBusAway
             get
             {
                 return instance;
+            }
+        }
+
+        /// <summary>
+        /// True when the app is in a snapped state.
+        /// </summary>
+        public bool IsSnapped
+        {
+            get
+            {
+                return this.isSnapped;
+            }
+            set
+            {
+                SetProperty(ref this.isSnapped, value);
             }
         }
 

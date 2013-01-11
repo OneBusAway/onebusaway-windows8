@@ -64,6 +64,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns true when the app is in a snapped state.
+        /// </summary>
+        public bool IsSnapped
+        {
+            get
+            {
+                return NavigationController.Instance.IsSnapped;
+            }
+        }
+
+        /// <summary>
         /// Return the go back command.
         /// </summary>
         public ObservableCommand GoBackCommand
