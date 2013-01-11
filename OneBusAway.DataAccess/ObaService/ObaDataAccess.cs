@@ -163,7 +163,7 @@ namespace OneBusAway.DataAccess
 
         /// <summary>
         /// Returns route data for a particular route. Since there are two directions for each route,
-        /// this method returns an array of routes - one for each direction (trip headsign).
+        /// this method returns an array of routes - one for each direction.
         /// </summary>
         public async Task<RouteData[]> GetRouteDataAsync(string routeId)
         {
@@ -173,25 +173,24 @@ namespace OneBusAway.DataAccess
             XDocument doc = await helper.SendAndRecieveAsync();
             XElement dataElement = doc.Descendants("data").First();
 
-            string []tripHeadsigns = (from stopGroupsElement in dataElement.Descendants("stopGroup")
-                                      let nameElement = stopGroupsElement.Descendants("names").First()
-                                      select nameElement.Descendants("string").First().Value).ToArray();
+            string[] firstStops = (from stopGroupsElement in dataElement.Descendants("stopGroup")
+                                   select stopGroupsElement.Descendants("stopIds").First().Elements("string").First().Value).ToArray();
 
-            return (from tripHeadsign in tripHeadsigns
-                    select new RouteData(dataElement, tripHeadsign)).ToArray();
+            return (from stopId in firstStops
+                    select new RouteData(dataElement, stopId)).ToArray();
         }
 
         /// <summary>
         /// Returns the route data for a route.
         /// </summary>
-        public async Task<RouteData> GetRouteDataAsync(string routeId, string tripHeadsign)
+        public async Task<RouteData> GetRouteDataAsync(string routeId, string stopId)
         {
             var helper = this.Factory.CreateHelper(ObaMethod.stops_for_route);
             helper.SetId(routeId);
             
             XDocument doc = await helper.SendAndRecieveAsync();
             XElement dataElement = doc.Descendants("data").First();
-            return new RouteData(dataElement, tripHeadsign);            
+            return new RouteData(dataElement, stopId);
         }
 
         /// <summary>

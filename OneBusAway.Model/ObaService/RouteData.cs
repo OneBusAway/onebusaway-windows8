@@ -22,10 +22,10 @@ namespace OneBusAway.Model
         /// 
         /// For an example.
         /// </summary>
-        public RouteData(XElement dataElement, string tripHeadsign)
+        public RouteData(XElement dataElement, string stopId)
         {
-            // First, we have to find the trip data for this headsign. There will be two because
-            // each trip we have to match this trip to the trip headsign:
+            // First, we have to find the trip data for this stopId. There will be two because
+            // each trip we have to match this trip to the trip that has matching stopId in the stops collection:
 
             //<stopGroupings>
             //    <stopGrouping>
@@ -55,16 +55,16 @@ namespace OneBusAway.Model
             //        </stopGroup>
             //        ...
 
-            XElement stopGroupElement = (from stopGroupsElement in dataElement.Descendants("stopGroup")
-                                         let nameElement = stopGroupsElement.Descendants("names").First()
-                                         let destinationHeadsign = nameElement.Descendants("string").First().Value
-                                         where string.Equals(tripHeadsign, destinationHeadsign, StringComparison.OrdinalIgnoreCase)
-                                         select stopGroupsElement).FirstOrDefault();
+            XElement foundStopIdElement = (from stopIdsElement in dataElement.Descendants("stopIds").Elements("string")
+                                         where string.Equals(stopId, stopIdsElement.Value, StringComparison.OrdinalIgnoreCase)
+                                         select stopIdsElement).FirstOrDefault();
 
-            if (stopGroupElement == null)
+            if (foundStopIdElement == null)
             {
-                throw new ArgumentException(string.Format("Unknown trip destination '{0}'", tripHeadsign));
+                throw new ArgumentException(string.Format("Unknown trip stop '{0}'", stopId));
             }
+
+            XElement stopGroupElement = foundStopIdElement.Parent.Parent;
 
             // Now find the stops that are part of this trip headsign:
             var stopIdsQuery = from stringElement in stopGroupElement.Descendants("stopIds").First().Descendants("string")
@@ -85,8 +85,8 @@ namespace OneBusAway.Model
             //</routeIds>
             //</stop>
             XElement stopsElement = dataElement.Descendants("stops").First();
-            this.Stops = (from stopId in stopIdsQuery
-                          join stopElement in stopsElement.Descendants("stop") on stopId equals stopElement.GetFirstElementValue<string>("id")
+            this.Stops = (from stopIdElement in stopIdsQuery
+                          join stopElement in stopsElement.Descendants("stop") on stopIdElement equals stopElement.GetFirstElementValue<string>("id")
                           select new Stop(stopElement)).ToArray();
 
             // Lastly, store the polylines:

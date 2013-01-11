@@ -69,7 +69,7 @@ namespace OneBusAway.PageControls
             mapViewModel.BusStops = null;
             mapViewModel.BusStops = tripViewModel.TripDetails.TripStops.Cast<Stop>().ToList();
             mapViewModel.SelectStop(trackingData.StopId);
-            await mapViewModel.FindRouteShapeAsync(trackingData.RouteId, trackingData.TripHeadsign);
+            await mapViewModel.FindRouteShapeAsync(trackingData.RouteId, trackingData.StopId);
         }
 
         /// <summary>

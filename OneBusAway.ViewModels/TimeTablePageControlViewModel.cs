@@ -74,10 +74,10 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task GetRouteData(TrackingData trackingData)
         {
-            RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.TripHeadsign);
+            RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.StopId);
             this.MapControlViewModel.BusStops = routeData.Stops.ToList();
             this.MapControlViewModel.Shapes = routeData.Shapes.ToList();
-            this.MapControlViewModel.SelectStop(trackingData.StopId);            
+            this.MapControlViewModel.SelectStop(trackingData.StopId);
         }
 
         /// <summary>

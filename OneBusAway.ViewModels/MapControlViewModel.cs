@@ -235,11 +235,11 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
-        /// Finds the shape of a route by its id and headsign and then displays it.
+        /// Finds the shape of a route by its id and current stopId and then displays it.
         /// </summary>
-        public async Task FindRouteShapeAsync(string routeId, string tripHeadsign)
+        public async Task FindRouteShapeAsync(string routeId, string stopId)
         {
-            var routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, tripHeadsign);
+            var routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, stopId);
             this.Shapes = routeData.Shapes.ToList();
         }
 
