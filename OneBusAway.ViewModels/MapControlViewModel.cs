@@ -188,6 +188,7 @@ namespace OneBusAway.ViewModels
             if (this.SelectedBusStop != null)
             {
                 this.SelectedBusStop.IsSelected = false;
+                this.SelectedBusStop.ZIndex = 0;
                 this.SelectedBusStop = null;
             }
         }
@@ -200,7 +201,10 @@ namespace OneBusAway.ViewModels
             var stopSelected = this.StopSelected;
             if (stopSelected != null)
             {
+                this.UnSelectStop();
                 this.SelectedBusStop = busStopViewModel;
+                this.SelectedBusStop.ZIndex = 100;
+
                 stopSelected(this, new StopSelectedEventArgs(busStopViewModel.StopName,
                     busStopViewModel.StopId,
                     busStopViewModel.Direction,

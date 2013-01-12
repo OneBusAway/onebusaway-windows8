@@ -18,6 +18,7 @@ namespace OneBusAway.ViewModels
         private string stopName;
         private double latitude;
         private double longitude;
+        private double zIndex;
 
         /// <summary>
         /// Creates the view model.
@@ -52,6 +53,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.longitude, value);
+            }
+        }
+
+        public double ZIndex
+        {
+            get
+            {
+                return this.zIndex;
+            }
+            set
+            {
+                SetProperty(ref this.zIndex, value);
             }
         }
 

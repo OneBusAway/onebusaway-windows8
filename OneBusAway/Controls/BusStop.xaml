@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:conv="using:OneBusAway.Converters"
+             xmlns:trig="using:OneBusAway.Triggers"
+             Canvas.ZIndex="{Binding ZIndex}"
              mc:Ignorable="d"
              d:DesignHeight="100"
              d:DesignWidth="100">
@@ -15,7 +17,7 @@
         <conv:MapViewToVisibilityConverter x:Key="mapViewToVisibilityConverter" />
         <local:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
-
+    
     <Grid>
         <Canvas Visibility="{Binding MapView, Converter={StaticResource mapViewToVisibilityConverter}, Source={StaticResource navigationProxy}}">
             <Image Name="bus"
@@ -26,7 +28,6 @@
                    PointerPressed="OnPointerPressed" />
             <Polygon Name="SE"
                      Points="0,0 8,5 0,10"
-                     Stroke="Crimson"
                      Fill="Crimson"
                      Margin="19,12,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -39,7 +40,6 @@
             </Polygon>
             <Polygon Name="S"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="5,17,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -52,7 +52,6 @@
             </Polygon>
             <Polygon Name="E"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=E}"
                      Margin="16,-5,0,0">
@@ -62,7 +61,6 @@
             </Polygon>
             <Polygon Name="W"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="-16,5,0,0"
                      Visibility="{Binding Direction, Converter={StaticResource stringEqualsToVisibilityConverter}, ConverterParameter=W}"
@@ -73,7 +71,6 @@
             </Polygon>
             <Polygon Name="NW"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="-19,-12,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -86,7 +83,6 @@
             </Polygon>
             <Polygon Name="NE"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="12,-19,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -99,7 +95,6 @@
             </Polygon>
             <Polygon Name="N"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="-5,-17,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -112,7 +107,6 @@
             </Polygon>
             <Polygon Name="SW"
                      Points="0,0 8,5 0,10"
-                     Stroke="Black"
                      Fill="Crimson"
                      Margin="-12,19,0,0"
                      RenderTransformOrigin="0.5,0.5"
@@ -124,7 +118,7 @@
                 </Polygon.RenderTransform>
             </Polygon>
         </Canvas>
-        <Grid Margin="0,-55,0,0"
+        <Grid Margin="0,-55,0,0"              
               Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
