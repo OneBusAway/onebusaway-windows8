@@ -187,6 +187,17 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Selects specific routes from an enumerable of stop ids.
+        /// </summary>
+        public async Task SelectSpecificRoutesAsync(IEnumerable<string> routeIds)
+        {
+            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            this.SearchResults = (from result in listOfAllRoutes
+                                  where routeIds.Contains(result.Id)
+                                  select new SearchRouteResultViewModel(result)).ToArray();
+        }
+
+        /// <summary>
         /// Called when the user selects a route from the results.
         /// </summary>
         private void OnResultRouteSelected(object sender, RouteSelectedEventArgs e)

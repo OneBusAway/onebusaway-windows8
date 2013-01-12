@@ -32,7 +32,7 @@ namespace OneBusAway.ViewModels
 
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
             this.obaDataAccess = new ObaDataAccess();
-        }        
+        }            
 
         public SearchResultsControlViewModel SearchResultsControlViewModel
         {
@@ -62,8 +62,7 @@ namespace OneBusAway.ViewModels
             // If this is true then the user just clicked from a location-based search. Clear old bus stops!
             if (this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
             {
-                this.MapControlViewModel.BusStops = null;
-                this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
+                this.MapControlViewModel.BusStops = null;                
             }            
 
             var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
@@ -84,18 +83,25 @@ namespace OneBusAway.ViewModels
         /// </summary>
         /// <param name="sender">SearchResultsControlViewModel</param>
         /// <param name="e">SearchLocationResultViewModel</param>
-        private void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
+        private async void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
         {
             if (!this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
             {
                 this.MapControlViewModel.BusStops = null;
                 this.MapControlViewModel.Shapes = null;
-                this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = true;
             }
             
             var point = new OneBusAway.Model.Point(e.Location.Point.Coordinates[0], e.Location.Point.Coordinates[1]);
             this.MapControlViewModel.UserLocation = point;
             this.MapControlViewModel.MapView = new MapView(point, ViewModelConstants.ZoomedInMapZoom, true);            
-        }
+
+            // Find all the bus stops at this location and then show the routes for this address:
+            await this.MapControlViewModel.RefreshStopsForLocationAsync();
+
+            // Find all of the unique routes for this location:
+            await this.SearchResultsControlViewModel.SelectSpecificRoutesAsync((from stop in this.MapControlViewModel.BusStops
+                                                                                from route in stop.Routes
+                                                                                select route.Id).Distinct());
+        } 
     }
 }
