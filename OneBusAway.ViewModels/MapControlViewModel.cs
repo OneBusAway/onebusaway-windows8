@@ -142,20 +142,20 @@ namespace OneBusAway.ViewModels
             // If we already have a location, don't get it again:
             if (this.UserLocation == null)
             {
+                this.UserLocation = new Point(ViewModelConstants.SeattleLatitude, ViewModelConstants.SeattleLongitude);
+                this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
+
                 try
                 {
                     Geolocator geolocator = new Geolocator();
                     var position = await geolocator.GetGeopositionAsync();
 
-                    var userLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude);
-
-                    this.UserLocation = userLocation;
-                    this.MapView = new MapView(userLocation, ViewModelConstants.DefaultMapZoom);
+                    this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
+                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    // the user didn't give us permission to use their location. Nothing we can do here
-                    // so just zoom out to show the whole freakin' world =)
+                    // the user didn't give us permission to use their location. OK, fine, have it your way :P
                 }
             }
         }

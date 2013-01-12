@@ -25,5 +25,16 @@ namespace OneBusAway.ViewModels
         /// The name of the route data cache file.
         /// </summary>
         public const string CacheFileName = "RouteData.xml";
+
+        /// <summary>
+        /// The latitude of Seattle's city center.
+        /// </summary>
+        public const double SeattleLatitude = 47.603561401367188;
+
+        /// <summary>
+        /// The longitude of Seattle's city center.
+        /// </summary>
+        public const double SeattleLongitude = -122.32943725585937;
+
     }
 }
