@@ -21,6 +21,8 @@ namespace OneBusAway.ViewModels
         private string stopSubHeaderText;
         private string stopOrDestinationText;
         private DateTime lastUpdated;
+        private string filteredRouteId;
+        private bool isFiltered;
 
         public RoutesAndStopsControlViewModel()
         {
@@ -34,7 +36,16 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return this.realTimeData;
+                if (this.isFiltered)
+                {
+                    return (from trackingData in this.realTimeData
+                            where string.Equals(trackingData.Route.Id, this.filteredRouteId, StringComparison.OrdinalIgnoreCase)
+                            select trackingData).ToArray();
+                }
+                else
+                {
+                    return this.realTimeData;
+                }
             }
             set
             {
@@ -56,7 +67,7 @@ namespace OneBusAway.ViewModels
                 }
 
                 // Find all of the unique routes and order them by the ones that are predicted to come sooner:
-                var query = from trackingData in this.realTimeData
+                var query = from trackingData in this.RealTimeData
                             group trackingData by trackingData.Route.Id into groupedRoutes
                             select groupedRoutes.OrderBy(gr => gr.PredictedArrivalTime).First();
 
@@ -171,21 +182,24 @@ namespace OneBusAway.ViewModels
             this.LastUpdated = DateTime.Now;
         }
 
-        public void FilterByRouteAsync(Route route)
+        /// <summary>
+        /// Toggles filtering by a specific route.
+        /// </summary>
+        public void ToggleFilterByRouteAsync(Route route)
         {
-            TrackingData[] tdataArray = this.RealTimeData;
-            this.RealTimeData = null;
-            List<TrackingData> tdataList = new List<TrackingData>();
-
-            foreach (TrackingData tdata in tdataArray)
+            if (this.isFiltered)
             {
-                if (string.Equals(tdata.Route.Id, route.Id, StringComparison.OrdinalIgnoreCase))
-                {
-                    tdataList.Add(tdata);
-                }
+                this.filteredRouteId = null;
+                this.isFiltered = false;
+            }
+            else
+            {
+                this.filteredRouteId = route.Id;
+                this.isFiltered = true;
             }
 
-            this.RealTimeData = tdataList.ToArray();
+            FirePropertyChanged("RealTimeData");
+            FirePropertyChanged("DistinctRoutes");
         }
     }
 }

@@ -497,7 +497,7 @@ namespace OneBusAway
                         if (page.DataContext is RealTimePageControlViewModel)
                         {
                             RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
-                            viewModel.RoutesAndStopsViewModel.FilterByRouteAsync(route);
+                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRouteAsync(route);
                         }
                         else if (page.DataContext is FavoritesPageControlViewModel)
                         {
