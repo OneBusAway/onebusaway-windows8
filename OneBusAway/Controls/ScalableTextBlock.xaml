@@ -33,7 +33,10 @@
         <TextBlock x:Name="textBlock"
                    FontSize="{Binding NormalFontSize, ElementName=root}"
                    FontWeight="{Binding FontWeight, ElementName=root}"
-                   Text="{Binding Text, ElementName=root}" />
+                   Text="{Binding Text, ElementName=root}"
+                   TextTrimming="None"
+                   TextAlignment="Left"
+                   TextWrapping="NoWrap" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
@@ -42,7 +45,12 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
                                                        Storyboard.TargetProperty="FontSize">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{Binding SnappedFontSize, ElementName=root}" />
+                                                    Value="{Binding SnappedFontSize, ElementName=root}" />                            
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
+                                                       Storyboard.TargetProperty="TextTrimming">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="WordEllipsis" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
