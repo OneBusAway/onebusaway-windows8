@@ -4,8 +4,7 @@
   <Properties>
     <DisplayName>OneBusAway</DisplayName>
     <PublisherDisplayName>mbraude</PublisherDisplayName>
-    <Logo>
-    </Logo>
+    <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
@@ -16,9 +15,9 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="OneBusAway.App">
-      <VisualElements DisplayName="OneBusAway" Logo="Assets\logo.png" SmallLogo="" Description="OneBusAway" ForegroundText="light" BackgroundColor="#78AA36">
-        <DefaultTile ShowName="allLogos" ShortName="OneBusAway" />
-        <SplashScreen Image="Assets\logo_620x300_black.png" BackgroundColor="#78AA36" />
+      <VisualElements DisplayName="OneBusAway" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="OneBusAway" ForegroundText="light" BackgroundColor="#78AA36">
+        <DefaultTile ShowName="allLogos" ShortName="OneBusAway" WideLogo="Assets\WideLogo.png" />
+        <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#78AA36" />
       </VisualElements>
       <Extensions>
         <Extension Category="windows.search" />
