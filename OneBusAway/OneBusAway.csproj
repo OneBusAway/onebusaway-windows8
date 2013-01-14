@@ -195,20 +195,12 @@
   <ItemGroup>
     <Content Include="Assets\Bus.gif" />
     <Content Include="Assets\bus.png" />
-    <Content Include="Assets\logo_310x150_black.png" />
-    <Content Include="Assets\Logo.png" />
-    <Content Include="Assets\logo_150x150_black.png" />
-    <Content Include="Assets\logo_150x150_white.png" />
-    <Content Include="Assets\logo_24x24_black.png" />
-    <Content Include="Assets\logo_24x24_white.png" />
-    <Content Include="Assets\logo_30x30_black.png" />
-    <Content Include="Assets\logo_30x30_white.png" />
-    <Content Include="Assets\logo_50x50_black.png" />
-    <Content Include="Assets\logo_50x50_white.png" />
-    <Content Include="Assets\logo_620x300_black.png" />
-    <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SplashScreen.png" />
-    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\logo+310x150.png" />
+    <Content Include="Assets\logo_150x150.png" />
+    <Content Include="Assets\logo_150x150.scale-100.png" />
+    <Content Include="Assets\logo_24x24.png" />
+    <Content Include="Assets\logo_30x30.png" />
+    <Content Include="Assets\logo_50x50.png" />
     <Content Include="Assets\transparentbus.png" />
   </ItemGroup>
   <ItemGroup>
