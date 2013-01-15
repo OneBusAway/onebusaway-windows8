@@ -60,6 +60,25 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Empty cache folder.
+        /// </summary>
+        public static async Task EmptyCache()
+        {
+            try
+            {
+                var cacheFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(ObaCacheFolderName);
+
+                if (cacheFolder != null)
+                {
+                    await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+            }
+            catch {}
+
+            return;
+        }
+
+        /// <summary>
         /// Get cached file.
         /// </summary>
         /// <param name="method">Method</param>
@@ -71,12 +90,20 @@ namespace OneBusAway.DataAccess
 
             try
             {
-                return await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(fileName);
+                var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+                var properties = await existingFile.GetBasicPropertiesAsync();
+
+                // If the existing cache file is more than 5 days old, let not bother returning it.
+                if ((DateTime.Now - properties.DateModified).TotalDays < 7)
+                {
+                    return await existingFile.OpenStreamForReadAsync();
+                }
             }
             catch
             {
-                return null;
             }
+
+            return null;
         }
 
         /// <summary>
