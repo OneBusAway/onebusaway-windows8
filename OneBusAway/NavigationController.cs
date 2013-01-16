@@ -458,7 +458,7 @@ namespace OneBusAway
                     var page = currentFrame.Content as MainPage;
 
                     if (page != null)
-                    {                        
+                    {
                         if (page.DataContext is RealTimePageControlViewModel)
                         {
                             RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
@@ -469,8 +469,9 @@ namespace OneBusAway
                         else if (page.DataContext is FavoritesPageControlViewModel)
                         {
                             FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)page.DataContext;
+                            TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
                             viewModel.RoutesAndStopsViewModel.RealTimeData = null;
-                            await viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+                            viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
                         }
                         else
                         {
