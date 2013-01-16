@@ -86,11 +86,11 @@ namespace OneBusAway
             base.OnWindowCreated(args);
 
             var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
+            pane.ShowOnKeyboardInput = true;
             pane.QuerySubmitted += App_QuerySubmitted;
             pane.ResultSuggestionChosen += pane_ResultSuggestionChosen;
             pane.SuggestionsRequested += pane_SuggestionsRequested;
             pane.QueryChanged += pane_QueryChanged;
-
         }
 
         private async void pane_QueryChanged(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQueryChangedEventArgs args)
