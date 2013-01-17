@@ -44,7 +44,7 @@ namespace OneBusAway.Model
 
         public static async Task Persist()
         {
-            if (instance == null || instance.favorites.Count == 0) return;
+            if (instance == null) return;
 
             using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(FavoritesFileName, CreationCollisionOption.ReplaceExisting))
             {
