@@ -198,6 +198,18 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Should be called to let us know that the currently selected result is being processed.
+        /// </summary>
+        public void SetIsLoadingCurrentRoute(bool isLoading)
+        {
+            var searchRouteResultViewModel = this.selectedResult as SearchRouteResultViewModel;
+            if (searchRouteResultViewModel != null)
+            {
+                searchRouteResultViewModel.IsGettingRouteData = isLoading;
+            }
+        }
+
+        /// <summary>
         /// Called when the user selects a route from the results.
         /// </summary>
         private void OnResultRouteSelected(object sender, RouteSelectedEventArgs e)
@@ -243,6 +255,7 @@ namespace OneBusAway.ViewModels
                 else if (this.selectedResult is SearchRouteResultViewModel)
                 {
                     (selectedResult as SearchRouteResultViewModel).IsSelected = false;
+                    (selectedResult as SearchRouteResultViewModel).IsGettingRouteData = false;
                 }
             }
         }

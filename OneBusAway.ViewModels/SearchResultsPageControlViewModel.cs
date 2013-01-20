@@ -63,17 +63,26 @@ namespace OneBusAway.ViewModels
             if (this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
             {
                 this.MapControlViewModel.BusStops = null;                
-            }            
+            }
 
-            var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
+            this.searchResultsControlViewModel.SetIsLoadingCurrentRoute(true);
 
-            this.MapControlViewModel.BusStops = (from route in routes
-                                                 from stop in route.Stops
-                                                 select stop).ToList();
+            try
+            {
+                var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
 
-            this.MapControlViewModel.Shapes = (from route in routes
-                                               from shape in route.Shapes
-                                               select shape).ToList();
+                this.MapControlViewModel.BusStops = (from route in routes
+                                                     from stop in route.Stops
+                                                     select stop).ToList();
+
+                this.MapControlViewModel.Shapes = (from route in routes
+                                                   from shape in route.Shapes
+                                                   select shape).ToList();
+            }
+            finally
+            {
+                this.searchResultsControlViewModel.SetIsLoadingCurrentRoute(false);
+            }
 
             this.MapControlViewModel.ZoomToRouteShape();
         }

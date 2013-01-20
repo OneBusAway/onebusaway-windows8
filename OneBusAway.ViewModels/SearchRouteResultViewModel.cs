@@ -23,6 +23,11 @@ namespace OneBusAway.ViewModels
         private bool isSelected;
 
         /// <summary>
+        /// True when we are getting route data.
+        /// </summary>
+        private bool isGettingRouteData;
+
+        /// <summary>
         /// Called when this view model is selected.
         /// </summary>
         private ObservableCommand selectedCommand;
@@ -54,6 +59,21 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.route, value);
+            }
+        }
+
+        /// <summary>
+        /// True when we are getting data for this route.
+        /// </summary>
+        public bool IsGettingRouteData
+        {
+            get
+            {
+                return this.isGettingRouteData;
+            }
+            set
+            {
+                SetProperty(ref this.isGettingRouteData, value);
             }
         }
 
