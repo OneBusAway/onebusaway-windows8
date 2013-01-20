@@ -21,10 +21,30 @@ namespace OneBusAway.Converters
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            MapView mapView = (MapView)value;
-            return (mapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
-                ? Visibility.Collapsed
-                : Visibility.Visible;
+            MapView mapView = value as MapView;
+            if (mapView != null)
+            {
+                bool invert = false;
+                if (parameter != null)
+                {
+                    bool.TryParse(parameter as string, out invert);
+                }
+
+                if (mapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
+                {
+                    return (invert)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;                        
+                }
+                else
+                {
+                    return (invert)
+                        ? Visibility.Collapsed
+                        : Visibility.Visible;
+                }
+            }
+
+            return Visibility.Collapsed;
         }
 
         /// <summary>

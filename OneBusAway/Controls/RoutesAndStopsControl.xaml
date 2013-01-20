@@ -16,6 +16,7 @@
         <conv:StopAndRouteToFavoriteColorConverter x:Key="stopAndRouteToFavoriteColorConverter" />
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
+        <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
         <oba:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
@@ -195,6 +196,36 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <StackPanel Grid.Column="0"
+                    Grid.Row="3"
+                    Margin="0,40,0,0"
+                    Visibility="{Binding RealTimeData, Converter={StaticResource arrayToVisibilityConverter}, ConverterParameter=True}">
+
+            <StackPanel.Resources>
+                <Style TargetType="ctrls:ScalableTextBlock">
+                    <Setter Property="Foreground"
+                            Value="Black" />
+                    <Setter Property="HorizontalTextAlignment"
+                            Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+
+            <ctrls:ScalableTextBlock Text="You currently do not have any favorite bus stops pinned." />
+            <ctrls:ScalableTextBlock Text="Find real time data on your favorite stop," />
+            <ctrls:ScalableTextBlock Text="then pin it to the favorites page." />
+            
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Center">
+                <ctrls:ScalableTextBlock Text="Just tap the" />
+                <ctrls:ScalableTextBlock Text="&#xE113;"
+                                         Margin="2,-2,2,2"
+                                         FontFamily="Segoe UI Symbol" />
+                <ctrls:ScalableTextBlock Text="to pin/unpin a bus stop." />
+            </StackPanel>            
+            
+        </StackPanel>
+        
     </Grid>
 
 </UserControl>
