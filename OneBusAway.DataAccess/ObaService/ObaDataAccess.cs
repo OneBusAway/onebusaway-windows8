@@ -170,7 +170,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Returns the schedule for a particular stop / route combination.
         /// </summary>
-        public async Task<StopRouteSchedule> GetScheduleForStopAndRoute(string stopId, string routeId)
+        public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId)
         {
             ObaMethod method = ObaMethod.schedule_for_stop;
             XDocument doc = await ObaCache.GetCache(method, stopId);
@@ -196,7 +196,8 @@ namespace OneBusAway.DataAccess
             }
 
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
-            return new StopRouteSchedule(serverTime, stopRouteScheduleElement.Descendants("scheduleStopTimes").First());
+            return (from stopRouteDirectionScheduleElement in stopRouteScheduleElement.Descendants("stopRouteDirectionSchedule")
+                    select new StopRouteSchedule(serverTime, stopRouteDirectionScheduleElement)).ToArray();
         }
 
         /// <summary>

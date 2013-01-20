@@ -113,7 +113,10 @@ namespace OneBusAway.ViewModels
             {
                 var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
 
-                var query = from scheduleStopTime in scheduleData.ScheduleStopTimes
+                // TO DO: support more than one trip headsign. 
+                // Not sure what the UI for this should be.
+
+                var query = from scheduleStopTime in scheduleData[0].ScheduleStopTimes
                             orderby scheduleStopTime.ArrivalTime ascending
                             where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
                             group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
@@ -124,6 +127,8 @@ namespace OneBusAway.ViewModels
                 this.ScheduleAvailable = true;
                 this.ScheduleData = (from arrivalsByHour in query
                                      select arrivalsByHour).ToArray();
+
+                this.TripHeadsign = scheduleData[0].TripHeadsign;                
             }
             catch (ArgumentException)
             {

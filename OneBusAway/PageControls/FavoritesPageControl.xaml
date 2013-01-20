@@ -35,9 +35,6 @@
 
         <ctrls:RoutesAndStopsControl DataContext="{Binding RoutesAndStopsViewModel}" />
 
-        <ctrls:RouteMapsAndSchedulesControl Margin="0,20,0,30"
-                                            DataContext="{Binding RoutesAndStopsViewModel}" />
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />

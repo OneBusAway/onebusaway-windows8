@@ -17,6 +17,7 @@ namespace OneBusAway.ViewModels
 
         private ObaDataAccess obaDataAccess;
         private TrackingData[] realTimeData;
+        private RouteMapsAndSchedulesControlViewModel[] routeAndMapsViewModels;
         private string stopHeaderText;
         private string stopSubHeaderText;
         private string stopOrDestinationText;
@@ -50,28 +51,21 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.realTimeData, value);
-                FirePropertyChanged("DistinctRoutes");
             }
         }
 
         /// <summary>
         /// Returns the distinct routes from the real time data.
         /// </summary>
-        public TrackingData[] DistinctRoutes
+        public RouteMapsAndSchedulesControlViewModel[] RouteAndMapsViewModels
         {
             get
             {
-                if (this.realTimeData == null)
-                {
-                    return new TrackingData[] { };
-                }
-
-                // Find all of the unique routes and order them by the ones that are predicted to come sooner:
-                var query = from trackingData in this.RealTimeData
-                            group trackingData by trackingData.Route.Id into groupedRoutes
-                            select groupedRoutes.OrderBy(gr => gr.PredictedArrivalTime).First();
-
-                return query.ToArray();
+                return this.routeAndMapsViewModels;
+            }
+            set
+            {
+                SetProperty(ref this.routeAndMapsViewModels, value);
             }
         }
 
@@ -148,12 +142,11 @@ namespace OneBusAway.ViewModels
         {
             List<TrackingData> trackingData = new List<TrackingData>();
 
-            //  TO DO: Load favorites from some storage location...somewhere.
             var favs = Model.Favorites.Get();
 
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
-
+            
             foreach (StopAndRoutePair fav in favs)
             {
                 TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
@@ -170,15 +163,29 @@ namespace OneBusAway.ViewModels
             }
 
             this.RealTimeData = trackingData.ToArray();
+            this.RouteAndMapsViewModels = null;
             this.LastUpdated = DateTime.Now;
         }
 
+        /// <summary>
+        /// Populates a stop asyncrhonously.
+        /// </summary>
         public async Task PopulateStopAsync(string stopName, string stopId, string direction)
         {
             this.StopHeaderText = stopName;
             this.StopSubHeaderText = string.Format(CultureInfo.CurrentCulture, "{0} BOUND", direction);
 
             this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
+
+            this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(stopId)
+                                           select new RouteMapsAndSchedulesControlViewModel()
+                                           {
+                                               StopId = stopId,
+                                               RouteId = route.Id,
+                                               RouteName = route.ShortName,
+                                               StopName = stopName
+                                           }).ToArray();
+
             this.LastUpdated = DateTime.Now;
         }
 

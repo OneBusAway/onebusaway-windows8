@@ -25,9 +25,9 @@ namespace OneBusAway.ViewModels
         private ObaDataAccess obaDataAccess;
 
         /// <summary>
-        /// The tracking data that we are based off of.
+        /// This is the route id that we are displaying schedule data for.
         /// </summary>
-        private TrackingData trackingData;
+        private string routeId;
 
         /// <summary>
         /// Creates the time table view model.
@@ -60,33 +60,32 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Setset parameters on the time table control.
         /// </summary>
-        public async Task SetRouteAndStopData(TrackingData trackingData)
+        public async Task SetRouteAndStopData(string stopName, string stopId, string routeName, string routeId)
         {
-            this.trackingData = trackingData;
-            this.TimeTableControlViewModel.TripHeadsign = trackingData.TripHeadsign;
-            this.TimeTableControlViewModel.RouteNumber = trackingData.Route.ShortName;
-            this.TimeTableControlViewModel.StopDescription = trackingData.StopName;
-            await this.TimeTableControlViewModel.FindScheduleDataAsync(trackingData.StopId, trackingData.RouteId);
+            this.routeId = routeId;
+            this.TimeTableControlViewModel.RouteNumber = routeName;
+            this.TimeTableControlViewModel.StopDescription = stopName;
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(stopId, routeId);            
         }
 
         /// <summary>
         /// Ask OBA for shape & route data.
         /// </summary>
-        public async Task GetRouteData(TrackingData trackingData)
+        public async Task GetRouteData(string stopId, string routeId)
         {
-            RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(trackingData.RouteId, trackingData.StopId);
+            RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, stopId);
             this.MapControlViewModel.BusStops = routeData.Stops.ToList();
             this.MapControlViewModel.Shapes = routeData.Shapes.ToList();
-            this.MapControlViewModel.SelectStop(trackingData.StopId);
+            this.MapControlViewModel.SelectStop(stopId);
+            await Task.Delay(10);
         }
 
         /// <summary>
         /// Called when user selects another bus stop on the map control.
         /// </summary>
         private async void OnStopSelectedAsync(object sender, StopSelectedEventArgs e)
-        {
-            this.TimeTableControlViewModel.StopDescription = e.StopName;
-            await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.trackingData.RouteId);
+        {            
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.routeId);
             this.MapControlViewModel.SelectStop(e.SelectedStopId);            
         }
     }

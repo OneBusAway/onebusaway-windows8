@@ -54,11 +54,16 @@ namespace OneBusAway.PageControls
         {
             this.viewModel.MapControlViewModel.BusStops = null;
 
-            TrackingData trackingData = parameter as TrackingData;
-            if (trackingData != null)
+            var routeMapViewModel = parameter as RouteMapsAndSchedulesControlViewModel;
+            if (routeMapViewModel != null)
             {
-                await this.viewModel.SetRouteAndStopData(trackingData);
-                await this.viewModel.GetRouteData(trackingData);
+                await this.viewModel.SetRouteAndStopData(
+                    routeMapViewModel.StopName,
+                    routeMapViewModel.StopId, 
+                    routeMapViewModel.RouteName,
+                    routeMapViewModel.RouteId);
+
+                await this.viewModel.GetRouteData(routeMapViewModel.StopId, routeMapViewModel.RouteId);
             }
 
             this.viewModel.MapControlViewModel.ZoomToRouteShape();

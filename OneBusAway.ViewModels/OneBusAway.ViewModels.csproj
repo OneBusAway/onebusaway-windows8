@@ -127,6 +127,7 @@
     <Compile Include="BusStopControlViewModel.cs" />
     <Compile Include="FavoritesPageControlViewModel.cs" />
     <Compile Include="LocationSelectedEventArgs.cs" />
+    <Compile Include="RouteMapsAndSchedulesControlViewModel.cs" />
     <Compile Include="SearchLocationResultViewModel.cs" />
     <Compile Include="RouteSelectedEventArgs.cs" />
     <Compile Include="SearchRouteResultViewModel.cs" />

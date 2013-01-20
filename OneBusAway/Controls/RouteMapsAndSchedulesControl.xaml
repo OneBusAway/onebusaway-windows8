@@ -55,7 +55,7 @@
                    Foreground="Black"
                    Margin="0,15,0,0"
                    Text="ROUTE MAPS &amp; SCHEDULES"
-                   Visibility="{Binding DistinctRoutes, Converter={StaticResource arrayToVisibilityConverter}}" />
+                   Visibility="{Binding Converter={StaticResource arrayToVisibilityConverter}}" />
 
         <ItemsControl Grid.Column="0"
                       Grid.Row="1"
@@ -63,7 +63,7 @@
                       VerticalAlignment="Top"
                       VerticalContentAlignment="Top"
                       HorizontalContentAlignment="Stretch"
-                      ItemsSource="{Binding DistinctRoutes}">
+                      ItemsSource="{Binding}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapGrid ItemHeight="60"
@@ -85,7 +85,7 @@
                             BorderBrush="{StaticResource obaGreen}"
                             BorderThickness="1">
                         <Button Style="{StaticResource CommandableButton}"
-                                AutomationProperties.Name="{Binding Route.ShortName}"
+                                AutomationProperties.Name="{Binding RouteName}"
                                 Command="{Binding GoToTimeTablePageCommand, Source={StaticResource navigationProxy}}"
                                 CommandParameter="{Binding}"
                                 Width="40"

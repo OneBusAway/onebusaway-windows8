@@ -18,12 +18,33 @@ namespace OneBusAway.Model
         private ScheduleStopTime[] scheduleStopTimes;
 
         /// <summary>
+        /// The trip headsign for this route.
+        /// </summary>
+        private string tripHeadsign;
+
+        /// <summary>
         /// Creates a schedule out of a scheduleStopTimesElement.
         /// </summary>
-        public StopRouteSchedule(DateTime serverTime, XElement scheduleStopTimesElement)
+        public StopRouteSchedule(DateTime serverTime, XElement stopRouteDirectionScheduleElement)
         {
-            this.ScheduleStopTimes = (from scheduleStopTimeElement in scheduleStopTimesElement.Descendants("scheduleStopTime")
+            this.TripHeadsign = stopRouteDirectionScheduleElement.GetFirstElementValue<string>("tripHeadsign");
+            this.ScheduleStopTimes = (from scheduleStopTimeElement in stopRouteDirectionScheduleElement.Descendants("scheduleStopTime")
                                       select new ScheduleStopTime(serverTime, scheduleStopTimeElement)).ToArray();
+        }
+
+        /// <summary>
+        /// Gets / sets the trip headsign
+        /// </summary>
+        public string TripHeadsign
+        {
+            get
+            {
+                return this.tripHeadsign;
+            }
+            set
+            {
+                SetProperty(ref this.tripHeadsign, value);
+            }
         }
 
         /// <summary>
