@@ -20,65 +20,7 @@
     </UserControl.Resources>
 
     <Grid>
-
-        <Grid.Resources>
-            <Style x:Key="CommandableButton"
-                   TargetType="ButtonBase">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Grid>
-                                <ctrls:ScalableTextBlock Text="{TemplateBinding AutomationProperties.Name}"
-                                                         Foreground="Black"
-                                                         NormalFontSize="14"
-                                                         SnappedFontSize="12"
-                                                         FontWeight="Bold"
-                                                         HorizontalAlignment="Left"
-                                                         VerticalAlignment="Center" />
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style x:Key="CommandableButton2"
-                   TargetType="ButtonBase">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE113;"
-                                           FontFamily="Segoe UI Symbol"
-                                           FontWeight="Bold"
-                                           FontSize="14"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           TextAlignment="Center" />
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style x:Key="CommandableButton3"
-                   TargetType="ButtonBase">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Grid>
-                                <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
-                                           TextTrimming="None"
-                                           TextWrapping="Wrap"
-                                           Foreground="Black"
-                                           FontSize="14"
-                                           FontWeight="Bold"
-                                           TextAlignment="Left"
-                                           HorizontalAlignment="Left"
-                                           VerticalAlignment="Center" />
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </Grid.Resources>
+        
 
         <Grid.RowDefinitions>
             <RowDefinition Height="70" />
@@ -176,27 +118,48 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
+                        
                         <Rectangle Grid.Row="0"
                                    Grid.Column="0"
                                    Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
-                        <Button Grid.Row="0"
-                                Grid.Column="2"
-                                Style="{StaticResource CommandableButton3}"
-                                Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
-                                CommandParameter="{Binding Route}"
-                                AutomationProperties.Name="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}" />
-                        <Button Grid.Row="0"
-                                Grid.Column="3"
-                                Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource CommandableButton}"
-                                AutomationProperties.Name="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}" />
-                        <Button Grid.Row="0"
-                                Grid.Column="4"
-                                Style="{StaticResource CommandableButton2}"
-                                Foreground="{Binding StopAndRoute, Converter={StaticResource stopAndRouteToFavoriteColorConverter}}"
-                                Command="{Binding AddToFavoritesCommand, Source={StaticResource navigationProxy}}"
-                                CommandParameter="{Binding StopAndRoute}" />
+                        
+                        <ctrls:ScalableTextBlock Grid.Row="0"
+                                                 Grid.Column="2"
+                                                 Text="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}"
+                                                 Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
+                                                 CommandParameter="{Binding Route}"
+                                                 Foreground="Black"
+                                                 NormalFontSize="14"
+                                                 SnappedFontSize="12"
+                                                 FontWeight="Bold"
+                                                 HorizontalTextAlignment="Left"
+                                                 VerticalTextAlignment="Center" />
+                        
+                        <ctrls:ScalableTextBlock Grid.Row="0"
+                                                 Grid.Column="3"
+                                                 Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
+                                                 Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
+                                                 CommandParameter="{Binding}"
+                                                 Foreground="Black"
+                                                 NormalFontSize="14"
+                                                 SnappedFontSize="12"
+                                                 FontWeight="Bold"
+                                                 HorizontalTextAlignment="Left"
+                                                 VerticalTextAlignment="Center" />
+
+                        <ctrls:ScalableTextBlock Grid.Row="0"
+                                                 Grid.Column="4"
+                                                 Text="&#xE113;"
+                                                 FontFamily="Segoe UI Symbol"
+                                                 Command="{Binding AddToFavoritesCommand, Source={StaticResource navigationProxy}}"
+                                                 CommandParameter="{Binding StopAndRoute}"
+                                                 Foreground="{Binding StopAndRoute, Converter={StaticResource stopAndRouteToFavoriteColorConverter}}"
+                                                 NormalFontSize="14"
+                                                 SnappedFontSize="14"
+                                                 FontWeight="Bold"
+                                                 HorizontalTextAlignment="Center"
+                                                 VerticalTextAlignment="Center" />
+
                         <TextBlock Grid.Row="0"
                                    Grid.Column="5"
                                    Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm tt'}"

@@ -28,12 +28,12 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Called when the user selects a stop.
         /// </summary>
-        private void OnStopClicked(object sender, RoutedEventArgs e)
+        private void OnStopClicked(object sender, PointerRoutedEventArgs e)
         {
             var viewModel = this.DataContext as TripTimelineControlViewModel;
             if (viewModel != null)
             {
-                var stop = ((Button)sender).DataContext as TripStop;
+                var stop = ((Control)sender).DataContext as TripStop;
                 if (stop != null)
                 {
                     viewModel.SelectNewStop(stop);

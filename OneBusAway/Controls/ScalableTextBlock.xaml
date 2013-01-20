@@ -5,8 +5,8 @@
              xmlns:local="using:OneBusAway"             
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:trig="using:OneBusAway.Triggers"
-             mc:Ignorable="d"
+             xmlns:trig="using:OneBusAway.Triggers"             
+             mc:Ignorable="d"             
              d:DesignHeight="30"
              d:DesignWidth="100">
 
@@ -29,14 +29,20 @@
                       VisualState="Default" />
     </trig:TriggerManager.Triggers>
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          PointerPressed="OnPointerPressed">
+        <Rectangle HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Fill="Transparent" />
         <TextBlock x:Name="textBlock"
                    FontSize="{Binding NormalFontSize, ElementName=root}"
                    FontWeight="{Binding FontWeight, ElementName=root}"
-                   Text="{Binding Text, ElementName=root}"
+                   Text="{Binding Text, ElementName=root}"                   
+                   HorizontalAlignment="{Binding HorizontalTextAlignment, ElementName=root}"
+                   VerticalAlignment="{Binding VerticalTextAlignment, ElementName=root}"
                    TextTrimming="None"
-                   TextAlignment="Left"
-                   TextWrapping="NoWrap" />
+                   TextWrapping="Wrap" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
@@ -51,6 +57,11 @@
                                                        Storyboard.TargetProperty="TextTrimming">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="WordEllipsis" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
+                                                       Storyboard.TargetProperty="TextWrapping">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="NoWrap" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Text;
@@ -42,6 +43,26 @@ namespace OneBusAway.Controls
             typeof(ScalableTextBlock), 
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command",
+            typeof(ICommand),
+            typeof(ScalableTextBlock),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register("CommandParameter",
+            typeof(object),
+            typeof(ScalableTextBlock),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty VerticalTextAlignmentProperty = DependencyProperty.Register("VerticalTextAlignment",
+            typeof(VerticalAlignment),
+            typeof(ScalableTextBlock),
+            new PropertyMetadata(VerticalAlignment.Top));
+
+        public static readonly DependencyProperty HorizontalTextAlignmentProperty = DependencyProperty.Register("HorizontalTextAlignment",
+            typeof(HorizontalAlignment),
+            typeof(ScalableTextBlock),
+            new PropertyMetadata(HorizontalAlignment.Left));
+
         public ScalableTextBlock()
         {
             this.InitializeComponent();
@@ -69,6 +90,41 @@ namespace OneBusAway.Controls
         {
             get { return (int)GetValue(LargeFontSizeProperty); }
             set { SetValue(LargeFontSizeProperty, value); }
+        }
+
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+
+        public object CommandParameter
+        {
+            get { return (object)GetValue(CommandParameterProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+
+        public VerticalAlignment VerticalTextAlignment
+        {
+            get { return (VerticalAlignment)GetValue(VerticalTextAlignmentProperty); }
+            set { SetValue(VerticalTextAlignmentProperty, value); }
+        }
+
+        public HorizontalAlignment HorizontalTextAlignment
+        {
+            get { return (HorizontalAlignment)GetValue(HorizontalTextAlignmentProperty); }
+            set { SetValue(HorizontalTextAlignmentProperty, value); }
+        }
+
+        /// <summary>
+        /// If there is a command bound to this text block, invoke it.
+        /// </summary>
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (this.Command != null && this.Command.CanExecute(this.CommandParameter))
+            {
+                this.Command.Execute(this.CommandParameter);
+            }
         }
     }
 }

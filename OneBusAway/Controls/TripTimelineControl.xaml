@@ -6,6 +6,7 @@
              xmlns:local="using:OneBusAway.Controls"                          
              xmlns:conv="using:OneBusAway.Converters"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ctrls="using:OneBusAway.Controls"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -18,24 +19,6 @@
         <conv:BoolToFontWeightConverter x:Key="boolToFontWeightConverter" />
         <conv:BoolToThicknessConverter x:Key="boolToThicknessConverter" />        
         <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
-        <Style x:Key="CommandableButton"
-                   TargetType="ButtonBase">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Grid>
-                            <TextBlock Text="{TemplateBinding AutomationProperties.Name}"
-                                       Foreground="Black"
-                                       FontWeight="Bold"
-                                       Margin="10,2,0,2"
-                                       FontSize="12"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Center" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
 
     <Grid Background="White">
@@ -132,13 +115,18 @@
                                    FontSize="12"
                                    Foreground="{Binding HasReachedStop, Converter={StaticResource boolToObaGreenConverter}, ConverterParameter=True}">&#x2B24;</TextBlock>
 
-                            <Button Grid.Column="2"
-                                    Grid.Row="0"
-                                    Margin="10,2,0,2"
-                                    Style="{StaticResource CommandableButton}"
-                                    Click="OnStopClicked"
-                                    AutomationProperties.Name="{Binding Name, Converter={StaticResource capitalLetterConverter}}" />
-
+                            <ctrls:ScalableTextBlock Grid.Column="2"
+                                                     Grid.Row="0"
+                                                     Margin="10,2,0,2"
+                                                     Text="{Binding Name, Converter={StaticResource capitalLetterConverter}}"
+                                                     Foreground="Black"
+                                                     FontWeight="Bold"
+                                                     HorizontalTextAlignment="Left"
+                                                     VerticalTextAlignment="Center"
+                                                     NormalFontSize="12"
+                                                     SnappedFontSize="12"
+                                                     LargeFontSize="12" 
+                                                     PointerPressed="OnStopClicked" />
                         </Grid>
 
                         <!-- Border displays the selected border -->

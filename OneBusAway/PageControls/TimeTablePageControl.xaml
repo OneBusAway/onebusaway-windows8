@@ -30,9 +30,11 @@
     </trig:TriggerManager.Triggers>
 
     <StackPanel x:Name="stackPanel"
-                Margin="80,30,20,0">
+                Margin="80,30,20,30">
         
         <ctrls:TimeTableControl DataContext="{Binding TimeTableControlViewModel}" />
+        
+        <ctrls:DayOfTheWeekControl DataContext="{Binding DayOfTheWeekControlViewModel}" />
         
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

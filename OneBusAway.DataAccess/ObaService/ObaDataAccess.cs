@@ -170,15 +170,16 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Returns the schedule for a particular stop / route combination.
         /// </summary>
-        public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId)
+        public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId, DateTime date)
         {
             ObaMethod method = ObaMethod.schedule_for_stop;
-            XDocument doc = await ObaCache.GetCache(method, stopId);
+            XDocument doc = await ObaCache.GetCache(method, stopId + "#" + date.DayOfWeek.ToString(), 24 * 60 * 60);
 
             if (doc == null)
             {
                 var helper = this.Factory.CreateHelper(method);
                 helper.SetId(stopId);
+                helper.AddToQueryString("date", date.ToString("yyyy-MM-dd"));
 
                 doc = await helper.SendAndRecieveAsync();
                 await ObaCache.SaveCache(method, stopId, doc);

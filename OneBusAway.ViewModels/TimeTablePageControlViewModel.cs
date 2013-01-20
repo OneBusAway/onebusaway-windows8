@@ -18,6 +18,11 @@ namespace OneBusAway.ViewModels
         /// The view model for the time table page control.
         /// </summary>
         private TimeTableControlViewModel timeTableControlViewModel;
+
+        /// <summary>
+        /// View model for hte day of the week control.
+        /// </summary>
+        private DayOfTheWeekControlViewModel dayOfTheWeekControlViewModel;
         
         /// <summary>
         /// Get shape data for the route.
@@ -30,6 +35,16 @@ namespace OneBusAway.ViewModels
         private string routeId;
 
         /// <summary>
+        /// The stop id.
+        /// </summary>
+        private string stopId;
+
+        /// <summary>
+        /// The day of the week.
+        /// </summary>
+        private int dayOfTheWeek;
+
+        /// <summary>
         /// Creates the time table view model.
         /// </summary>
         public TimeTablePageControlViewModel()
@@ -40,6 +55,11 @@ namespace OneBusAway.ViewModels
 
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
             this.MapControlViewModel.StopSelected += OnStopSelectedAsync;
+
+            this.DayOfTheWeekControlViewModel = new DayOfTheWeekControlViewModel();
+            this.DayOfTheWeekControlViewModel.DayOfWeekChanged += OnDayOfTheWeekControlViewModelDayChanged;
+
+            this.dayOfTheWeek = (int)DateTime.Now.DayOfWeek;
         }
 
         /// <summary>
@@ -58,14 +78,30 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Returns the day of the week control view model.
+        /// </summary>
+        public DayOfTheWeekControlViewModel DayOfTheWeekControlViewModel
+        {
+            get
+            {
+                return this.dayOfTheWeekControlViewModel;
+            }
+            set
+            {
+                SetProperty(ref this.dayOfTheWeekControlViewModel, value);
+            }
+        }
+
+        /// <summary>
         /// Setset parameters on the time table control.
         /// </summary>
         public async Task SetRouteAndStopData(string stopName, string stopId, string routeName, string routeId)
         {
             this.routeId = routeId;
+            this.stopId = stopId;
             this.TimeTableControlViewModel.RouteNumber = routeName;
             this.TimeTableControlViewModel.StopDescription = stopName;
-            await this.TimeTableControlViewModel.FindScheduleDataAsync(stopId, routeId);            
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(stopId, routeId, this.dayOfTheWeek);
         }
 
         /// <summary>
@@ -84,9 +120,19 @@ namespace OneBusAway.ViewModels
         /// Called when user selects another bus stop on the map control.
         /// </summary>
         private async void OnStopSelectedAsync(object sender, StopSelectedEventArgs e)
-        {            
-            await this.TimeTableControlViewModel.FindScheduleDataAsync(e.SelectedStopId, this.routeId);
+        {
+            this.stopId = e.SelectedStopId;
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(this.stopId, this.routeId, this.dayOfTheWeek);
             this.MapControlViewModel.SelectStop(e.SelectedStopId);            
+        }
+
+        /// <summary>
+        /// Called when the user selects a new day of the week.
+        /// </summary>
+        private async void OnDayOfTheWeekControlViewModelDayChanged(object sender, DayChangedEventArgs e)
+        {
+            this.dayOfTheWeek = e.DayOfWeek;
+            await this.TimeTableControlViewModel.FindScheduleDataAsync(this.stopId, this.routeId, this.dayOfTheWeek);
         }
     }
 }

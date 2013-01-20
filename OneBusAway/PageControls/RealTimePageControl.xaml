@@ -31,7 +31,7 @@
     </trig:TriggerManager.Triggers>
 
     <StackPanel x:Name="stackPanel" 
-                Margin="80,30,20,0">
+                Margin="80,30,20,30">
 
         <ctrls:RoutesAndStopsControl DataContext="{Binding RoutesAndStopsViewModel}" />
 

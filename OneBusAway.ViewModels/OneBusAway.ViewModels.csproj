@@ -125,6 +125,8 @@
   <ItemGroup>
     <Compile Include="AllRoutesCache.cs" />
     <Compile Include="BusStopControlViewModel.cs" />
+    <Compile Include="DayChangedEventArgs.cs" />
+    <Compile Include="DayOfTheWeekControlViewModel.cs" />
     <Compile Include="FavoritesPageControlViewModel.cs" />
     <Compile Include="LocationSelectedEventArgs.cs" />
     <Compile Include="RouteMapsAndSchedulesControlViewModel.cs" />

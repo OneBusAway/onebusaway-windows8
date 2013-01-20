@@ -107,18 +107,23 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Queries Oba for schedule data based on the current stop id.
         /// </summary>
-        public async Task FindScheduleDataAsync(string stopId, string routeId)
+        public async Task FindScheduleDataAsync(string stopId, string routeId, int dayOfWeek)
         {
+            // First we need to find the day of the week to use:
+            DateTime date = DateTime.Now;
+            int daysFromNow = dayOfWeek - (int)date.DayOfWeek;
+            date = date.AddDays(daysFromNow);
+
             try
             {
-                var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId);
+                var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId, date);
 
                 // TO DO: support more than one trip headsign. 
                 // Not sure what the UI for this should be.
 
                 var query = from scheduleStopTime in scheduleData[0].ScheduleStopTimes
                             orderby scheduleStopTime.ArrivalTime ascending
-                            where scheduleStopTime.ArrivalTime.Day == DateTime.Now.Day
+                            where scheduleStopTime.ArrivalTime.Day == date.Day
                             group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
                             select (from byHourStopTime in groupedByHourData
                                     orderby byHourStopTime.ArrivalTime ascending

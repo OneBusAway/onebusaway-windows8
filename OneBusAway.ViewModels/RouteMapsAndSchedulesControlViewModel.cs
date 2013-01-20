@@ -15,14 +15,14 @@ namespace OneBusAway.ViewModels
         private string stopId;
         private string routeId;
         private string stopName;
-        private string routeName;
+        private string routeName;                
 
         /// <summary>
         /// Creates the control.
         /// </summary>
         public RouteMapsAndSchedulesControlViewModel()
         {
-        }
+        }        
 
         public string StopName
         {
@@ -70,6 +70,6 @@ namespace OneBusAway.ViewModels
             {
                 SetProperty(ref this.routeId, value);
             }
-        }
+        }        
     }
 }
