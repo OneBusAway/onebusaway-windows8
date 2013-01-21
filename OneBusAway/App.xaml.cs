@@ -90,12 +90,23 @@ namespace OneBusAway
             pane.QuerySubmitted += App_QuerySubmitted;
             pane.ResultSuggestionChosen += pane_ResultSuggestionChosen;
             pane.SuggestionsRequested += pane_SuggestionsRequested;            
-        }        
+        }
 
-        void pane_SuggestionsRequested(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestedEventArgs args)
+        async void pane_SuggestionsRequested(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestedEventArgs args)
         {
-            // TODO: possible implementation here is to get the user's favorites and do a search within those to see if any match.
-            // Those can be provided as suggestions.
+            var frame = Window.Current.Content as Frame;
+            if (frame != null)
+            {
+                var searchResultsPage = frame.Content as MainPage;
+                if (searchResultsPage != null)
+                {
+                    var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
+                    if (viewModel != null)
+                    {
+                        args.Request.SearchSuggestionCollection.AppendQuerySuggestions(await viewModel.GetSuggestionsAsync(args.QueryText));
+                    }
+                }
+            }
         }
 
         void pane_ResultSuggestionChosen(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneResultSuggestionChosenEventArgs args)
@@ -108,7 +119,19 @@ namespace OneBusAway
 
             if (frame != null)
             {
-                await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText);
+                var searchResultsPage = frame.Content as MainPage;
+                if (searchResultsPage != null)
+                {
+                    var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
+                    if (viewModel != null)
+                    {
+                        await viewModel.SearchAsync(args.QueryText);
+                    }
+                    else
+                    {
+                        await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText);
+                    }
+                }                
             }
         }
 

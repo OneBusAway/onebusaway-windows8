@@ -4,6 +4,7 @@ using OneBusAway.Model;
 using OneBusAway.Model.BingService;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,7 +155,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches all agencies for all bus numbers.
         /// </summary>
-        public async Task Search(string query, OneBusAway.Model.Point userLocation = null)
+        public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation = null)
         {
             try
             {
@@ -168,15 +169,27 @@ namespace OneBusAway.ViewModels
                 }
                 else
                 {
-                    // Let's filter the results!
-                    this.SearchResults = (from result in listOfAllRoutes
-                                          where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                             || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                          select new SearchRouteResultViewModel(result)).ToArray();
+                    // If the user selected a suggestion, then that means they want a specific bus:
+                    if (query.StartsWith("BUS"))
+                    {
+                        query = query.Replace("BUS ", string.Empty);
+                        this.BingMapsSearchResults = null;
+                        this.SearchResults = (from result in listOfAllRoutes
+                                              where string.Equals(query, result.ShortName, StringComparison.OrdinalIgnoreCase)
+                                              select new SearchRouteResultViewModel(result)).ToArray();
+                    }
+                    else
+                    {
+                        // Let's filter the results!
+                        this.SearchResults = (from result in listOfAllRoutes
+                                              where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                                 || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                              select new SearchRouteResultViewModel(result)).ToArray();
 
-                    var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
-                    this.BingMapsSearchResults = (from result in bingMapResults
-                                                  select new SearchLocationResultViewModel(result)).ToArray();
+                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
+                        this.BingMapsSearchResults = (from result in bingMapResults
+                                                      select new SearchLocationResultViewModel(result)).ToArray();
+                    }
 
                 }
             }
@@ -184,6 +197,18 @@ namespace OneBusAway.ViewModels
             {
 
             }
+        }
+
+        /// <summary>
+        /// Returns a list of suggestions for the user the OBA list of routes.
+        /// </summary>
+        public async Task<IEnumerable<string>> GetSuggestionsAsync(string query, OneBusAway.Model.Point userLocation)
+        {
+            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            return from result in listOfAllRoutes
+                   where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                      || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                   select string.Format(CultureInfo.CurrentCulture, "BUS {0}", result.ShortName);
         }
 
         /// <summary>

@@ -51,7 +51,15 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task SearchAsync(string queryText)
         {            
-            await this.SearchResultsControlViewModel.Search(queryText, MapControlViewModel.UserLocation);
+            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation);
+        }
+
+        /// <summary>
+        /// Returns a list of suggestions.
+        /// </summary>
+        public async Task<IEnumerable<string>> GetSuggestionsAsync(string queryText)
+        {
+            return await this.SearchResultsControlViewModel.GetSuggestionsAsync(queryText, MapControlViewModel.UserLocation);
         }
 
         /// <summary>
