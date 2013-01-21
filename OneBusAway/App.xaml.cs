@@ -89,26 +89,8 @@ namespace OneBusAway
             pane.ShowOnKeyboardInput = true;
             pane.QuerySubmitted += App_QuerySubmitted;
             pane.ResultSuggestionChosen += pane_ResultSuggestionChosen;
-            pane.SuggestionsRequested += pane_SuggestionsRequested;
-            pane.QueryChanged += pane_QueryChanged;
-        }
-
-        private async void pane_QueryChanged(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneQueryChangedEventArgs args)
-        {
-            var frame = Window.Current.Content as Frame;
-            if (frame != null)
-            {
-                var searchResultsPage = frame.Content as MainPage;
-                if (searchResultsPage != null)
-                {
-                    var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
-                    if (viewModel != null)
-                    {
-                        await viewModel.SearchAsync(args.QueryText);
-                    }
-                }
-            }
-        }
+            pane.SuggestionsRequested += pane_SuggestionsRequested;            
+        }        
 
         void pane_SuggestionsRequested(Windows.ApplicationModel.Search.SearchPane sender, Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestedEventArgs args)
         {
