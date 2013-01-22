@@ -21,6 +21,7 @@ namespace OneBusAway.ViewModels
         private string stopHeaderText;
         private string stopSubHeaderText;
         private string stopOrDestinationText;
+        private bool showNoFavoritesMessage;
         private DateTime lastUpdated;
         private string filteredRouteId;
         private bool isFiltered;
@@ -66,6 +67,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.routeAndMapsViewModels, value);
+            }
+        }
+
+        public bool ShowNoFavoritesMessage
+        {
+            get
+            {
+                return this.showNoFavoritesMessage;
+            }
+            set
+            {
+                SetProperty(ref this.showNoFavoritesMessage, value);
             }
         }
 
@@ -165,6 +178,7 @@ namespace OneBusAway.ViewModels
             this.RealTimeData = trackingData.ToArray();
             this.RouteAndMapsViewModels = null;
             this.LastUpdated = DateTime.Now;
+            this.ShowNoFavoritesMessage = trackingData.Count == 0;
         }
 
         /// <summary>

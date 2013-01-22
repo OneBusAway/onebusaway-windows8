@@ -17,11 +17,12 @@
         <conv:TimeToTextConverter x:Key="timeToTextConverter" />
         <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
         <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+        <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <oba:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
     <Grid>
-        
+
 
         <Grid.RowDefinitions>
             <RowDefinition Height="70" />
@@ -119,11 +120,11 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
-                        
+
                         <Rectangle Grid.Row="0"
                                    Grid.Column="0"
                                    Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
-                        
+
                         <ctrls:ScalableTextBlock Grid.Row="0"
                                                  Grid.Column="2"
                                                  Text="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}"
@@ -135,7 +136,7 @@
                                                  FontWeight="Bold"
                                                  HorizontalTextAlignment="Left"
                                                  VerticalTextAlignment="Center" />
-                        
+
                         <ctrls:ScalableTextBlock Grid.Row="0"
                                                  Grid.Column="3"
                                                  Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
@@ -199,7 +200,7 @@
         <StackPanel Grid.Column="0"
                     Grid.Row="3"
                     Margin="0,40,0,0"
-                    Visibility="{Binding RealTimeData, Converter={StaticResource arrayToVisibilityConverter}, ConverterParameter=True}">
+                    Visibility="{Binding ShowNoFavoritesMessage, Converter={StaticResource boolToVisibilityConverter}}">
 
             <StackPanel.Resources>
                 <Style TargetType="ctrls:ScalableTextBlock">
@@ -213,7 +214,7 @@
             <ctrls:ScalableTextBlock Text="You currently do not have any favorite bus stops pinned." />
             <ctrls:ScalableTextBlock Text="Find real time data on your favorite stop," />
             <ctrls:ScalableTextBlock Text="then pin it to the favorites page." />
-            
+
             <StackPanel Orientation="Horizontal"
                         Margin="0,10,0,0"
                         HorizontalAlignment="Center">
@@ -222,10 +223,10 @@
                                          Margin="2,-2,2,2"
                                          FontFamily="Segoe UI Symbol" />
                 <ctrls:ScalableTextBlock Text="to pin/unpin a bus stop." />
-            </StackPanel>            
-            
+            </StackPanel>
+
         </StackPanel>
-        
+
     </Grid>
 
 </UserControl>
