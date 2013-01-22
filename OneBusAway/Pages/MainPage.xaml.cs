@@ -32,7 +32,7 @@ namespace OneBusAway.Pages
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();            
         }
 
         /// <summary>
@@ -65,7 +65,8 @@ namespace OneBusAway.Pages
         /// </summary>
         public void ShowHelpFlyout()
         {
-            this.helpPopup.IsOpen = true;
+            var helpFlyoutControl = new HelpFlyoutControl();
+            helpFlyoutControl.Show();
         }
 
         /// <summary>

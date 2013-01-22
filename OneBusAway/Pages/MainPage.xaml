@@ -68,36 +68,11 @@
                           Shapes="{Binding Shapes}"
                           SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
 
-        <Popup x:Name="helpPopup" 
-               Grid.Column="2"
-               Grid.Row="0"
-               Grid.RowSpan="3"
-               Height="{Binding ActualHeight, ElementName=root}"
-               Width="500"               
-               HorizontalAlignment="Right"               
-               Canvas.ZIndex="100">
-
-            <Grid HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch"
-                  Height="{Binding ActualHeight, ElementName=root}"
-                  Width="500">
-                <ScrollViewer VerticalScrollBarVisibility="Visible">
-                    <ctrls:HelpFlyoutControl />
-                </ScrollViewer>
-            </Grid>
-            
-        </Popup>
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
                 <VisualState x:Name="IsSnapped">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="helpPopup"
-                                                       Storyboard.TargetProperty="IsOpen">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="False" />
-                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainPageMap"
                                                        Storyboard.TargetProperty="(Grid.Row)">
                             <DiscreteObjectKeyFrame KeyTime="0"
