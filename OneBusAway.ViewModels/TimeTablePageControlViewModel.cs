@@ -110,7 +110,7 @@ namespace OneBusAway.ViewModels
         public async Task GetRouteData(string stopId, string routeId)
         {
             RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, stopId);
-            this.MapControlViewModel.BusStops = routeData.Stops.ToList();
+            this.MapControlViewModel.BusStops = new BusStopList(routeData.Stops);
             this.MapControlViewModel.Shapes = routeData.Shapes.ToList();
             this.MapControlViewModel.SelectStop(stopId);
             await Task.Delay(10);

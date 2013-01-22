@@ -141,11 +141,11 @@ namespace OneBusAway.Controls
             }
         }
 
-        public List<Stop> BusStops
+        public BusStopList BusStops
         {
             get
             {
-                return GetValue(BusStopsDP) as List<Stop>;
+                return GetValue(BusStopsDP) as BusStopList;
             }
             set
             {
@@ -213,7 +213,7 @@ namespace OneBusAway.Controls
 
         public static readonly DependencyProperty ZoomLevelDP = DependencyProperty.Register("ZoomLevel", typeof(double), typeof(MapControl), new PropertyMetadata(null, ZoomLevelChanged));
 
-        public static readonly DependencyProperty BusStopsDP = DependencyProperty.Register("BusStops", typeof(OneBusAway.Model.Stop), typeof(MapControl), new PropertyMetadata(null, BusStopsChanged));
+        public static readonly DependencyProperty BusStopsDP = DependencyProperty.Register("BusStops", typeof(BusStopList), typeof(MapControl), new PropertyMetadata(null, BusStopsChanged));
 
         public static readonly DependencyProperty BoundsWidthDP = DependencyProperty.Register("BoundsWidth", typeof(double), typeof(MapControl), null);
 
@@ -397,7 +397,16 @@ namespace OneBusAway.Controls
             else
             {
                 MapControlViewModel mapControlViewModel = (MapControlViewModel)mapControl.DataContext;
-                var stops = e.NewValue as List<Stop>;
+                var stops = e.NewValue as BusStopList;
+
+                if (stops.ClearExistingStops)
+                {
+                    // If the clear existing stops property is set to true, 
+                    // then we should clear the existing stops:
+                    mapControl.map.Children.Clear();
+                    mapControl.displayedBusStopLookup.Clear();
+                }
+
                 foreach (var stop in stops)
                 {
                     // If we're not already displaying this bus stop then add it to the list:

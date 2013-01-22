@@ -67,25 +67,19 @@ namespace OneBusAway.ViewModels
         /// </summary>
         private async void OnSearchResultsControlViewModelRouteSelected(object sender, RouteSelectedEventArgs e)
         {
-            // If this is true then the user just clicked from a location-based search. Clear old bus stops!
-            if (this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
-            {
-                this.MapControlViewModel.BusStops = null;                
-            }
-
             this.searchResultsControlViewModel.SetIsLoadingCurrentRoute(true);
 
             try
             {
                 var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
 
-                this.MapControlViewModel.BusStops = (from route in routes
-                                                     from stop in route.Stops
-                                                     select stop).ToList();
+                this.MapControlViewModel.BusStops = new BusStopList(from route in routes
+                                                                    from stop in route.Stops
+                                                                    select stop);
 
                 this.MapControlViewModel.Shapes = (from route in routes
-                                                   from shape in route.Shapes
-                                                   select shape).ToList();
+                                                    from shape in route.Shapes
+                                                    select shape).ToList();
             }
             finally
             {
@@ -96,17 +90,14 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
-        /// Called when the user selects a location as the search result
+        /// Called when the user selects a location as the search result. Show all of the routes that are near this stop.
         /// </summary>
         /// <param name="sender">SearchResultsControlViewModel</param>
         /// <param name="e">SearchLocationResultViewModel</param>
         private async void OnSearchResultsControlViewModelLocationSelected(object sender, LocationSelectedEventArgs e)
         {
-            if (!this.MapControlViewModel.RefreshBusStopsOnMapViewChanged)
-            {
-                this.MapControlViewModel.BusStops = null;
-                this.MapControlViewModel.Shapes = null;
-            }
+            this.MapControlViewModel.BusStops = null;
+            this.MapControlViewModel.Shapes = null;
             
             var point = new OneBusAway.Model.Point(e.Location.Point.Coordinates[0], e.Location.Point.Coordinates[1]);
             this.MapControlViewModel.UserLocation = point;

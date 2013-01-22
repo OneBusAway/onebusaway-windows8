@@ -18,7 +18,7 @@ namespace OneBusAway.ViewModels
         private ObaDataAccess obaDataAccess;
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
-        private List<Stop> busStops;
+        private BusStopList busStops;
         private List<Shape> shapes;
         private bool refreshBusStopsOnMapViewChanged;
         private BusStopControlViewModel selectedBusStop;
@@ -98,7 +98,7 @@ namespace OneBusAway.ViewModels
             }
         }
 
-        public List<Stop> BusStops
+        public BusStopList BusStops
         {
             get
             {
@@ -162,11 +162,11 @@ namespace OneBusAway.ViewModels
 
         public async Task RefreshStopsForLocationAsync()
         {
-            this.BusStops = (await this.obaDataAccess.GetStopsForLocationAsync(
+            this.BusStops = new BusStopList(await this.obaDataAccess.GetStopsForLocationAsync(
                 mapView.MapCenter.Latitude,
                 mapView.MapCenter.Longitude,
                 mapView.BoundsHeight,
-                mapView.BoundsWidth)).ToList();
+                mapView.BoundsWidth));
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace OneBusAway.ViewModels
             SetProperty(ref this.mapView, mapView);
             MapView.Current = mapView;
 
-            this.BusStops = (await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude)).ToList();
+            this.BusStops = new BusStopList(await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude));
         }
 
         /// <summary>

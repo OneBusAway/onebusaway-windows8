@@ -108,6 +108,14 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Selects this view model.
+        /// </summary>
+        public async Task SelectAsync()
+        {
+            await this.OnSelectedCommandExecuted(null, null);
+        }
+
+        /// <summary>
         /// Fires when this view is selected.
         /// </summary>
         private Task OnSelectedCommandExecuted(object arg1, object arg2)

@@ -120,6 +120,9 @@
     <Compile Include="Controls\HeaderControl.xaml.cs">
       <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HelpFlyoutControl.xaml.cs">
+      <DependentUpon>HelpFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
@@ -200,6 +203,8 @@
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\Bus.gif" />
     <Content Include="Assets\bus.png" />
+    <Content Include="Assets\Help-Find.png" />
+    <Content Include="Assets\Help-Search.png" />
     <Content Include="Assets\Logo.scale-100.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
@@ -225,6 +230,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\HeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HelpFlyoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

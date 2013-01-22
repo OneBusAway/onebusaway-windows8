@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Search;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -125,7 +127,7 @@ namespace OneBusAway
             this.GoToTripDetailsPageCommand = new ObservableCommand();
             this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
 
-            this.pageControls = new Stack<IPageControl>();
+            this.pageControls = new Stack<IPageControl>();   
         }
 
         /// <summary>
@@ -357,27 +359,9 @@ namespace OneBusAway
             await previousPageControl.RestoreAsync();
 
             this.currentPageControl = previousPageControl;
-            MainPage.SetPageView(previousPageControl);
+            MainPage.SetPageView(previousPageControl);            
 
             this.FirePropertyChanged("CanGoBack");
-        }
-
-        /// <summary>
-        /// Attempts to retreive the view model type T from the navigation stack.
-        /// </summary>
-        public static bool TryRestoreViewModel<T>(NavigationMode navigationMode, ref T viewModel)
-            where T : ViewModelBase
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Attempts to persist a view model of type T in the navigation stack.
-        /// </summary>
-        public static bool TryPersistViewModel<T>(NavigationMode navigationMode, T viewModel)
-            where T : PageViewModelBase
-        {
-            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -401,6 +385,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
+            NavigationController.MainPage.ShowHelpFlyout();
             return Task.FromResult<object>(null);
         }
 

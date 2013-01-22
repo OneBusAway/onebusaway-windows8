@@ -153,15 +153,22 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Private helper method returns all routes.
+        /// </summary>
+        private async Task<List<Route>> LoadAllRoutesAsync()
+        {
+            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            this.IsLoadingRoutes = false;
+            return listOfAllRoutes;
+        }
+
+        /// <summary>
         /// Searches all agencies for all bus numbers.
         /// </summary>
         public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation = null)
         {
             try
             {
-                var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
-                this.IsLoadingRoutes = false;
-
                 if (string.IsNullOrEmpty(query))
                 {
                     this.SearchResults = null;
@@ -170,16 +177,14 @@ namespace OneBusAway.ViewModels
                 else
                 {
                     // If the user selected a suggestion, then that means they want a specific bus:
-                    if (query.StartsWith("BUS"))
+                    if (query.StartsWith("BUS", StringComparison.OrdinalIgnoreCase))
                     {
-                        query = query.Replace("BUS ", string.Empty);
-                        this.BingMapsSearchResults = null;
-                        this.SearchResults = (from result in listOfAllRoutes
-                                              where string.Equals(query, result.ShortName, StringComparison.OrdinalIgnoreCase)
-                                              select new SearchRouteResultViewModel(result)).ToArray();
+                        await DisplayAndSelectSpecificRouteAsync(query.Substring(3).Trim());
                     }
                     else
                     {
+                        var listOfAllRoutes = await this.LoadAllRoutesAsync();
+
                         // Let's filter the results!
                         this.SearchResults = (from result in listOfAllRoutes
                                               where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
@@ -200,6 +205,25 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Loads and displays a specific route.
+        /// </summary>
+        public async Task DisplayAndSelectSpecificRouteAsync(string routeIdOrShortName)
+        {
+            var listOfAllRoutes = await this.LoadAllRoutesAsync();
+            this.BingMapsSearchResults = null;
+
+            this.SearchResults = (from result in listOfAllRoutes
+                                  where string.Equals(routeIdOrShortName, result.ShortName, StringComparison.OrdinalIgnoreCase)
+                                     || string.Equals(routeIdOrShortName, result.Id, StringComparison.OrdinalIgnoreCase)
+                                  select new SearchRouteResultViewModel(result)).ToArray();
+
+            if (this.SearchResults.Length == 1)
+            {
+                await this.SearchResults[0].SelectAsync();
+            }
+        }
+
+        /// <summary>
         /// Returns a list of suggestions for the user the OBA list of routes.
         /// </summary>
         public async Task<IEnumerable<string>> GetSuggestionsAsync(string query, OneBusAway.Model.Point userLocation)
@@ -216,7 +240,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task SelectSpecificRoutesAsync(IEnumerable<string> routeIds)
         {
-            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            var listOfAllRoutes = await this.LoadAllRoutesAsync();
             this.SearchResults = (from result in listOfAllRoutes
                                   where routeIds.Contains(result.Id)
                                   select new SearchRouteResultViewModel(result)).ToArray();

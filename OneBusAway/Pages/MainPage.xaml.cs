@@ -61,6 +61,14 @@ namespace OneBusAway.Pages
         }
 
         /// <summary>
+        /// Displays the help flyout.
+        /// </summary>
+        public void ShowHelpFlyout()
+        {
+            this.helpPopup.IsOpen = true;
+        }
+
+        /// <summary>
         /// Called when the size of the page changes.
         /// </summary>
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
