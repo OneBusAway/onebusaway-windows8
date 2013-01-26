@@ -111,8 +111,12 @@ namespace OneBusAway.ViewModels
         {
             // First we need to find the day of the week to use:
             DateTime date = DateTime.Now;
-            int daysFromNow = dayOfWeek - (int)date.DayOfWeek;
-            date = date.AddDays(daysFromNow);
+
+            if (dayOfWeek != (int) date.DayOfWeek)
+            {
+                int daysFromNow = (7 + dayOfWeek - (int)date.DayOfWeek) % 7; // Always query for future date
+                date = date.AddDays(daysFromNow);
+            }
 
             try
             {
@@ -133,12 +137,12 @@ namespace OneBusAway.ViewModels
                 this.ScheduleData = (from arrivalsByHour in query
                                      select arrivalsByHour).ToArray();
 
-                this.TripHeadsign = scheduleData[0].TripHeadsign;                
+                this.TripHeadsign = scheduleData[0].TripHeadsign;
             }
             catch (ArgumentException)
             {
-                // No schedule available for this stop:   
-                this.ScheduleAvailable = false;                
+                // No schedule available for this stop:
+                this.ScheduleAvailable = false;
                 this.ScheduleData = null;
             }
             finally

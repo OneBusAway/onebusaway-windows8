@@ -173,7 +173,8 @@ namespace OneBusAway.DataAccess
         public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId, DateTime date)
         {
             ObaMethod method = ObaMethod.schedule_for_stop;
-            XDocument doc = await ObaCache.GetCache(method, stopId + "#" + date.DayOfWeek.ToString(), 24 * 60 * 60);
+            string cacheId = stopId + "_" + date.DayOfWeek.ToString();
+            XDocument doc = await ObaCache.GetCache(method, cacheId, 24 * 60 * 60);
 
             if (doc == null)
             {
@@ -182,7 +183,7 @@ namespace OneBusAway.DataAccess
                 helper.AddToQueryString("date", date.ToString("yyyy-MM-dd"));
 
                 doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, stopId, doc);
+                await ObaCache.SaveCache(method, cacheId, doc);
             }
 
             // Find all of the stops in the payload that have this route id:
