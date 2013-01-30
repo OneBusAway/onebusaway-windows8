@@ -19,7 +19,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mbraude.visualstudio.com/defaultcollection
+		SccTeamFoundationServer = https://mbraude.tfspreview.com/defaultcollection
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = OneBusAway\\OneBusAway.csproj
 		SccProjectName1 = OneBusAway
@@ -130,8 +130,5 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9} = {50A4B99B-93CD-44D1-BB16-7FDA864FD4D9}
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

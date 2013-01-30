@@ -23,12 +23,12 @@ namespace OneBusAway.Utilities
         /// <summary>
         /// API Key to access Bing Maps Service
         /// </summary>
-        public const string BingsMapsServiceApiKey = "AvU-uxo8TYI1W27CBfXD2He_ZJ2T_yYcPbbfPgn9x-0HVVJHqbCfbB69wEYECRmt";
+        public const string BingsMapsServiceApiKey = "AtX8n80j9qDzHLBakqiTlTwvNm0pp9I9uO1wHfu4UyAXvZosECwuYGqYoGSkxnGT";
 
         /// <summary>
         /// Key to use the Bing Maps control
         /// </summary>
-        public const string BingMapCredentials = "AoUHJXTeSKEqI4xCm_HWb3GEmQY_rLTAOKlhGgzZFCYpZsU-BcD_IUWE0PcjGGgr";
+        public const string BingMapCredentials = "AtX8n80j9qDzHLBakqiTlTwvNm0pp9I9uO1wHfu4UyAXvZosECwuYGqYoGSkxnGT";
 
         /// <summary>
         /// Base address to access the REST based Bing location service
