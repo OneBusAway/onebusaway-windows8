@@ -11,12 +11,7 @@
              d:DesignWidth="100">
 
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-            <local:NavigationControllerProxy x:Key="navigationProxy" />
-        </ResourceDictionary>
+        <local:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
     <!-- Triggers and Visual States -->
