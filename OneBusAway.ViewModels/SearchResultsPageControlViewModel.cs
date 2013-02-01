@@ -22,11 +22,11 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Creates the search results page view model.
         /// </summary>
-        public SearchResultsPageControlViewModel()
+        public SearchResultsPageControlViewModel(IUIHelper uiHelper)
         {
             this.HeaderViewModel.SubText = "SEARCH RESULTS";
 
-            this.SearchResultsControlViewModel = new SearchResultsControlViewModel();
+            this.SearchResultsControlViewModel = new SearchResultsControlViewModel(uiHelper);
             this.SearchResultsControlViewModel.RouteSelected += OnSearchResultsControlViewModelRouteSelected;
             this.SearchResultsControlViewModel.LocationSelected += OnSearchResultsControlViewModelLocationSelected;
 

@@ -25,6 +25,7 @@ namespace OneBusAway.Controls
         private UserLocationIcon userLocationIcon;
         private bool centerOnUserLocation;
         private Location userLocation;
+        private IUIHelper uiHelper;
         private HashSet<string> displayedBusStopLookup = new HashSet<string>();
 
         public MapControl()
@@ -37,6 +38,7 @@ namespace OneBusAway.Controls
             this.MapCenter = null;
 
             map.ViewChangeEnded += OnMapViewChangeEnded;
+            this.uiHelper = new DefaultUIHelper(this.Dispatcher);
         }
 
         public string BingMapCredentials
@@ -73,7 +75,7 @@ namespace OneBusAway.Controls
             }
         }
 
-        public OneBusAway.Model.Point MapCenter 
+        public OneBusAway.Model.Point MapCenter
         {
             get
             {
@@ -197,7 +199,7 @@ namespace OneBusAway.Controls
             }
             set
             {
-                SetValue(SelectedBusStopDP, value);                
+                SetValue(SelectedBusStopDP, value);
             }
         }
 
@@ -280,8 +282,8 @@ namespace OneBusAway.Controls
 
             if (e.NewValue != null)
             {
-                MapShapeLayer routeLayer = new MapShapeLayer();                
-                
+                MapShapeLayer routeLayer = new MapShapeLayer();
+
                 List<Shape> shapes = (List<Shape>)e.NewValue;
                 foreach (var shape in shapes)
                 {
@@ -296,7 +298,7 @@ namespace OneBusAway.Controls
                     }
 
                     polyline.Locations = locations;
-                    routeLayer.Shapes.Add(polyline);                    
+                    routeLayer.Shapes.Add(polyline);
                 }
 
                 mapControl.map.ShapeLayers.Add(routeLayer);
@@ -304,7 +306,7 @@ namespace OneBusAway.Controls
         }
 
         private static void SelectedBusStopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
+        {
             BusStopControlViewModel lastSelected = e.OldValue as BusStopControlViewModel;
             if (lastSelected != null)
             {
@@ -319,30 +321,30 @@ namespace OneBusAway.Controls
                 // Make sure the new view model is bound to an existing control.
                 // If it's not then we need to find the one that is and make it selected:                
                 MapControl mapControl = (MapControl)d;
-                var boundViewModel = (from busStop in mapControl.map.Children
-                                      let busStopControl = busStop as BusStop
-                                      where busStopControl != null
-                                      let busStopControlViewModel = busStopControl.DataContext as BusStopControlViewModel
-                                      where busStopControlViewModel != null
-                                        && string.Equals(busStopControlViewModel.StopId, newSelected.StopId, StringComparison.OrdinalIgnoreCase)
-                                        && busStopControlViewModel != newSelected
-                                      select busStopControlViewModel).FirstOrDefault();
+                var busStop = (from child in mapControl.map.Children
+                               let currentBusStop = child as BusStop
+                               where currentBusStop != null
+                               let busStopControlViewModel = currentBusStop.DataContext as BusStopControlViewModel
+                               where busStopControlViewModel != null
+                                 && string.Equals(busStopControlViewModel.StopId, newSelected.StopId, StringComparison.OrdinalIgnoreCase)
+                                 && busStopControlViewModel != newSelected
+                               select currentBusStop).FirstOrDefault();
 
                 // This means we have a control that matches the selected control, but it is not
                 // the same view model.
-                if (boundViewModel != null)
+                if (busStop != null)
                 {
-                    mapControl.SelectedBusStop = boundViewModel;
+                    busStop.DataContext = newSelected;
                 }
             }
         }
 
         private static void MapCenterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
+        {
             var mapControl = d as MapControl;
 
             mapControl.MapCenter = (OneBusAway.Model.Point)e.NewValue;
-        }        
+        }
 
         private static void UserLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -384,7 +386,7 @@ namespace OneBusAway.Controls
             }
         }
 
-        private static void BusStopsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void BusStopsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var mapControl = d as MapControl;
 
@@ -431,6 +433,10 @@ namespace OneBusAway.Controls
                         };
 
                         mapControl.map.Children.Add(busStopIcon);
+
+                        // Wait for the UI to idle before we add another bus stop to make the UI more responsive:
+                        await mapControl.uiHelper.WaitForIdleAsync();
+
                         mapControl.displayedBusStopLookup.Add(stop.StopId);
 
                         MapLayer.SetPosition(busStopIcon, new Location(stop.Latitude, stop.Longitude));
@@ -447,12 +453,12 @@ namespace OneBusAway.Controls
         /// </summary>
         void OnMapViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
         {
-            this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude), 
-                map.ZoomLevel, 
-                map.Bounds.Height, 
+            this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude),
+                map.ZoomLevel,
+                map.Bounds.Height,
                 map.Bounds.Width);
 
             NavigationController.Instance.MapView = this.MapView;
-        }         
+        }
     }
 }

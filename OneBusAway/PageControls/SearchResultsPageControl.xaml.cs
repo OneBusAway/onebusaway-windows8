@@ -32,8 +32,8 @@ namespace OneBusAway.PageControls
         public SearchResultsPageControl()
         {
             this.InitializeComponent();
-            
-            this.viewModel = new SearchResultsPageControlViewModel();
+
+            this.viewModel = new SearchResultsPageControlViewModel(new DefaultUIHelper(this.Dispatcher));
             this.viewModel.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelected;        
         }
 
