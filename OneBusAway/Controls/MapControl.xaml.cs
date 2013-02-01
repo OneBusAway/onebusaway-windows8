@@ -289,12 +289,14 @@ namespace OneBusAway.Controls
                     polyline.Color = Color.FromArgb(255, 0x4f, 0x64, 0xba);
                     polyline.Width = 6;
 
+                    LocationCollection locations = new LocationCollection();
                     foreach (var point in shape.Points)
                     {
-                        polyline.Locations.Add(new Location(point.Latitude, point.Longitude));
+                        locations.Add(new Location(point.Latitude, point.Longitude));
                     }
 
-                    routeLayer.Shapes.Add(polyline);
+                    polyline.Locations = locations;
+                    routeLayer.Shapes.Add(polyline);                    
                 }
 
                 mapControl.map.ShapeLayers.Add(routeLayer);
