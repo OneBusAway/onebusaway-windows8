@@ -4,6 +4,8 @@ using OneBusAway.Model;
 using OneBusAway.Model.BingService;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,6 +19,13 @@ namespace OneBusAway.ViewModels
     public class SearchResultsControlViewModel : ViewModelBase
     {
         /// <summary>
+        /// In order to prevent LayoutCycleExceptions, we need to limit the number of bus stops we 
+        /// can add to the searchResults collection at one time. We also need to make sure we give the UI 
+        /// a chance to update after we've added some stops.
+        /// </summary>
+        private const int MAX_STOPS_AT_ONCE = 25;
+
+        /// <summary>
         /// Data access to OneBusAway.
         /// </summary>
         private ObaDataAccess obaDataAccess;
@@ -24,7 +33,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// These are the search results.
         /// </summary>
-        private SearchRouteResultViewModel[] searchResults;
+        private ObservableCollection<SearchRouteResultViewModel> searchResults;
 
         /// <summary>
         /// List of locations obtained by querying Bing maps service
@@ -60,15 +69,18 @@ namespace OneBusAway.ViewModels
         /// Creates the search results control view model.
         /// </summary>
         public SearchResultsControlViewModel()
-        {
+        {            
             this.obaDataAccess = new ObaDataAccess();
             this.IsLoadingRoutes = AllRoutesCache.IsCacheUpToDate();
+
+            this.searchResults = new ObservableCollection<SearchRouteResultViewModel>();
+            this.searchResults.CollectionChanged += OnSearchResultsCollectionChanged;
         }
 
         /// <summary>
         /// Gets / sets the search results.
         /// </summary>
-        public SearchRouteResultViewModel[] SearchResults
+        public ObservableCollection<SearchRouteResultViewModel> SearchResults
         {
             get
             {
@@ -76,26 +88,7 @@ namespace OneBusAway.ViewModels
             }
             set
             {
-                // Remove old event handlers:
-                if (this.searchResults != null)
-                {
-                    foreach (var result in this.searchResults)
-                    {
-                        result.RouteSelected -= OnResultRouteSelected;
-                    }
-                }
-
                 SetProperty(ref this.searchResults, value);
-                FirePropertyChanged("SearchResultsExist");
-
-                // Add new event handlers:
-                if (this.searchResults != null)
-                {
-                    foreach (var result in this.searchResults)
-                    {
-                        result.RouteSelected += OnResultRouteSelected;
-                    }
-                }
             }
         }
 
@@ -171,7 +164,7 @@ namespace OneBusAway.ViewModels
             {
                 if (string.IsNullOrEmpty(query))
                 {
-                    this.SearchResults = null;
+                    this.SearchResults.Clear();
                     this.BingMapsSearchResults = null;
                 }
                 else
@@ -186,10 +179,13 @@ namespace OneBusAway.ViewModels
                         var listOfAllRoutes = await this.LoadAllRoutesAsync();
 
                         // Let's filter the results!
-                        this.SearchResults = (from result in listOfAllRoutes
-                                              where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                                 || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
-                                              select new SearchRouteResultViewModel(result)).ToArray();
+
+                        var newItems = (from result in listOfAllRoutes
+                                        where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                           || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                                        select new SearchRouteResultViewModel(result));
+
+                        await BatchAddItemsAsync(this.searchResults, newItems);
 
                         var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
                         this.BingMapsSearchResults = (from result in bingMapResults
@@ -205,6 +201,24 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Batch-adds new items to the search result list in a way that prevents LayoutCycleExceptions. If 
+        /// we add too many at once, WinRT thinks we've entered an infinite loop.
+        /// </summary>
+        private static async Task BatchAddItemsAsync<T>(ObservableCollection<T> collection, IEnumerable<T> newItems, bool clear = true)
+        {
+            if (clear)
+            {
+                collection.Clear();                
+            }
+
+            foreach (var item in newItems)
+            {
+                collection.Add(item);
+                await Task.Yield();
+            }
+        }
+
+        /// <summary>
         /// Loads and displays a specific route.
         /// </summary>
         public async Task DisplayAndSelectSpecificRouteAsync(string routeIdOrShortName)
@@ -212,12 +226,15 @@ namespace OneBusAway.ViewModels
             var listOfAllRoutes = await this.LoadAllRoutesAsync();
             this.BingMapsSearchResults = null;
 
-            this.SearchResults = (from result in listOfAllRoutes
-                                  where string.Equals(routeIdOrShortName, result.ShortName, StringComparison.OrdinalIgnoreCase)
-                                     || string.Equals(routeIdOrShortName, result.Id, StringComparison.OrdinalIgnoreCase)
-                                  select new SearchRouteResultViewModel(result)).ToArray();
 
-            if (this.SearchResults.Length == 1)
+            var newRoutes = (from result in listOfAllRoutes
+                             where string.Equals(routeIdOrShortName, result.ShortName, StringComparison.OrdinalIgnoreCase)
+                                || string.Equals(routeIdOrShortName, result.Id, StringComparison.OrdinalIgnoreCase)
+                             select new SearchRouteResultViewModel(result));
+
+            await BatchAddItemsAsync(this.searchResults, newRoutes);
+
+            if (this.SearchResults.Count == 1)
             {
                 await this.SearchResults[0].SelectAsync();
             }
@@ -241,9 +258,42 @@ namespace OneBusAway.ViewModels
         public async Task SelectSpecificRoutesAsync(IEnumerable<string> routeIds)
         {
             var listOfAllRoutes = await this.LoadAllRoutesAsync();
-            this.SearchResults = (from result in listOfAllRoutes
-                                  where routeIds.Contains(result.Id)
-                                  select new SearchRouteResultViewModel(result)).ToArray();
+            await BatchAddItemsAsync(this.searchResults, from result in listOfAllRoutes
+                                                         where routeIds.Contains(result.Id)
+                                                         select new SearchRouteResultViewModel(result));
+        }
+
+        /// <summary>
+        /// Called when the search results collection changes.
+        /// </summary>
+        private void OnSearchResultsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.NewItems.OfType<SearchRouteResultViewModel>())
+                {
+                    item.RouteSelected -= OnResultRouteSelected;
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (e.OldItems != null)
+                {
+                    foreach (var item in e.OldItems.OfType<SearchRouteResultViewModel>())
+                    {
+                        item.RouteSelected -= OnResultRouteSelected;
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in e.NewItems.OfType<SearchRouteResultViewModel>())
+                {
+                    item.RouteSelected += OnResultRouteSelected;
+                }
+            }
+
+            this.FirePropertyChanged("SearchResultsExist");
         }
 
         /// <summary>
