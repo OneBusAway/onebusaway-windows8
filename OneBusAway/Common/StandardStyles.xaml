@@ -36,6 +36,13 @@
                 Value="12" />
     </Style>
     
+    <Style TargetType="ScrollViewer">
+        <Setter Property="ZoomMode"
+                Value="Disabled" />
+        <Setter Property="HorizontalScrollMode"
+                Value="Disabled" />
+    </Style>
+    
     <!-- RichTextBlock styles -->
 
     <Style x:Key="BasicRichTextStyle" TargetType="RichTextBlock">

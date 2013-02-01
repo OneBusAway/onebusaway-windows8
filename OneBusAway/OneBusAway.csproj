@@ -204,7 +204,9 @@
     <Content Include="Assets\Bus.gif" />
     <Content Include="Assets\bus.png" />
     <Content Include="Assets\Help-Find.png" />
+    <Content Include="Assets\Help-RouteMaps.png" />
     <Content Include="Assets\Help-Search.png" />
+    <Content Include="Assets\Help-TapActions.png" />
     <Content Include="Assets\Logo.scale-100.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />

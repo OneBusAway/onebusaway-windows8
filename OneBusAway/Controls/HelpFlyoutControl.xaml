@@ -7,7 +7,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="1000"
+             d:DesignHeight="2000"
              d:DesignWidth="500">
 
     <UserControl.Resources>
@@ -27,7 +27,7 @@
 
         <Border x:Name="mainBorder"
                 BorderThickness="1,0,0,0"
-                Background="Black">
+                Background="#e6e6e6">
 
             <Border.Transitions>
                 <TransitionCollection>
@@ -57,6 +57,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -182,9 +183,63 @@
                             <TextBlock FontSize="18"
                                        FontWeight="Bold">TAP ACTIONS</TextBlock>
 
+                            <Image Grid.Row="1"
+                                   Grid.Column="0"
+                                   Height="80"
+                                   Width="405"
+                                   Margin="0,20,0,0"
+                                   HorizontalAlignment="Left"
+                                   Source="ms-appx:///Assets/Help-TapActions.png" />
+
+                            <TextBlock FontSize="14"
+                                       Margin="0,40,0,0"
+                                       FontWeight="Bold">FILTER</TextBlock>
+                            <TextBlock FontSize="14"
+                                       TextWrapping="Wrap">Filter real time information by bus.</TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       Margin="0,20,0,0"
+                                       FontWeight="Bold">TRIP INFO</TextBlock>
+                            <TextBlock FontSize="14"
+                                       TextWrapping="Wrap">View trip info for selected bus.</TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       Margin="0,20,0,0"
+                                       FontWeight="Bold">FAVORITE</TextBlock>
+                            <TextBlock FontSize="14"
+                                       TextWrapping="Wrap">Tap to pin/unpin a bus stop to your favorite list.</TextBlock>
+
+                        </StackPanel>
+                        
+                        <!-- Route Maps Panel -->
+                        <StackPanel Grid.Column="1"
+                                    Grid.Row="4"
+                                    Margin="0,40,10,40">
+
+                            <TextBlock FontSize="18"
+                                       FontWeight="Bold">ROUTE MAPS</TextBlock>
+
+                            <Image Height="40"
+                                   Width="220"
+                                   Margin="0,20,0,0"
+                                   HorizontalAlignment="Left"
+                                   Source="ms-appx:///Assets/Help-RouteMaps.png" />
+
+                            <TextBlock FontSize="14"
+                                       Margin="0,20,0,0"
+                                       FontWeight="Bold">WHAT ARE THESE</TextBlock>
+                            <TextBlock FontSize="14"
+                                       TextWrapping="Wrap">When you select a bus stop on the map, you will see "Bus Route Badges" below the real time information. Each badge represents a different bus that will pass through the stop you have currently selected.</TextBlock>
+
+                            <TextBlock FontSize="14"
+                                       Margin="0,20,0,0"
+                                       FontWeight="Bold">HOW TO USE</TextBlock>
+                            <TextBlock FontSize="14"
+                                       TextWrapping="Wrap">Tap on a "Bus Route Badge" to see a full route map and the schedule for all of the stops along that route.</TextBlock>
+
                         </StackPanel>
                     </Grid>
-                    
+
                 </ScrollViewer>
             </Grid>
         </Border>
