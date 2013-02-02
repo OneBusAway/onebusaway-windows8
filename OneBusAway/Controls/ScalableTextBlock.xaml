@@ -23,31 +23,7 @@
                    HorizontalAlignment="{Binding HorizontalTextAlignment, ElementName=root}"
                    VerticalAlignment="{Binding VerticalTextAlignment, ElementName=root}"
                    TextTrimming="None"
-                   TextWrapping="Wrap" />
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Default" />
-                <VisualState x:Name="IsSnapped">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
-                                                       Storyboard.TargetProperty="FontSize">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="{Binding SnappedFontSize, ElementName=root}" />                            
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
-                                                       Storyboard.TargetProperty="TextTrimming">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="WordEllipsis" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="textBlock"
-                                                       Storyboard.TargetProperty="TextWrapping">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="NoWrap" />
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+                   TextWrapping="Wrap" />        
     </Grid>
 
 </UserControl>

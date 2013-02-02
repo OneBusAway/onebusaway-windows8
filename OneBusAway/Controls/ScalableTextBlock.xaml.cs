@@ -1,6 +1,7 @@
 ﻿using OneBusAway.Triggers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -74,30 +75,8 @@ namespace OneBusAway.Controls
             this.InitializeComponent();
             
             this.proxy = new NavigationControllerProxy();
+            this.proxy.PropertyChanged += OnProxyPropertyChanged;
 
-            // Set things in code so that it's faster:
-            var triggerCollection = TriggerManager.GetTriggers(this);
-            triggerCollection.Add(new Trigger()
-            {
-                Value = "True",
-                VisualState = "IsSnapped",
-                Binding = new Binding()
-                {
-                    Path = new PropertyPath("IsSnapped"),
-                    Source = this.proxy,
-                }
-            });
-
-            triggerCollection.Add(new Trigger()
-            {
-                Value = "False",
-                VisualState = "Default",
-                Binding = new Binding()
-                {
-                    Path = new PropertyPath("IsSnapped"),
-                    Source = this.proxy,
-                }
-            });
         }
 
         public string Text
@@ -146,6 +125,29 @@ namespace OneBusAway.Controls
         {
             get { return (HorizontalAlignment)GetValue(HorizontalTextAlignmentProperty); }
             set { SetValue(HorizontalTextAlignmentProperty, value); }
+        }
+
+        /// <summary>
+        /// Called when a property changes on the navigation proxy. Since this is a hot path, it's cheaper 
+        /// to implement these events manually instead of binding via the triggers system in xaml.
+        /// </summary>
+        private void OnProxyPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(string.Equals("IsSnapped", e.PropertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (this.proxy.IsSnapped)
+                {
+                    this.textBlock.SetValue(TextBlock.FontSizeProperty, this.SnappedFontSize);
+                    this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.WordEllipsis);
+                    this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.NoWrap);
+                }
+                else
+                {
+                    this.textBlock.SetValue(TextBlock.FontSizeProperty, this.NormalFontSize);
+                    this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.None);
+                    this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap);
+                }
+            }
         }
 
         /// <summary>
