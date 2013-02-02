@@ -324,7 +324,7 @@ namespace OneBusAway.Controls
                 var busStop = (from child in mapControl.map.Children
                                let currentBusStop = child as BusStop
                                where currentBusStop != null
-                               let busStopControlViewModel = currentBusStop.DataContext as BusStopControlViewModel
+                               let busStopControlViewModel = currentBusStop.ViewModel
                                where busStopControlViewModel != null
                                  && string.Equals(busStopControlViewModel.StopId, newSelected.StopId, StringComparison.OrdinalIgnoreCase)
                                  && busStopControlViewModel != newSelected
@@ -334,7 +334,7 @@ namespace OneBusAway.Controls
                 // the same view model.
                 if (busStop != null)
                 {
-                    busStop.DataContext = newSelected;
+                    busStop.ViewModel = newSelected;
                 }
             }
         }
@@ -427,10 +427,8 @@ namespace OneBusAway.Controls
                             }
                         }
 
-                        BusStop busStopIcon = new BusStop()
-                        {
-                            DataContext = busStopControlViewModel
-                        };
+                        BusStop busStopIcon = new BusStop();
+                        busStopIcon.ViewModel = busStopControlViewModel;
 
                         mapControl.map.Children.Add(busStopIcon);
 

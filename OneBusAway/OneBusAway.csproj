@@ -114,6 +114,9 @@
     <Compile Include="Controls\BusStop.xaml.cs">
       <DependentUpon>BusStop.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BusStopHeaderControl.xaml.cs">
+      <DependentUpon>BusStopHeaderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DayOfTheWeekControl.xaml.cs">
       <DependentUpon>DayOfTheWeekControl.xaml</DependentUpon>
     </Compile>
@@ -225,6 +228,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\BusStop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BusStopHeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
