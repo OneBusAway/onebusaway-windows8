@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneBusAway.Triggers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,9 +64,40 @@ namespace OneBusAway.Controls
             typeof(ScalableTextBlock),
             new PropertyMetadata(HorizontalAlignment.Left));
 
+        /// <summary>
+        /// Navigation controller proxy.
+        /// </summary>
+        private NavigationControllerProxy proxy;
+
         public ScalableTextBlock()
         {
             this.InitializeComponent();
+            
+            this.proxy = new NavigationControllerProxy();
+
+            // Set things in code so that it's faster:
+            var triggerCollection = TriggerManager.GetTriggers(this);
+            triggerCollection.Add(new Trigger()
+            {
+                Value = "True",
+                VisualState = "IsSnapped",
+                Binding = new Binding()
+                {
+                    Path = new PropertyPath("IsSnapped"),
+                    Source = this.proxy,
+                }
+            });
+
+            triggerCollection.Add(new Trigger()
+            {
+                Value = "False",
+                VisualState = "Default",
+                Binding = new Binding()
+                {
+                    Path = new PropertyPath("IsSnapped"),
+                    Source = this.proxy,
+                }
+            });
         }
 
         public string Text

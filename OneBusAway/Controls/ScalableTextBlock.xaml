@@ -10,20 +10,6 @@
              d:DesignHeight="30"
              d:DesignWidth="100">
 
-    <UserControl.Resources>
-        <local:NavigationControllerProxy x:Key="navigationProxy" />
-    </UserControl.Resources>
-
-    <!-- Triggers and Visual States -->
-    <trig:TriggerManager.Triggers>
-        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
-                      Value="True"
-                      VisualState="IsSnapped" />
-        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
-                      Value="False"
-                      VisualState="Default" />
-    </trig:TriggerManager.Triggers>
-
     <Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           PointerPressed="OnPointerPressed">
