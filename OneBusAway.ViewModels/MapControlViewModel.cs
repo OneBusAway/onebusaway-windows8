@@ -44,6 +44,7 @@ namespace OneBusAway.ViewModels
             this.busStops = other.busStops;
             this.mapView = other.mapView;
             this.shapes = other.shapes;
+            this.selectedBusStop = other.selectedBusStop;
         }
 
         /// <summary>
