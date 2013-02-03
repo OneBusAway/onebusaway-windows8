@@ -25,20 +25,20 @@ namespace OneBusAway.Controls
     /// </summary>
     public sealed partial class ScalableTextBlock : UserControl
     {
-        public static readonly DependencyProperty LargeFontSizeProperty = DependencyProperty.Register("LargeFontSize", 
-            typeof(int), 
+        public static readonly DependencyProperty LargeFontSizeProperty = DependencyProperty.Register("LargeFontSize",
+            typeof(double), 
             typeof(ScalableTextBlock), 
-            new PropertyMetadata(14));
+            new PropertyMetadata(14.0));
         
-        public static readonly DependencyProperty NormalFontSizeProperty = DependencyProperty.Register("NormalFontSize", 
-            typeof(int), 
+        public static readonly DependencyProperty NormalFontSizeProperty = DependencyProperty.Register("NormalFontSize",
+            typeof(double), 
             typeof(ScalableTextBlock), 
-            new PropertyMetadata(12));
+            new PropertyMetadata(12.0));
         
-        public static readonly DependencyProperty SnappedFontSizeProperty = DependencyProperty.Register("SnappedFontSize", 
-            typeof(int), 
+        public static readonly DependencyProperty SnappedFontSizeProperty = DependencyProperty.Register("SnappedFontSize",
+            typeof(double), 
             typeof(ScalableTextBlock), 
-            new PropertyMetadata(10));
+            new PropertyMetadata(10.0));
         
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", 
             typeof(string), 
@@ -75,12 +75,7 @@ namespace OneBusAway.Controls
             this.InitializeComponent();
             
             this.proxy = new NavigationControllerProxy();
-            this.proxy.PropertyChanged += OnProxyPropertyChanged;
-
-            if (this.proxy.IsSnapped)
-            {
-                this.CalculateState();
-            }
+            this.proxy.PropertyChanged += OnProxyPropertyChanged;           
         }
 
         public string Text
@@ -89,21 +84,21 @@ namespace OneBusAway.Controls
             set { SetValue(TextProperty, value); }
         }
 
-        public int SnappedFontSize
+        public double SnappedFontSize
         {
-            get { return (int)GetValue(SnappedFontSizeProperty); }
+            get { return (double)GetValue(SnappedFontSizeProperty); }
             set { SetValue(SnappedFontSizeProperty, value); }
         }
 
-        public int NormalFontSize
+        public double NormalFontSize
         {
-            get { return (int)GetValue(NormalFontSizeProperty); }
+            get { return (double)GetValue(NormalFontSizeProperty); }
             set { SetValue(NormalFontSizeProperty, value); }
         }
 
-        public int LargeFontSize
+        public double LargeFontSize
         {
-            get { return (int)GetValue(LargeFontSizeProperty); }
+            get { return (double)GetValue(LargeFontSizeProperty); }
             set { SetValue(LargeFontSizeProperty, value); }
         }
 
@@ -150,16 +145,24 @@ namespace OneBusAway.Controls
         {
             if (this.proxy.IsSnapped)
             {
-                this.textBlock.SetValue(TextBlock.FontSizeProperty, this.SnappedFontSize);
-                this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.WordEllipsis);
-                this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.NoWrap);
+                this.textBlock.FontSize = this.SnappedFontSize;
+                this.textBlock.TextTrimming = TextTrimming.WordEllipsis;
+                this.textBlock.TextWrapping = TextWrapping.NoWrap;
             }
             else
             {
-                this.textBlock.SetValue(TextBlock.FontSizeProperty, this.NormalFontSize);
-                this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.None);
-                this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap);
+                this.textBlock.FontSize = this.NormalFontSize;
+                this.textBlock.TextTrimming = TextTrimming.None;
+                this.textBlock.TextWrapping = TextWrapping.Wrap;
             }
+        }
+
+        /// <summary>
+        /// Called when the user control is loaded.
+        /// </summary>
+        private void OnUserControlLoaded(object sender, RoutedEventArgs e)
+        {
+            this.CalculateState();
         }
 
         /// <summary>
@@ -171,6 +174,6 @@ namespace OneBusAway.Controls
             {
                 this.Command.Execute(this.CommandParameter);
             }
-        }
+        }        
     }
 }

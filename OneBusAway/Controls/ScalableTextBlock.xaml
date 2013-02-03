@@ -6,7 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:trig="using:OneBusAway.Triggers"             
-             mc:Ignorable="d"             
+             mc:Ignorable="d"
+             Loaded="OnUserControlLoaded"
              d:DesignHeight="30"
              d:DesignWidth="100">
 
@@ -17,13 +18,10 @@
                    VerticalAlignment="Stretch"
                    Fill="Transparent" />
         <TextBlock x:Name="textBlock"
-                   FontSize="{Binding NormalFontSize, ElementName=root}"
                    FontWeight="{Binding FontWeight, ElementName=root}"
                    Text="{Binding Text, ElementName=root}"                   
                    HorizontalAlignment="{Binding HorizontalTextAlignment, ElementName=root}"
-                   VerticalAlignment="{Binding VerticalTextAlignment, ElementName=root}"
-                   TextTrimming="None"
-                   TextWrapping="Wrap" />        
+                   VerticalAlignment="{Binding VerticalTextAlignment, ElementName=root}" />
     </Grid>
 
 </UserControl>
