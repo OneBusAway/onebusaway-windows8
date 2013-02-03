@@ -89,8 +89,8 @@
                                   Margin="4"
                                   VerticalAlignment="Center">
 
-                                <Ellipse Width="40"
-                                         Height="40"
+                                <Ellipse Width="50"
+                                         Height="50"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"
                                          Fill="{StaticResource obaGreen}" />
@@ -107,7 +107,7 @@
                                               IsActive="{Binding IsGettingRouteData}"
                                               Width="40"
                                               Height="40"
-                                              Foreground="Black"
+                                              Foreground="White"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Center" />
                             </Grid>
@@ -119,16 +119,16 @@
                                 <ctrls:ScalableTextBlock Text="{Binding Route.ShortName, Converter={StaticResource stringFormatConverter}, ConverterParameter='ROUTE {0}'}"
                                                          FontWeight="Bold"
                                                          Foreground="{StaticResource obaGreen}"
-                                                         NormalFontSize="20"
+                                                         NormalFontSize="14"
                                                          SnappedFontSize="14" />
                                 <ctrls:ScalableTextBlock Text="{Binding Route.Description, Converter={StaticResource capitalLetterConverter}}"
-                                                         NormalFontSize="14"
-                                                         SnappedFontSize="12"
+                                                         NormalFontSize="11"
+                                                         SnappedFontSize="11"
                                                          Foreground="Black" />
                                 <ctrls:ScalableTextBlock Text="{Binding Route.Agency.Name, Converter={StaticResource stringFormatConverter}, ConverterParameter='Operated by {0}'}"
                                                          Margin="0,2,0,0"
-                                                         NormalFontSize="14"
-                                                         SnappedFontSize="12"
+                                                         NormalFontSize="9"
+                                                         SnappedFontSize="9"
                                                          Foreground="Gray" />
                             </StackPanel>                            
                         </Grid>
