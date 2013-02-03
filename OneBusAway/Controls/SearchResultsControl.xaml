@@ -48,7 +48,7 @@
                       Grid.Column="0"
                       Grid.Row="0"
                       BorderThickness="0"
-                      Margin="80,0,80,0"
+                      Margin="90,0,80,0"
                       ItemsSource="{Binding SearchResults}">
 
             <ItemsControl.ItemTemplate>
@@ -143,7 +143,7 @@
               Background="#FFE5E5E5"
               VerticalAlignment="Stretch">
             <Grid x:Name="searchResultsGrid"
-                  Margin="80,0,0,0">
+                  Margin="90,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -185,7 +185,7 @@
         <Grid x:Name="noResultsGrid"
               Grid.Row="0"
               Grid.Column="0"
-              Margin="80,20,20,0"
+              Margin="90,20,20,0"
               Visibility="{Binding IsLoadingRoutes, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
             <TextBlock Foreground="Black"
                        FontSize="14"

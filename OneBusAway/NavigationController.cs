@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Search;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -392,12 +393,18 @@ namespace OneBusAway
         /// <summary>
         /// Called when the go to search page command is executed.
         /// </summary>
-        private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
+        private async Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            var pane = SearchPane.GetForCurrentView();
-            pane.Show();  
+            if (!this.IsSnapped || ApplicationView.TryUnsnap())
+            {
+                // Make sure we're idiling before we try this. TryUnsnap may cause the UI to refresh
+                // before we can try this:
+                var helper = new DefaultUIHelper(NavigationController.MainPage.Dispatcher);
+                await helper.WaitForIdleAsync();
 
-            return Task.FromResult<object>(null);
+                var pane = SearchPane.GetForCurrentView();
+                pane.Show();
+            }
         }
 
         /// <summary>

@@ -8,6 +8,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:viewmodel="using:OneBusAway.ViewModels"
+      xmlns:conv="using:OneBusAway.Converters"
       xmlns:bingmaps="using:Bing.Maps"
       xmlns:trig="using:OneBusAway.Triggers"
       SizeChanged="OnSizeChanged"
@@ -19,6 +20,7 @@
                 <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:NavigationControllerProxy x:Key="navigationProxy" />
+            <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -31,12 +33,13 @@
                       Value="False"
                       VisualState="Default" />
     </trig:TriggerManager.Triggers>
-    
-    <Grid Background="White" x:Name="grid">
+
+    <Grid Background="White"
+          x:Name="grid">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="45*" />
-            <ColumnDefinition Width="55*" />
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="50*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -50,7 +53,7 @@
                              Grid.Row="0"
                              DataContext="{Binding HeaderViewModel}" />
 
-        <ScrollViewer x:Name="scrollViewer" 
+        <ScrollViewer x:Name="scrollViewer"
                       Grid.Column="0"
                       Grid.Row="2"
                       VerticalScrollBarVisibility="Auto"
@@ -108,4 +111,26 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+
+    <Page.BottomAppBar>
+        <!-- App bar is only enabled in snapped mode -->
+        <AppBar Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
+                Background="{StaticResource obaGreen}">
+            <StackPanel HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Style="{StaticResource AppBarButtonStyle}"
+                        Command="{Binding GoBackCommand, Source={StaticResource navigationProxy}}"
+                        IsEnabled="{Binding CanGoBack, Source={StaticResource navigationProxy}}"
+                        Content="&#xE112;" />
+                <Button Style="{StaticResource AppBarButtonStyle}"
+                        Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationProxy}}"
+                        Content="&#xE094;" />
+                <Button Style="{StaticResource AppBarButtonStyle}"
+                        Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationProxy}}"
+                        Content="&#xE113;" />
+            </StackPanel>
+        </AppBar>
+    </Page.BottomAppBar>
+
 </Page>

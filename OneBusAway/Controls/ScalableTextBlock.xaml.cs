@@ -77,6 +77,10 @@ namespace OneBusAway.Controls
             this.proxy = new NavigationControllerProxy();
             this.proxy.PropertyChanged += OnProxyPropertyChanged;
 
+            if (this.proxy.IsSnapped)
+            {
+                this.CalculateState();
+            }
         }
 
         public string Text
@@ -135,18 +139,26 @@ namespace OneBusAway.Controls
         {
             if(string.Equals("IsSnapped", e.PropertyName, StringComparison.OrdinalIgnoreCase))
             {
-                if (this.proxy.IsSnapped)
-                {
-                    this.textBlock.SetValue(TextBlock.FontSizeProperty, this.SnappedFontSize);
-                    this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.WordEllipsis);
-                    this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.NoWrap);
-                }
-                else
-                {
-                    this.textBlock.SetValue(TextBlock.FontSizeProperty, this.NormalFontSize);
-                    this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.None);
-                    this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap);
-                }
+                CalculateState();
+            }
+        }
+
+        /// <summary>
+        /// Calculates the state of the text block based on whether we are snapped or not.
+        /// </summary>
+        private void CalculateState()
+        {
+            if (this.proxy.IsSnapped)
+            {
+                this.textBlock.SetValue(TextBlock.FontSizeProperty, this.SnappedFontSize);
+                this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.WordEllipsis);
+                this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.NoWrap);
+            }
+            else
+            {
+                this.textBlock.SetValue(TextBlock.FontSizeProperty, this.NormalFontSize);
+                this.textBlock.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.None);
+                this.textBlock.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap);
             }
         }
 

@@ -58,40 +58,48 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="0"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Style="{StaticResource BackButtonStyle}"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Right"
-                    Visibility="{Binding CanGoBack, Source={StaticResource navigationControllerProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                    Command="{Binding GoBackCommand, Source={StaticResource navigationControllerProxy}}"
-                    Margin="0,0,0,-7" />
+            <!-- Only show the back button when we are not snapped and we can go back -->
+            <!-- Hacky way of doing multi-bindings :) -->
+            <Grid Grid.Column="0"
+                  Grid.Row="0"
+                  Grid.RowSpan="2"
+                  Visibility="{Binding IsSnapped, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}, ConverterParameter=True}">
+                <Button Style="{StaticResource BackButtonStyle}"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Visibility="{Binding CanGoBack, Source={StaticResource navigationControllerProxy}, Converter={StaticResource boolToVisibilityConverter}}"
+                        Command="{Binding GoBackCommand, Source={StaticResource navigationControllerProxy}}"
+                        Margin="0,0,0,-7" />
+            </Grid>
 
             <ctrls:ScalableTextBlock Grid.Column="1"
-                       Grid.Row="0"
-                       FontWeight="Bold"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Left"
-                       Opacity=".5"
+                                     Grid.Row="0"
+                                     FontWeight="Bold"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Left"
+                                     Opacity=".5"
                                      Margin="10,0,0,0"
                                      Text="ONE BUS AWAY"
+                                     NormalFontSize="16"
+                                     SnappedFontSize="14"
                                      Visibility="{Binding HasSubText, Converter={StaticResource boolToVisibilityConverter}}" />
 
-            <ctrls:ScalableTextBlock Grid.Column="1"
-                       Grid.Row="1"
-                       FontWeight="Bold"
-                       Margin="10,0,0,0"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Left"
+            <ctrls:ScalableTextBlock x:Name="subTextTextBlock" 
+                                     Grid.Column="1"
+                                     Grid.Row="1"
+                                     FontWeight="Bold"
+                                     Margin="10,0,0,0"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Left"                                     
                                      NormalFontSize="34"
-                                     SnappedFontSize="24"
-                       Height="31"
-                       Text="{Binding SubText}" />
+                                     SnappedFontSize="28"
+                                     Height="31"
+                                     Text="{Binding SubText}" />
         </Grid>
 
         <!-- Links on top right -->
-        <Grid Grid.Column="1"
+        <Grid x:Name="linksGrid" 
+              Grid.Column="1"
               Grid.Row="0"
               HorizontalAlignment="Right"
               VerticalAlignment="Center"
@@ -101,7 +109,7 @@
                 <ColumnDefinition Width=".3*" />
                 <ColumnDefinition Width=".3*" />
             </Grid.ColumnDefinitions>
-            
+
             <Grid.Resources>
                 <Style TargetType="Button">
                     <Setter Property="BorderThickness"
@@ -130,28 +138,28 @@
                                             </VisualState>
                                         </VisualStateGroup>
                                     </VisualStateManager.VisualStateGroups>
-                                </Grid>                                
+                                </Grid>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
             </Grid.Resources>
-            
+
             <Button Grid.Column="0"
                     Grid.Row="0"
                     Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="40,0,40,0">FAVORITES</Button>
-            
+
             <Button Grid.Column="1"
                     Grid.Row="0"
                     Command="{Binding GoToHelpPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,40,0">HELP</Button>
-            
+
             <Button Grid.Column="2"
                     Grid.Row="0"
                     Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,40,0">SEARCH</Button>
-            
+
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -162,7 +170,17 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButtonColumn"
                                                        Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="Auto" />
+                                                    Value="15" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="linksGrid"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="subTextTextBlock"
+                                                       Storyboard.TargetProperty="Height">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="25" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
