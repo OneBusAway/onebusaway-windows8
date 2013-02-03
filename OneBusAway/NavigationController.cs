@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Search;
 using Windows.UI.ApplicationSettings;
@@ -58,6 +59,11 @@ namespace OneBusAway
         /// Command fires the go back command.
         /// </summary>
         private ObservableCommand goBackCommand;
+
+        /// <summary>
+        /// Tells the current PageControl to refreshes its data.
+        /// </summary>
+        private ObservableCommand refreshCommand;
                 
         /// <summary>
         /// Adds a favorite.
@@ -95,6 +101,16 @@ namespace OneBusAway
         /// True when the app is in a snapped state.
         /// </summary>
         private bool isSnapped;
+
+        /// <summary>
+        /// This cancellation token source is used to cancel an existing refresh loop so that we can start a new one.
+        /// </summary>
+        private CancellationTokenSource refreshLoopCancelationToken;
+
+        /// <summary>
+        /// Before we can start a new refresh loop, wait for the old one to exit.
+        /// </summary>
+        private Task refreshLoopTask;
         
         /// <summary>
         /// Creates the controller.
@@ -127,6 +143,9 @@ namespace OneBusAway
 
             this.GoToTripDetailsPageCommand = new ObservableCommand();
             this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
+
+            this.RefreshCommand = new ObservableCommand();
+            this.RefreshCommand.Executed += OnRefreshCommandExecuted;
 
             this.pageControls = new Stack<IPageControl>();   
         }
@@ -285,6 +304,21 @@ namespace OneBusAway
             }
         }
 
+        /// <summary>
+        /// Returns the refresh command.
+        /// </summary>
+        public ObservableCommand RefreshCommand
+        {
+            get
+            {
+                return this.refreshCommand;
+            }
+            set
+            {
+                SetProperty(ref this.refreshCommand, value);
+            }
+        }
+
         public ObservableCommand AddToFavoritesCommand
         {
             get
@@ -348,7 +382,51 @@ namespace OneBusAway
             this.currentPageControl = newPageControl;
 
             this.FirePropertyChanged("CanGoBack");
+            await this.RestartRefreshLoopAsync();            
             return newPageControl;
+        }       
+        
+        /// <summary>
+        /// Refreshes the active page control every 60 seconds. If we navigate to another page, then this
+        /// loop will be cancelled. The NavigateToPageControlAsync method will cancel this task and wait for 
+        /// it to exit before it kicks off another one. That way, we can't navigate to a page and have it refresh 
+        /// immediately - there will always be 60 seconds between a page navigation and a page refresh.
+        /// </summary>
+        private async Task RefreshLoopAsync()
+        {
+            try
+            {
+                while (true)
+                {
+                    await Task.Delay(60000, this.refreshLoopCancelationToken.Token);
+                    this.refreshLoopCancelationToken.Token.ThrowIfCancellationRequested();
+
+                    // Call refresh asyn directly here to make sure we don't have a loop:
+                    if (this.currentPageControl != null)
+                    {
+                        await this.currentPageControl.RefreshAsync();
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Kills the existing refresh loop and restarts it with a fresh timer.
+        /// </summary>
+        private async Task RestartRefreshLoopAsync()
+        {
+            if (this.refreshLoopTask != null)
+            {
+                this.refreshLoopCancelationToken.Cancel();
+                await this.refreshLoopTask;
+            }
+
+            // Start the refresh loop:
+            this.refreshLoopCancelationToken = new CancellationTokenSource();
+            this.refreshLoopTask = this.RefreshLoopAsync();
         }
 
         /// <summary>
@@ -421,6 +499,18 @@ namespace OneBusAway
         private async Task OnGoToTripDetailsPageCommandExecuted(object arg1, object arg2)
         {
             await this.NavigateToPageControlAsync<TripDetailsPageControl>(arg2);
+        }
+
+        /// <summary>
+        /// Refreshes the current page control.
+        /// </summary>
+        private async Task OnRefreshCommandExecuted(object arg1, object arg2)
+        {
+            if (this.currentPageControl != null)
+            {
+                await this.RestartRefreshLoopAsync(); 
+                await this.currentPageControl.RefreshAsync();
+            }
         }
 
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)

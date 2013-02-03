@@ -86,6 +86,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns the refresh command.
+        /// </summary>
+        public ObservableCommand RefreshCommand
+        {
+            get
+            {
+                return NavigationController.Instance.RefreshCommand;
+            }
+        }
+
+        /// <summary>
         /// Returns the go to favorites page command.
         /// </summary>
         public ObservableCommand GoToFavoritesPageCommand

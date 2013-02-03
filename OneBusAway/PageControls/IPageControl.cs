@@ -30,5 +30,10 @@ namespace OneBusAway.PageControls
         /// Pages should be able to restore themselves.
         /// </summary>
         Task RestoreAsync();
+
+        /// <summary>
+        /// Pages should be able to refresh their data on demand.
+        /// </summary>
+        Task RefreshAsync();
     }
 }

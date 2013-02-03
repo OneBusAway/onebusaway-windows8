@@ -129,6 +129,9 @@
                 <Button Style="{StaticResource AppBarButtonStyle}"
                         Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationProxy}}"
                         Content="&#xE113;" />
+                <Button Style="{StaticResource AppBarButtonStyle}"
+                        Command="{Binding RefreshCommand, Source={StaticResource navigationProxy}}"
+                        Content="&#xE117;" />
             </StackPanel>
         </AppBar>
     </Page.BottomAppBar>

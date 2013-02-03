@@ -77,5 +77,13 @@ namespace OneBusAway.PageControls
             this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
         }
+
+        /// <summary>
+        /// Nothing to do here.
+        /// </summary>
+        public Task RefreshAsync()
+        {
+            return Task.FromResult<object>(null);
+        }
     }
 }

@@ -73,5 +73,12 @@ namespace OneBusAway.PageControls
             return Task.FromResult<object>(null);
         }
 
+        /// <summary>
+        /// Refresh the realtime data.
+        /// </summary>
+        public async Task RefreshAsync()
+        {
+            await this.viewModel.RoutesAndStopsViewModel.RefreshStopAsync();
+        }
     }
 }

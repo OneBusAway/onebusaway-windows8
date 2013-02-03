@@ -72,6 +72,14 @@ namespace OneBusAway.PageControls
         }
 
         /// <summary>
+        /// Nothing to do here.
+        /// </summary>
+        public async Task RefreshAsync()
+        {
+            await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+        }
+
+        /// <summary>
         /// When the user selects a stop, we need to navigate to it.
         /// </summary>
         private void OnViewModelStopSelected(object sender, StopSelectedEventArgs e)

@@ -101,7 +101,8 @@ namespace OneBusAway.ViewModels
         /// Gets the trip details for the tracking data.
         /// </summary>
         public async Task GetTripDetailsAsync()
-        {            
+        {
+            this.IsLoadingTripDetails = true;
             this.TripDetails = await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
             this.IsLoadingTripDetails = false;
         }

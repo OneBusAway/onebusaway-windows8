@@ -82,6 +82,14 @@ namespace OneBusAway.PageControls
         }
 
         /// <summary>
+        /// Refresh the trip details.
+        /// </summary>
+        public async Task RefreshAsync()
+        {
+            await this.viewModel.TripTimelineControlViewModel.GetTripDetailsAsync();
+        }
+
+        /// <summary>
         /// Update the selected stop on the map view model.
         /// </summary>
         private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)

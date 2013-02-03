@@ -71,6 +71,14 @@ namespace OneBusAway.PageControls
         }
 
         /// <summary>
+        /// Nothing to do here.
+        /// </summary>
+        public Task RefreshAsync()
+        {
+            return Task.FromResult<object>(null);
+        }
+
+        /// <summary>
         /// When the user selects a bus stop, see if we can navigate to a page to display the route / stop combination.
         /// </summary>
         private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)

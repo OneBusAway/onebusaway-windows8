@@ -18,6 +18,7 @@ namespace OneBusAway.ViewModels
         private ObaDataAccess obaDataAccess;
         private TrackingData[] realTimeData;
         private RouteMapsAndSchedulesControlViewModel[] routeAndMapsViewModels;
+        private string stopId;
         private string stopHeaderText;
         private string stopSubHeaderText;
         private string stopOrDestinationText;
@@ -91,6 +92,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.stopOrDestinationText, value);
+            }
+        }
+
+        public string StopId
+        {
+            get
+            {
+                return this.stopId;
+            }
+            set
+            {
+                SetProperty(ref this.stopId, value);
             }
         }
 
@@ -186,21 +199,33 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task PopulateStopAsync(string stopName, string stopId, string direction)
         {
+            this.StopId = stopId;            
             this.StopHeaderText = stopName;
             this.StopSubHeaderText = string.Format(CultureInfo.CurrentCulture, "{0} BOUND", direction);
 
-            this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
+            await this.RefreshStopAsync();
+        }
 
-            this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(stopId)
-                                           select new RouteMapsAndSchedulesControlViewModel()
-                                           {
-                                               StopId = stopId,
-                                               RouteId = route.Id,
-                                               RouteName = route.ShortName,
-                                               StopName = stopName
-                                           }).ToArray();
+        /// <summary>
+        /// Refreshes the currently displayed bus stop.
+        /// </summary>
+        public async Task RefreshStopAsync()
+        {
+            if (!string.IsNullOrEmpty(this.StopId))
+            {
+                this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(this.StopId);
 
-            this.LastUpdated = DateTime.Now;
+                this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(this.StopId)
+                                               select new RouteMapsAndSchedulesControlViewModel()
+                                               {
+                                                   StopId = this.stopId,
+                                                   RouteId = route.Id,
+                                                   RouteName = route.ShortName,
+                                                   StopName = this.StopHeaderText
+                                               }).ToArray();
+
+                this.LastUpdated = DateTime.Now;
+            }
         }
 
         /// <summary>
