@@ -23,6 +23,7 @@ namespace OneBusAway.ViewModels
         private string stopSubHeaderText;
         private string stopOrDestinationText;
         private bool showNoFavoritesMessage;
+        private bool showNoItemsMessage;
         private DateTime lastUpdated;
         private string filteredRouteId;
         private bool isFiltered;
@@ -32,6 +33,7 @@ namespace OneBusAway.ViewModels
             this.obaDataAccess = new ObaDataAccess();
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
+            this.LastUpdated = DateTime.Now;
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification="Enables binding to xaml")]
@@ -80,6 +82,19 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.showNoFavoritesMessage, value);
+            }
+        }
+
+        public bool ShowNoItemsMessage
+        {
+
+            get
+            {
+                return this.showNoItemsMessage;
+            }
+            set
+            {
+                SetProperty(ref this.showNoItemsMessage, value);
             }
         }
 
@@ -149,18 +164,6 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.lastUpdated, value);
-                FirePropertyChanged("LastUpdatedText");
-            }
-        }
-
-        /// <summary>
-        /// Includes "LAST UPDATED" text.
-        /// </summary>
-        public string LastUpdatedText
-        {
-            get
-            {
-                return string.Format(CultureInfo.CurrentCulture, "LAST UPDATED: {0}", this.LastUpdated.ToString("h:mm tt"));
             }
         }
 
@@ -225,6 +228,7 @@ namespace OneBusAway.ViewModels
                                                }).ToArray();
 
                 this.LastUpdated = DateTime.Now;
+                this.ShowNoItemsMessage = this.RealTimeData.Length == 0;
             }
         }
 

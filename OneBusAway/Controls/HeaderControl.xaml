@@ -170,7 +170,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButtonColumn"
                                                        Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="15" />
+                                                    Value="0" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="linksGrid"
                                                        Storyboard.TargetProperty="Visibility">
