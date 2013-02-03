@@ -31,35 +31,5 @@
                  Credentials="AoUHJXTeSKEqI4xCm_HWb3GEmQY_rLTAOKlhGgzZFCYpZsU-BcD_IUWE0PcjGGgr"
                  ShowNavigationBar="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToInvertedConverter}}"
                  ShowScaleBar="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToInvertedConverter}}" />
-
-        <Grid Visibility="{Binding RefreshBusStopsOnMapViewChanged, Converter={StaticResource boolToVisibilityConverter}}"
-              IsHitTestVisible="False">
-            <Grid HorizontalAlignment="Stretch"
-                  VerticalAlignment="Center"
-                  Visibility="{Binding MapView, Converter={StaticResource mapViewToVisibilityConverter}, ConverterParameter=True}"
-                  Background="#884f64ba">
-
-                <StackPanel>
-                    <ctrls:ScalableTextBlock Text="oh my"
-                                             NormalFontSize="30"
-                                             SnappedFontSize="24"
-                                             FontWeight="Bold"
-                                             Margin="0,10,0,0"
-                                             HorizontalTextAlignment="Center"
-                                             Foreground="White" />
-                    <ctrls:ScalableTextBlock Text="There are too many results."
-                                             NormalFontSize="14"
-                                             SnappedFontSize="12"
-                                             HorizontalTextAlignment="Center"
-                                             Foreground="White" />
-                    <ctrls:ScalableTextBlock Text="Try zooming into street level."
-                                             NormalFontSize="14"
-                                             SnappedFontSize="12"
-                                             HorizontalTextAlignment="Center"
-                                             Foreground="White" />
-                </StackPanel>
-            </Grid>
-        </Grid>
-
     </Grid>
 </UserControl>

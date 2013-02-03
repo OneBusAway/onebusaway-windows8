@@ -21,6 +21,11 @@ namespace OneBusAway.Utilities
         public const string SERVER_URL = "http://api.onebusaway.org/api/where/";
 
         /// <summary>
+        /// This is a local settings key that keeps track of whether the oh my dialog was shown.
+        /// </summary>
+        public const string OH_MY_KEY = "OhMyDialogWasShown";
+
+        /// <summary>
         /// API Key to access Bing Maps Service
         /// </summary>
         public const string BingsMapsServiceApiKey = "AtX8n80j9qDzHLBakqiTlTwvNm0pp9I9uO1wHfu4UyAXvZosECwuYGqYoGSkxnGT";

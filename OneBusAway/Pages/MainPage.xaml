@@ -65,6 +65,7 @@
                           Grid.Column="1"
                           CenterOnUserLocation="True"
                           DataContext="{Binding MapControlViewModel}"
+                          RefreshBusStopsOnMapViewChanged="{Binding RefreshBusStopsOnMapViewChanged}"
                           MapView="{Binding MapView, Mode=TwoWay}"
                           UserLocation="{Binding UserLocation}"
                           BusStops="{Binding BusStops, Mode=TwoWay}"

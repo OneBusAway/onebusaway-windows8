@@ -17,6 +17,8 @@ using OneBusAway.Utilities;
 using OneBusAway.Model;
 using Windows.UI;
 using OneBusAway.ViewModels;
+using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace OneBusAway.Controls
 {
@@ -27,6 +29,11 @@ namespace OneBusAway.Controls
         private Location userLocation;
         private IUIHelper uiHelper;
         private HashSet<string> displayedBusStopLookup = new HashSet<string>();
+
+        /// <summary>
+        /// This bool is true when the user has already seen the oh my dialog.
+        /// </summary>
+        private bool hasShownOhMyDialog;            
 
         public MapControl()
         {
@@ -39,6 +46,8 @@ namespace OneBusAway.Controls
 
             map.ViewChangeEnded += OnMapViewChangeEnded;
             this.uiHelper = new DefaultUIHelper(this.Dispatcher);
+
+            this.hasShownOhMyDialog = ApplicationData.Current.LocalSettings.Values.ContainsKey(UtilitiesConstants.OH_MY_KEY);
         }
 
         public string BingMapCredentials
@@ -111,6 +120,18 @@ namespace OneBusAway.Controls
             set
             {
                 SetValue(UserLocationDP, value);
+            }
+        }
+
+        public bool RefreshBusStopsOnMapViewChanged
+        {
+            get
+            {
+                return (bool)GetValue(RefreshBusStopsOnMapViewChangedDP);
+            }
+            set
+            {
+                SetValue(RefreshBusStopsOnMapViewChangedDP, value);
             }
         }
 
@@ -206,6 +227,8 @@ namespace OneBusAway.Controls
         #endregion
 
         #region Dependency Properties
+
+        public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedDP = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged", typeof(bool), typeof(MapControl), new PropertyMetadata(true));
 
         public static readonly DependencyProperty MapCenterDP = DependencyProperty.Register("MapCenter", typeof(OneBusAway.Model.Point), typeof(MapControl), new PropertyMetadata(null, MapCenterPropertyChanged));
 
@@ -449,7 +472,7 @@ namespace OneBusAway.Controls
         /// Called when the map view change ends.  Store the map view and if we zoom out far enough, 
         /// clear the bus stops.
         /// </summary>
-        void OnMapViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
+        private void OnMapViewChangeEnded(object sender, ViewChangeEndedEventArgs e)
         {
             this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude),
                 map.ZoomLevel,
@@ -457,6 +480,27 @@ namespace OneBusAway.Controls
                 map.Bounds.Width);
 
             NavigationController.Instance.MapView = this.MapView;
+
+            if (!this.hasShownOhMyDialog)
+            {
+                lock (this)
+                {
+                    if (!this.hasShownOhMyDialog)
+                    {
+                        // If we're zoomed out too far and we haven't shown the oh my dialog yet, show it now:
+                        if (this.RefreshBusStopsOnMapViewChanged && this.MapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
+                        {
+                            this.hasShownOhMyDialog = true;
+                            var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level", "oh my");
+                            messageDialog.DefaultCommandIndex = 0;
+                            var ignored = messageDialog.ShowAsync().AsTask().ContinueWith(command =>
+                                {
+                                    ApplicationData.Current.LocalSettings.Values[UtilitiesConstants.OH_MY_KEY] = true;
+                                });
+                        }
+                    }
+                }
+            }
         }
     }
 }
