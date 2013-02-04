@@ -51,6 +51,11 @@ namespace OneBusAway.ViewModels
         private bool isLoadingRoutes;
 
         /// <summary>
+        /// A string that is displayed to the user when we are not loading routes and there are no results to display.
+        /// </summary>
+        private string noSearchResultsText;
+
+        /// <summary>
         /// This is the selected search result.
         /// </summary>
         private object selectedResult;
@@ -104,6 +109,18 @@ namespace OneBusAway.ViewModels
             {
                 return (SearchResults != null && SearchResults.Count() > 0)
                     || (BingMapsSearchResults != null && BingMapsSearchResults.Length > 0);
+            }
+        }
+
+        public string NoSearchResultsText
+        {
+            get
+            {
+                return this.noSearchResultsText;
+            }
+            set
+            {
+                SetProperty(ref this.noSearchResultsText, value);
             }
         }
 
@@ -166,6 +183,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation = null)
         {
+            this.NoSearchResultsText = string.Format(CultureInfo.CurrentCulture, "SEARCHING FOR '{0}'", query);
+
             try
             {
                 if (string.IsNullOrEmpty(query))
@@ -204,6 +223,8 @@ namespace OneBusAway.ViewModels
             {
 
             }
+
+            this.NoSearchResultsText = "NO RESULTS";
         }
 
         /// <summary>

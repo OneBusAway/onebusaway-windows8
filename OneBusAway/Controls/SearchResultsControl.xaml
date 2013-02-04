@@ -192,7 +192,7 @@
                        HorizontalAlignment="Left"
                        FontWeight="Bold"
                        Visibility="{Binding SearchResultsExist,Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
-                       Text="NO RESULTS" />
+                       Text="{Binding NoSearchResultsText}" />
         </Grid>
 
         <StackPanel Grid.Column="0"
