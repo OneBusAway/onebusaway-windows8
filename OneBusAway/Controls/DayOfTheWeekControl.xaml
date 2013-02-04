@@ -22,14 +22,17 @@
             </ResourceDictionary.MergedDictionaries>
             <conv:NumberToDayOfTheWeekConverter x:Key="numberToDayOfTheWeekConverter" />
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+            <local:NavigationControllerProxy x:Key="navigationProxy" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Left"
           VerticalAlignment="Top">
 
+        <!-- Regular view -->
         <ItemsControl ItemsSource="{Binding DaysOfTheWeek}"
-                      HorizontalAlignment="Center">
+                      HorizontalAlignment="Center"
+                      Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapGrid ItemHeight="60"
@@ -76,5 +79,57 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!-- Snapped view -->
+        <ItemsControl ItemsSource="{Binding DaysOfTheWeek}"
+                      HorizontalAlignment="Center"
+                      Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapGrid ItemHeight="40"
+                              ItemWidth="40"
+                              FlowDirection="LeftToRight"
+                              Orientation="Horizontal"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              HorizontalChildrenAlignment="Left"
+                              VerticalChildrenAlignment="Top" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <Border x:Name="border"
+                            Width="35"
+                            Height="35"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            BorderBrush="{StaticResource obaGreen}"
+                            BorderThickness="1">
+
+                        <Grid>
+
+                            <Rectangle Fill="{StaticResource obaGreen}"
+                                       Visibility="{Binding IsSelectedDay, Converter={StaticResource boolToVisibilityConverter}}" />
+
+                            <ctrls:ScalableTextBlock Text="{Binding Day, Converter={StaticResource numberToDayOfTheWeekConverter}}"
+                                                     Command="{Binding Command}"
+                                                     CommandParameter="{Binding Day}"
+                                                     Foreground="Black"
+                                                     HorizontalTextAlignment="Center"
+                                                     VerticalTextAlignment="Center"
+                                                     FontWeight="Bold"
+                                                     NormalFontSize="14"
+                                                     SnappedFontSize="14"
+                                                     LargeFontSize="14"
+                                                     Width="35"
+                                                     Height="35" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
     </Grid>
 </UserControl>

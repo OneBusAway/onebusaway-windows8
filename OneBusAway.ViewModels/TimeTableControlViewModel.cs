@@ -19,8 +19,12 @@ namespace OneBusAway.ViewModels
         private bool? scheduleAvailable;
         private bool isLoadingSchedule;
         private DateTime[][] scheduleData;
+        private int dayOfTheWeek;
+        private string stopId;
+        private string routeId;
 
         private ObaDataAccess obaDataAccess;
+        private DayOfTheWeekControlViewModel dayOfTheWeekControlViewModel;
 
         /// <summary>
         /// Creates the view model.
@@ -30,6 +34,26 @@ namespace OneBusAway.ViewModels
             this.scheduleAvailable = null;
             this.IsLoadingSchedule = true;
             this.obaDataAccess = new ObaDataAccess();
+
+            this.dayOfTheWeek = (int)DateTime.Now.DayOfWeek;
+
+            this.DayOfTheWeekControlViewModel = new DayOfTheWeekControlViewModel();
+            this.DayOfTheWeekControlViewModel.DayOfWeekChanged += OnDayOfTheWeekControlViewModelDayChanged;
+        }
+
+        /// <summary>
+        /// Returns the day of the week control view model.
+        /// </summary>
+        public DayOfTheWeekControlViewModel DayOfTheWeekControlViewModel
+        {
+            get
+            {
+                return this.dayOfTheWeekControlViewModel;
+            }
+            set
+            {
+                SetProperty(ref this.dayOfTheWeekControlViewModel, value);
+            }
         }
 
         public string RouteNumber
@@ -102,19 +126,22 @@ namespace OneBusAway.ViewModels
             {
                 SetProperty(ref this.stopDescription, value);
             }
-        }
+        }        
 
         /// <summary>
         /// Queries Oba for schedule data based on the current stop id.
         /// </summary>
-        public async Task FindScheduleDataAsync(string stopId, string routeId, int dayOfWeek)
+        public async Task FindScheduleDataAsync(string stopId, string routeId)
         {
+            this.stopId = stopId;
+            this.routeId = routeId;
+
             // First we need to find the day of the week to use:
             DateTime date = DateTime.Now;
 
-            if (dayOfWeek != (int) date.DayOfWeek)
+            if (this.dayOfTheWeek != (int)date.DayOfWeek)
             {
-                int daysFromNow = (7 + dayOfWeek - (int)date.DayOfWeek) % 7; // Always query for future date
+                int daysFromNow = (7 + this.dayOfTheWeek - (int)date.DayOfWeek) % 7; // Always query for future date
                 date = date.AddDays(daysFromNow);
             }
 
@@ -149,6 +176,15 @@ namespace OneBusAway.ViewModels
             {
                 this.IsLoadingSchedule = false;
             }
+        }
+
+        /// <summary>
+        /// Called when the user selects a new day of the week.
+        /// </summary>
+        private async void OnDayOfTheWeekControlViewModelDayChanged(object sender, DayChangedEventArgs e)
+        {
+            this.dayOfTheWeek = e.DayOfWeek;
+            await this.FindScheduleDataAsync(this.stopId, this.routeId);
         }
     }
 }

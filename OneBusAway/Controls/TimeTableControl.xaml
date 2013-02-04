@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:conv="using:OneBusAway.Converters"
+             xmlns:ctrls="using:OneBusAway.Controls"
+             xmlns:trig="using:OneBusAway.Triggers"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -19,6 +21,15 @@
         <local:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
+    <trig:TriggerManager.Triggers>
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="True"
+                      VisualState="IsSnapped" />
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="False"
+                      VisualState="Default" />
+    </trig:TriggerManager.Triggers>
+
     <Grid Background="White">
 
         <Grid.ColumnDefinitions>
@@ -27,10 +38,13 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0"
+        <StackPanel x:Name="headerStackPanel" 
+                    Grid.Row="0"
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center">
@@ -42,15 +56,6 @@
                        FontWeight="Bold"
                        Foreground="Black"
                        Text="{Binding TripHeadsign, Converter={StaticResource capitalLetterConverter}}" />
-            <Grid Margin="0,10,0,0"
-                  Background="{StaticResource obaGreen}"
-                  x:Name="banner">
-                <TextBlock FontSize="14"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           Text="{Binding StopDescription, Converter={StaticResource capitalLetterConverter}}"
-                           Margin="10,5,0,5" />
-            </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -60,7 +65,7 @@
                 <TextBlock Grid.Column="0"
                            Grid.Row="0"
                            FontSize="12"
-                           Margin="10,5,0,5"
+                           Margin="0,5,0,5"
                            Foreground="Black"
                            Text="AM = Lighter type" />
                 <TextBlock Grid.Column="1"
@@ -70,7 +75,8 @@
                            FontWeight="Bold"
                            Foreground="Black"
                            Text="PM = Darker type" />
-                <TextBlock Grid.Column="2"
+                <TextBlock x:Name="informationTextBlock" 
+                           Grid.Column="2"
                            Grid.Row="0"
                            FontSize="12"
                            Margin="10,5,0,5"
@@ -80,8 +86,24 @@
             </Grid>
         </StackPanel>
 
+        <Grid Grid.Column="0" 
+              Grid.Row="1" 
+              Background="{StaticResource obaGreen}"
+              x:Name="banner">
+            <TextBlock FontSize="14"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Text="{Binding StopDescription, Converter={StaticResource capitalLetterConverter}}"
+                       Margin="10,5,0,5" />
+        </Grid>
+
+        <ctrls:DayOfTheWeekControl x:Name="dayOfTheWeekControl" 
+                                   Grid.Column="0"
+                                   Grid.Row="2" 
+                                   DataContext="{Binding DayOfTheWeekControlViewModel}" />
+
         <ItemsControl Grid.Column="0"
-                      Grid.Row="1"
+                      Grid.Row="3"
                       BorderThickness="0"
                       ItemsSource="{Binding ScheduleData}">
             <ItemsControl.ItemTemplate>
@@ -122,7 +144,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="3"
               Grid.Column="0"
               Margin="20"
               Visibility="{Binding IsLoadingSchedule, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
@@ -133,7 +155,7 @@
                        Foreground="Black">NO SCHEDULE DATA AVAILABLE</TextBlock>
         </Grid>
 
-        <ProgressRing Grid.Row="1"
+        <ProgressRing Grid.Row="3"
                       Grid.Column="0"
                       VerticalAlignment="Top"
                       Margin="10"
@@ -142,6 +164,31 @@
                       IsActive="True"
                       Foreground="Black"
                       Visibility="{Binding IsLoadingSchedule, Converter={StaticResource boolToVisibilityConverter}}" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default" />
+                <VisualState x:Name="IsSnapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerStackPanel"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="10" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="dayOfTheWeekControl"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="10,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="informationTextBlock"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
     </Grid>
 

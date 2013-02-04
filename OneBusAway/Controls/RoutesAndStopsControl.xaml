@@ -87,7 +87,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0"
-                  Height="35"
+                  Height="25"
                   Background="{StaticResource obaGreen}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60" />
@@ -185,7 +185,7 @@
                                                      FontWeight="Bold"
                                                      HorizontalTextAlignment="Center"
                                                      VerticalTextAlignment="Center" />
-
+                            
                             <StackPanel Grid.Row="0"
                                         Grid.Column="4"
                                         VerticalAlignment="Center"
@@ -243,7 +243,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0"
-                  Height="35"
+                  Height="25"
                   Background="{StaticResource obaGreen}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -311,55 +311,70 @@
                                                      HorizontalTextAlignment="Left"
                                                      VerticalTextAlignment="Center" />
 
-                            <Grid Grid.Row="0"
-                                  Grid.Column="1"
-                                  VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width=".5*" />
-                                    <ColumnDefinition Width=".5*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
+                                    CommandParameter="{Binding}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width=".5*" />
+                                                <ColumnDefinition Width=".5*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
 
-                                <ctrls:ScalableTextBlock Grid.Row="0"
-                                                         Grid.Column="0"
-                                                         Grid.ColumnSpan="2"
-                                                         Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
-                                                         Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
-                                                         CommandParameter="{Binding}"
-                                                         NormalFontSize="14"
-                                                         SnappedFontSize="12"
-                                                         HorizontalTextAlignment="Left"
-                                                         VerticalTextAlignment="Center" />
+                                            <!-- This transparent rectangle makes the hit target of the button not just the text, -->
+                                            <!-- but the entire button -->
+                                            <Rectangle Grid.Column="0"
+                                                       Grid.Row="0"
+                                                       Grid.ColumnSpan="2"
+                                                       Grid.RowSpan="2"
+                                                       Fill="Transparent" />
+                                            
+                                            <ctrls:ScalableTextBlock Grid.Row="0"
+                                                                     Grid.Column="0"
+                                                                     Grid.ColumnSpan="2"
+                                                                     Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"                                                                     
+                                                                     NormalFontSize="14"
+                                                                     SnappedFontSize="12"
+                                                                     HorizontalTextAlignment="Left"
+                                                                     VerticalTextAlignment="Center" />
 
-                                <StackPanel Grid.Column="0"
-                                            Grid.Row="1"
-                                            Orientation="Horizontal">
-                                    <ctrls:ScalableTextBlock NormalFontSize="14"
-                                                             SnappedFontSize="12"
-                                                             HorizontalTextAlignment="Left"
-                                                             Text="{Binding ScheduledArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
-                                    <ctrls:ScalableTextBlock NormalFontSize="14"
-                                                             SnappedFontSize="12"
-                                                             HorizontalTextAlignment="Left"
-                                                             Margin="3,0,3,0"
-                                                             Text="/" />
-                                    <ctrls:ScalableTextBlock NormalFontSize="14"
-                                                             SnappedFontSize="12"
-                                                             HorizontalTextAlignment="Left"
-                                                             Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
-                                </StackPanel>
+                                            <StackPanel Grid.Column="0"
+                                                        Grid.Row="1"
+                                                        Orientation="Horizontal">
+                                                <ctrls:ScalableTextBlock NormalFontSize="14"
+                                                                         SnappedFontSize="12"
+                                                                         HorizontalTextAlignment="Left"
+                                                                         Text="{Binding ScheduledArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
+                                                <ctrls:ScalableTextBlock NormalFontSize="14"
+                                                                         SnappedFontSize="12"
+                                                                         HorizontalTextAlignment="Left"
+                                                                         Margin="3,0,3,0"
+                                                                         Text="/" />
+                                                <ctrls:ScalableTextBlock NormalFontSize="14"
+                                                                         SnappedFontSize="12"
+                                                                         HorizontalTextAlignment="Left"
+                                                                         Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
+                                            </StackPanel>
 
-                                <ctrls:ScalableTextBlock Grid.Column="1"
-                                                         Grid.Row="1"
-                                                         NormalFontSize="14"
-                                                         SnappedFontSize="12"
-                                                         HorizontalTextAlignment="Left"
-                                                         Text="{Binding Status}" />
+                                            <ctrls:ScalableTextBlock Grid.Column="1"
+                                                                     Grid.Row="1"
+                                                                     NormalFontSize="14"
+                                                                     SnappedFontSize="12"
+                                                                     HorizontalTextAlignment="Left"
+                                                                     Text="{Binding Status}" />
 
-                            </Grid>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
 
                             <Grid Grid.Row="0"
                                   Grid.Column="2"
@@ -384,7 +399,7 @@
         <!-- no item messages -->
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
-                    Margin="0,40,0,0"
+                    Margin="0,30,0,0"
                     Visibility="{Binding ShowNoFavoritesMessage, Converter={StaticResource boolToVisibilityConverter}}">
 
             <StackPanel.Resources>
@@ -414,7 +429,7 @@
 
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
-                    Margin="0,100,0,40"
+                    Margin="0,30,0,40"
                     Visibility="{Binding ShowNoItemsMessage, Converter={StaticResource boolToVisibilityConverter}}">
             <TextBlock HorizontalAlignment="Center"
                        Foreground="Black"

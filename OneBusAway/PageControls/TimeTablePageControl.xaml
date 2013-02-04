@@ -32,9 +32,8 @@
     <StackPanel x:Name="stackPanel"
                 Margin="90,10,20,30">
         
-        <ctrls:TimeTableControl DataContext="{Binding TimeTableControlViewModel}" />
+        <ctrls:TimeTableControl DataContext="{Binding TimeTableControlViewModel}" />       
         
-        <ctrls:DayOfTheWeekControl DataContext="{Binding DayOfTheWeekControlViewModel}" />
         
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
