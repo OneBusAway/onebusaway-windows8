@@ -90,38 +90,36 @@
                   Height="35"
                   Background="{StaticResource obaGreen}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="12*" />
-                    <ColumnDefinition Width="40*" />
-                    <ColumnDefinition Width="8*" />
-                    <ColumnDefinition Width="16*" />
-                    <ColumnDefinition Width="18*" />
+                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="2"
+                <TextBlock Grid.Column="0"
                            Text="ROUTE"
-                           FontSize="14"
+                           FontSize="9"
                            FontWeight="SemiBold"
                            TextAlignment="Left"
-                           HorizontalAlignment="Left"
+                           HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                <TextBlock Grid.Column="3"
+                <TextBlock Grid.Column="1"
                            Text="{Binding StopOrDestinationText}"
-                           FontSize="14"
+                           FontSize="9"
                            FontWeight="SemiBold"
                            TextAlignment="Left"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center" />
-                <TextBlock Grid.Column="5"
-                           Text="ETA"
-                           FontSize="14"
+                <TextBlock Grid.Column="2"
+                           Text="SCHED / ETA"
+                           FontSize="9"
+                           Margin="10,0,10,0"
                            FontWeight="SemiBold"
                            TextAlignment="Center"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                <TextBlock Grid.Column="6"
-                           Text="STATUS"
-                           FontSize="14"
+                <TextBlock Grid.Column="3"
+                           Text="MINS"
+                           FontSize="9"
                            FontWeight="SemiBold"
                            TextAlignment="Center"
                            HorizontalAlignment="Center"
@@ -135,13 +133,12 @@
                         <Grid Background="#FFF0F0F0"
                               Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="12*" />
-                                <ColumnDefinition Width="40*" />
-                                <ColumnDefinition Width="8*" />
-                                <ColumnDefinition Width="16*" />
-                                <ColumnDefinition Width="18*" />
+                                <ColumnDefinition Width="4" />
+                                <ColumnDefinition Width="56" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="50" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50" />
@@ -152,31 +149,31 @@
                                        Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
 
                             <ctrls:ScalableTextBlock Grid.Row="0"
-                                                     Grid.Column="2"
+                                                     Grid.Column="1"
                                                      Text="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}"
                                                      Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
                                                      CommandParameter="{Binding Route}"
                                                      Foreground="Black"
-                                                     NormalFontSize="14"
-                                                     SnappedFontSize="12"
+                                                     NormalFontSize="18"
+                                                     SnappedFontSize="18"
+                                                     FontWeight="Bold"
+                                                     HorizontalTextAlignment="Center"
+                                                     VerticalTextAlignment="Center" />
+
+                            <ctrls:ScalableTextBlock Grid.Row="0"
+                                                     Grid.Column="2"
+                                                     Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
+                                                     Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
+                                                     CommandParameter="{Binding}"
+                                                     Foreground="Black"
+                                                     NormalFontSize="11"
+                                                     SnappedFontSize="11"
                                                      FontWeight="Bold"
                                                      HorizontalTextAlignment="Left"
                                                      VerticalTextAlignment="Center" />
 
                             <ctrls:ScalableTextBlock Grid.Row="0"
                                                      Grid.Column="3"
-                                                     Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
-                                                     Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
-                                                     CommandParameter="{Binding}"
-                                                     Foreground="Black"
-                                                     NormalFontSize="14"
-                                                     SnappedFontSize="12"
-                                                     FontWeight="Bold"
-                                                     HorizontalTextAlignment="Left"
-                                                     VerticalTextAlignment="Center" />
-
-                            <ctrls:ScalableTextBlock Grid.Row="0"
-                                                     Grid.Column="4"
                                                      Text="&#xE113;"
                                                      FontFamily="Segoe UI Symbol"
                                                      Command="{Binding AddToFavoritesCommand, Source={StaticResource navigationProxy}}"
@@ -184,39 +181,49 @@
                                                      Foreground="{Binding StopAndRoute, Converter={StaticResource stopAndRouteToFavoriteColorConverter}}"
                                                      NormalFontSize="14"
                                                      SnappedFontSize="14"
+                                                     Margin="5,0,0,0"
                                                      FontWeight="Bold"
                                                      HorizontalTextAlignment="Center"
                                                      VerticalTextAlignment="Center" />
 
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="5"
-                                       Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm tt'}"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="Black"
-                                       TextAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" />
-                            <Grid Grid.Row="0"
-                                  Grid.Column="6"
-                                  Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
-                                <StackPanel VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
-                                            Orientation="Vertical">
-                                    <TextBlock Text="{Binding PredictedArrivalInMinutes}"
-                                               Foreground="White"
-                                               FontSize="20"
-                                               FontWeight="Bold"
-                                               TextAlignment="Center"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Bottom" />
-                                    <TextBlock Text="{Binding Status}"
-                                               Foreground="White"
-                                               FontSize="11"
-                                               TextAlignment="Center"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Top" />
+                            <StackPanel Grid.Row="0"
+                                        Grid.Column="4"
+                                        VerticalAlignment="Center"
+                                        Margin="15,0,10,0">
+                                <StackPanel Grid.Column="0"
+                                            Grid.Row="1"
+                                            Orientation="Horizontal">
+                                    <TextBlock FontSize="11"
+                                               Foreground="Black"
+                                               Text="{Binding ScheduledArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
+                                    <TextBlock FontSize="11"
+                                               Foreground="Black"
+                                               Margin="3,0,3,0"
+                                               Text="/" />
+                                    <TextBlock FontSize="11"
+                                               Foreground="Black"
+                                               FontWeight="SemiBold"
+                                               Text="{Binding PredictedArrivalTime, Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}" />
                                 </StackPanel>
+                                <TextBlock Text="{Binding Status}"
+                                           FontSize="11"
+                                           Foreground="Black"
+                                           TextAlignment="Right"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>                            
+
+                            <Grid Grid.Row="0"
+                                  Grid.Column="5"
+                                  Width="50"
+                                  Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
+                                <TextBlock Text="{Binding PredictedArrivalInMinutes}"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
                             </Grid>
                         </Grid>
                     </DataTemplate>
@@ -274,14 +281,14 @@
                     <DataTemplate>
                         <Grid Background="#FFF0F0F0"
                               Margin="5,5,5,0">
-                            
+
                             <Grid.Resources>
                                 <Style TargetType="ctrls:ScalableTextBlock">
                                     <Setter Property="Foreground"
                                             Value="Black" />
                                 </Style>
                             </Grid.Resources>
-                            
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -321,14 +328,14 @@
                                                          Grid.ColumnSpan="2"
                                                          Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
                                                          Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
-                                                         CommandParameter="{Binding}"                                                         
+                                                         CommandParameter="{Binding}"
                                                          NormalFontSize="14"
                                                          SnappedFontSize="12"
                                                          HorizontalTextAlignment="Left"
                                                          VerticalTextAlignment="Center" />
 
                                 <StackPanel Grid.Column="0"
-                                            Grid.Row="1"                                            
+                                            Grid.Row="1"
                                             Orientation="Horizontal">
                                     <ctrls:ScalableTextBlock NormalFontSize="14"
                                                              SnappedFontSize="12"
@@ -352,8 +359,8 @@
                                                          HorizontalTextAlignment="Left"
                                                          Text="{Binding Status}" />
 
-                            </Grid>                           
-                            
+                            </Grid>
+
                             <Grid Grid.Row="0"
                                   Grid.Column="2"
                                   Width="50"
