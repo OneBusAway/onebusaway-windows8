@@ -38,13 +38,14 @@ namespace OneBusAway.Pages
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // We should only get a parameter if we've been invoked from the start screen to search.
             // In that case, don't navigate to the favorites page control.
             if (e.NavigationMode == NavigationMode.New && string.IsNullOrEmpty(e.Parameter as string))
             {
-                await NavigationController.Instance.NavigateToPageControlAsync<FavoritesPageControl>(null);
+                // Important: to make sure we don't time out opening OBA on ARM devices, load the page control when we idle.
+                var ignored = this.Dispatcher.RunIdleAsync(async cb => await NavigationController.Instance.NavigateToPageControlAsync<FavoritesPageControl>(null));
             }
 
             base.OnNavigatedTo(e);

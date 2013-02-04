@@ -190,7 +190,7 @@ namespace OneBusAway
             frame.Navigate(typeof(MainPage), args.QueryText);
 
             Window.Current.Content = frame;
-            await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText);
+            var ignored = frame.Dispatcher.RunIdleAsync(async cb => await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(args.QueryText));
 
             // Ensure the current window is active
             Window.Current.Activate();
