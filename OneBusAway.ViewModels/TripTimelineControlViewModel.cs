@@ -52,6 +52,18 @@ namespace OneBusAway.ViewModels
             this.IsLoadingTripDetails = true;
         }
 
+        public TripStop SelectedStop
+        {
+            get
+            {
+                return this.selectedStop;
+            }
+            set
+            {
+                SetProperty(ref this.selectedStop, value);
+            }
+        }
+
         /// <summary>
         /// Set to false once we are done loading trip details.
         /// </summary>

@@ -117,6 +117,7 @@
     <Compile Include="Controls\BusStopHeaderControl.xaml.cs">
       <DependentUpon>BusStopHeaderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ControlUtilities.cs" />
     <Compile Include="Controls\DayOfTheWeekControl.xaml.cs">
       <DependentUpon>DayOfTheWeekControl.xaml</DependentUpon>
     </Compile>

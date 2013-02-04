@@ -40,5 +40,49 @@ namespace OneBusAway.Controls
                 }
             }
         }
+
+        /// <summary>
+        /// Called when the datatemplate in the itemscontrol loads. Here, we see whether the bound
+        /// TripStop is selected or not, and if it is, we then scroll to it.
+        /// </summary>
+        private void OnItemsControlTemplateLoaded(object sender, RoutedEventArgs e)
+        {
+            Grid grid = (Grid)sender;
+            TripStop tripStop = grid.DataContext as TripStop;
+
+            if (tripStop != null && tripStop.IsSelectedStop)
+            {
+                this.ScrollToSelectedTripStop();
+            }
+        }
+
+        /// <summary>
+        /// Scrolls the items control to the selected trip stop.
+        /// </summary>
+        public void ScrollToSelectedTripStop()
+        {
+            var viewModel = this.DataContext as TripTimelineControlViewModel;
+            if (viewModel != null)
+            {
+                var tripStop = viewModel.SelectedStop;
+                if (tripStop != null)
+                {
+                    var contentPresenter = this.itemsControl.ItemContainerGenerator.ContainerFromItem(tripStop) as ContentPresenter;
+                    if (contentPresenter != null)
+                    {
+                        ScrollViewer scrollViewer = ControlUtilities.GetParent<ScrollViewer>(this.Parent);
+                        if (scrollViewer != null)
+                        {
+                            // So now we need to find where this stop is in the control:
+                            var transform = contentPresenter.TransformToVisual(scrollViewer);
+                            var point = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+
+                            double newVerticalOffset = point.Y + scrollViewer.VerticalOffset;
+                            scrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+                        }
+                    }
+                }
+            }
+        }        
     }
 }

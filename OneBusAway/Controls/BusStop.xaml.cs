@@ -179,7 +179,7 @@ namespace OneBusAway.Controls
             if (this.viewModel != null)
             {
                 // Find the Map control that we're parented to:
-                MapControl mapControl = GetParent<MapControl>();
+                MapControl mapControl = ControlUtilities.GetParent<MapControl>(this.Parent);
                 if (mapControl != null)
                 {
                     MapControlViewModel mapControlViewModel = mapControl.DataContext as MapControlViewModel;
@@ -189,26 +189,6 @@ namespace OneBusAway.Controls
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Walks the logical tree until it finds type T.
-        /// </summary>
-        private T GetParent<T>()
-            where T : DependencyObject
-        {
-            DependencyObject parent = VisualTreeHelper.GetParent(this.Parent);
-            while (parent != null)
-            {
-                if (parent is T)
-                {
-                    break;
-                }
-
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-
-            return parent as T;
         }
     }
 }

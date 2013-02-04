@@ -95,6 +95,7 @@ namespace OneBusAway.PageControls
         private void OnMapControlViewModelStopSelected(object sender, StopSelectedEventArgs e)
         {
             this.viewModel.TripTimelineControlViewModel.SelectStop(e.SelectedStopId);
+            this.tripTimelineControl.ScrollToSelectedTripStop();
         }
 
         /// <summary>

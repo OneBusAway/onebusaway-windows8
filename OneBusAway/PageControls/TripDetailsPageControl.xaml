@@ -32,7 +32,8 @@
 
     <StackPanel x:Name="stackPanel" 
                 Margin="90,10,20,30">
-        <ctrls:TripTimelineControl DataContext="{Binding TripTimelineControlViewModel}" />
+        <ctrls:TripTimelineControl x:Name="tripTimelineControl" 
+                                   DataContext="{Binding TripTimelineControlViewModel}" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
