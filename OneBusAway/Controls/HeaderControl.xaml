@@ -16,12 +16,41 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <conv:SubTextConverter x:Key="subTextConverter" />
             <oba:NavigationControllerProxy x:Key="navigationControllerProxy" />
+            <Style x:Key="BackButtonStyle"
+                   TargetType="Button">
+                <Setter Property="MinWidth"
+                        Value="0" />
+                <Setter Property="VerticalAlignment"
+                        Value="Bottom" />
+                <Setter Property="FontFamily"
+                        Value="Segoe UI Symbol" />
+                <Setter Property="FontWeight"
+                        Value="Normal" />
+                <Setter Property="FontSize"
+                        Value="40" />
+                <Setter Property="AutomationProperties.AutomationId"
+                        Value="BackButton" />
+                <Setter Property="AutomationProperties.Name"
+                        Value="Back" />
+                <Setter Property="AutomationProperties.ItemType"
+                        Value="Navigation Button" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="RootGrid">
+                                <Grid>
+                                    <TextBlock x:Name="BackgroundGlyph"
+                                               Text="&#xE0B3;"
+                                               Foreground="White" />
+                                </Grid>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 

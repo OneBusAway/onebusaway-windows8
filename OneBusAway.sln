@@ -5,19 +5,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway", "OneBusAway\On
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.DataAccess", "OneBusAway.DataAccess\OneBusAway.DataAccess.csproj", "{B612D55D-895B-4C25-A696-5C7DFEB6BDE4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{50A4B99B-93CD-44D1-BB16-7FDA864FD4D9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Model", "OneBusAway.Model\OneBusAway.Model.csproj", "{73F2DEBF-F056-4BDA-B578-C2C99062F10B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.ViewModels", "OneBusAway.ViewModels\OneBusAway.ViewModels.csproj", "{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Utilities", "OneBusAway.Utilities\OneBusAway.Utilities.csproj", "{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Tests", "OneBusAway.Tests\OneBusAway.Tests.csproj", "{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://mbraude.tfspreview.com/defaultcollection
 		SccLocalPath0 = .
@@ -36,10 +32,6 @@ Global
 		SccProjectUniqueName5 = OneBusAway.Utilities\\OneBusAway.Utilities.csproj
 		SccProjectName5 = OneBusAway.Utilities
 		SccLocalPath5 = OneBusAway.Utilities
-		SccProjectUniqueName6 = OneBusAway.Tests\\OneBusAway.Tests.csproj
-		SccProjectTopLevelParentUniqueName6 = OneBusAway.sln
-		SccProjectName6 = OneBusAway.Tests
-		SccLocalPath6 = OneBusAway.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -116,29 +108,8 @@ Global
 		{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}.Release|x64.Build.0 = Release|x64
 		{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}.Release|x86.ActiveCfg = Release|x86
 		{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}.Release|x86.Build.0 = Release|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|ARM.ActiveCfg = Debug|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|ARM.Build.0 = Debug|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|ARM.Deploy.0 = Debug|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x64.ActiveCfg = Debug|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x64.Build.0 = Debug|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x64.Deploy.0 = Debug|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x86.ActiveCfg = Debug|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x86.Build.0 = Debug|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Debug|x86.Deploy.0 = Debug|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|ARM.ActiveCfg = Release|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|ARM.Build.0 = Release|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|ARM.Deploy.0 = Release|ARM
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x64.ActiveCfg = Release|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x64.Build.0 = Release|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x64.Deploy.0 = Release|x64
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x86.ActiveCfg = Release|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x86.Build.0 = Release|x86
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B80E93F4-9F90-4BB3-8D1C-6A0588AFFCE9} = {50A4B99B-93CD-44D1-BB16-7FDA864FD4D9}
 	EndGlobalSection
 EndGlobal
