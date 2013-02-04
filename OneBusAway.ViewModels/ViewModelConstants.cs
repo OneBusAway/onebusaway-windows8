@@ -14,7 +14,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Default map zoom when map control is loaded on any page
         /// </summary>
-        public const double DefaultMapZoom = 12;
+        public const double DefaultMapZoom = 15.6;
 
         /// <summary>
         /// Map zoom for a closer look than the default.

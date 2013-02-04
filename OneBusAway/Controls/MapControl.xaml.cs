@@ -228,7 +228,7 @@ namespace OneBusAway.Controls
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedDP = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged", typeof(bool), typeof(MapControl), new PropertyMetadata(true));
+        public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedDP = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged", typeof(bool), typeof(MapControl), new PropertyMetadata(false));
 
         public static readonly DependencyProperty MapCenterDP = DependencyProperty.Register("MapCenter", typeof(OneBusAway.Model.Point), typeof(MapControl), new PropertyMetadata(null, MapCenterPropertyChanged));
 
