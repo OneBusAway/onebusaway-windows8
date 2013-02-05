@@ -371,8 +371,7 @@ namespace OneBusAway
                 newPageControl.ViewModel.MapControlViewModel.CopyFrom(this.currentPageControl.ViewModel.MapControlViewModel);
             }
                         
-            NavigationController.MainPage.SetPageView(newPageControl);
-            await newPageControl.InitializeAsync(parameter);
+            NavigationController.MainPage.SetPageView(newPageControl);            
 
             if (this.currentPageControl != null)
             {
@@ -380,8 +379,9 @@ namespace OneBusAway
             }
 
             this.currentPageControl = newPageControl;
-
             this.FirePropertyChanged("CanGoBack");
+
+            await newPageControl.InitializeAsync(parameter);
             await this.RestartRefreshLoopAsync();            
             return newPageControl;
         }       
