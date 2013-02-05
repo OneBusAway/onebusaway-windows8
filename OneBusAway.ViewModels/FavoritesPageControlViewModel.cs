@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneBusAway.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the favorites page.
     /// </summary>
-    public class FavoritesPageControlViewModel : PageViewModelBase
+    public class FavoritesPageControlViewModel : PageViewModelBase, ITrackingDataViewModel
     {
         /// <summary>
         /// View model for the routes and stops control.
@@ -44,6 +45,21 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.routesAndStopsViewModel, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the real time data.
+        /// </summary>
+        public TrackingData[] RealTimeData
+        {
+            get
+            {
+                return this.routesAndStopsViewModel.RealTimeData;
+            }
+            set
+            {
+                this.routesAndStopsViewModel.RealTimeData = value;
             }
         }
 

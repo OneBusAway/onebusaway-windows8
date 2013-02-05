@@ -517,19 +517,38 @@ namespace OneBusAway
         {
             TrackingData trackingData = (TrackingData)arg2;
             StopAndRoutePair stopAndRoute = trackingData.StopAndRoute;
-
-            if (trackingData.IsFavorite)
+            
+            var trackingDataViewModel = NavigationController.MainPage.DataContext as ITrackingDataViewModel;
+            if (trackingDataViewModel != null)
             {
-                trackingData.IsFavorite = false;
-                bool removed = Favorites.Remove(stopAndRoute);
-            }
-            else
-            {
-                trackingData.IsFavorite = true;
-                bool added = Favorites.Add(stopAndRoute);
-            }
+                if (trackingData.IsFavorite)
+                {
+                    // Un-favorite all routes that match this tracking data:
+                    foreach (var currentTrackingData in trackingDataViewModel.RealTimeData)
+                    {
+                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            currentTrackingData.IsFavorite = false;
+                        }
+                    }
 
-            await Favorites.Persist();
+                    Favorites.Remove(stopAndRoute);
+                }
+                else
+                {
+                    foreach (var currentTrackingData in trackingDataViewModel.RealTimeData)
+                    {
+                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            currentTrackingData.IsFavorite = true;
+                        }
+                    }
+
+                    Favorites.Add(stopAndRoute);
+                }
+
+                await Favorites.Persist();
+            }        
         }
 
         private Task OnFilterByRouteCommandExecuted(object arg1, object arg2)

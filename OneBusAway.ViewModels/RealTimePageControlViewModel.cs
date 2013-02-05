@@ -15,7 +15,7 @@ namespace OneBusAway.ViewModels
     /// <summary>
     /// View model for the main page.
     /// </summary>
-    public class RealTimePageControlViewModel : PageViewModelBase
+    public class RealTimePageControlViewModel : PageViewModelBase, ITrackingDataViewModel
     {
         private RoutesAndStopsControlViewModel routesAndStopsViewModel;        
         private ObaDataAccess obaDataAccess;
@@ -30,6 +30,21 @@ namespace OneBusAway.ViewModels
         }
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets / sets the real time data.
+        /// </summary>
+        public TrackingData[] RealTimeData
+        {
+            get
+            {
+                return this.routesAndStopsViewModel.RealTimeData;
+            }
+            set
+            {
+                this.routesAndStopsViewModel.RealTimeData = value;
+            }
+        }
 
         /// <summary>
         /// The view model for the routes and stops page.
@@ -73,6 +88,6 @@ namespace OneBusAway.ViewModels
             await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);            
         }
 
-        #endregion
+        #endregion        
     }
 }
