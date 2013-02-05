@@ -65,6 +65,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public Task RestoreAsync()
         {
+            this.viewModel.MapControlViewModel.SelectedBusStop = null;
             this.viewModel.MapControlViewModel.BusStops.ClearExistingStops = true;
             this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
             return Task.FromResult<object>(null);
