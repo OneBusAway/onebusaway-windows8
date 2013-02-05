@@ -435,12 +435,11 @@ namespace OneBusAway
         private async Task OnGoBackCommandExecuted(object arg1, object arg2)
         {
             var previousPageControl = this.pageControls.Pop();
+            this.FirePropertyChanged("CanGoBack");
             await previousPageControl.RestoreAsync();
 
             this.currentPageControl = previousPageControl;
             MainPage.SetPageView(previousPageControl);            
-
-            this.FirePropertyChanged("CanGoBack");
         }
 
         /// <summary>
