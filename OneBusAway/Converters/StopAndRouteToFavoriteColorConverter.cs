@@ -14,16 +14,10 @@ namespace OneBusAway.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            StopAndRoutePair pair = (StopAndRoutePair)value;
-
-            bool isFavorite = Favorites.IsFavorite(pair);
-
-            if (isFavorite)
-            {
-                return new SolidColorBrush(Color.FromArgb(0xFF, 0x78, 0xAA, 0x36));
-            }
-
-            return new SolidColorBrush(Color.FromArgb(0xFF, 0xCF, 0xCF, 0xCF));
+            bool isFavorite = (bool)value;
+            return (isFavorite)
+                ? new SolidColorBrush(Color.FromArgb(0xFF, 0x78, 0xAA, 0x36))
+                : new SolidColorBrush(Color.FromArgb(0xFF, 0xCF, 0xCF, 0xCF));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -64,11 +64,11 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// Restore asynchronously.
         /// </summary>
-        public Task RestoreAsync()
+        public async Task RestoreAsync()
         {
             this.viewModel.MapControlViewModel.MapView = NavigationController.Instance.MapView;
             this.viewModel.MapControlViewModel.UnSelectStop();
-            return Task.FromResult<object>(null);
+            await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
         }
 
         /// <summary>

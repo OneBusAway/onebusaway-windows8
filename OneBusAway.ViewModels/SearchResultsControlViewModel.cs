@@ -210,7 +210,7 @@ namespace OneBusAway.ViewModels
                                            || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
                                         select new SearchRouteResultViewModel(result));
 
-                        await this.BatchAddItemsAsync(this.searchResults, newItems);
+                        await this.uiHelper.BatchAddItemsAsync(this.searchResults, newItems);
 
                         var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
                         this.BingMapsSearchResults = (from result in bingMapResults
@@ -228,24 +228,6 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
-        /// Batch-adds new items to the search result list in a way that prevents LayoutCycleExceptions. If 
-        /// we add too many at once, WinRT thinks we've entered an infinite loop.
-        /// </summary>
-        private async Task BatchAddItemsAsync<T>(ObservableCollection<T> collection, IEnumerable<T> newItems, bool clear = true)
-        {
-            if (clear)
-            {
-                collection.Clear();
-            }
-
-            foreach (var item in newItems)
-            {
-                collection.Add(item);
-                await this.uiHelper.WaitForIdleAsync();
-            }
-        }
-
-        /// <summary>
         /// Loads and displays a specific route.
         /// </summary>
         public async Task DisplayAndSelectSpecificRouteAsync(string routeIdOrShortName)
@@ -259,7 +241,7 @@ namespace OneBusAway.ViewModels
                                 || string.Equals(routeIdOrShortName, result.Id, StringComparison.OrdinalIgnoreCase)
                              select new SearchRouteResultViewModel(result));
 
-            await this.BatchAddItemsAsync(this.searchResults, newRoutes);
+            await this.uiHelper.BatchAddItemsAsync(this.searchResults, newRoutes);
 
             if (this.SearchResults.Count == 1)
             {
@@ -285,7 +267,7 @@ namespace OneBusAway.ViewModels
         public async Task SelectSpecificRoutesAsync(IEnumerable<string> routeIds)
         {
             var listOfAllRoutes = await this.LoadAllRoutesAsync();
-            await this.BatchAddItemsAsync(this.searchResults, from result in listOfAllRoutes
+            await this.uiHelper.BatchAddItemsAsync(this.searchResults, from result in listOfAllRoutes
                                                               where routeIds.Contains(result.Id)
                                                               select new SearchRouteResultViewModel(result));
         }

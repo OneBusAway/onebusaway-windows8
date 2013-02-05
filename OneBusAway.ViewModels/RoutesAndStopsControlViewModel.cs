@@ -36,7 +36,6 @@ namespace OneBusAway.ViewModels
             this.LastUpdated = DateTime.Now;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification="Enables binding to xaml")]
         public TrackingData[] RealTimeData
         {
             get
@@ -185,6 +184,7 @@ namespace OneBusAway.ViewModels
                     if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
                     {
                         tdata.Context = TrackingData.Favorites;
+                        tdata.IsFavorite = true;
                         trackingData.Add(tdata);
                         break;
                     }
@@ -218,6 +218,11 @@ namespace OneBusAway.ViewModels
             {
                 this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(this.StopId);
 
+                foreach (var trackingData in this.RealTimeData)
+                {
+                    trackingData.IsFavorite = OneBusAway.Model.Favorites.IsFavorite(trackingData.StopAndRoute);
+                }
+
                 this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(this.StopId)
                                                select new RouteMapsAndSchedulesControlViewModel()
                                                {
@@ -227,7 +232,7 @@ namespace OneBusAway.ViewModels
                                                    StopName = this.StopHeaderText
                                                }).ToArray();
 
-                this.LastUpdated = DateTime.Now;
+                this.LastUpdated = DateTime.Now;    
                 this.ShowNoItemsMessage = this.RealTimeData.Length == 0;
             }
         }
@@ -235,7 +240,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Toggles filtering by a specific route.
         /// </summary>
-        public void ToggleFilterByRouteAsync(Route route)
+        public void ToggleFilterByRoute(Route route)
         {
             if (this.isFiltered)
             {
@@ -249,7 +254,6 @@ namespace OneBusAway.ViewModels
             }
 
             FirePropertyChanged("RealTimeData");
-            FirePropertyChanged("DistinctRoutes");
         }
     }
 }

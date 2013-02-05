@@ -29,6 +29,8 @@ namespace OneBusAway.Model
 
         private string context;
         private string stopOrDestination;
+        private bool isFavorite;
+        private StopAndRoutePair stopAndRoute;
 
         /// <summary>
         /// Creates the tracking data out of an arrival and departure element.
@@ -75,6 +77,19 @@ namespace OneBusAway.Model
                                  select routeElement).ToList();
 
             this.Route = new Route(routeElements[0]);
+            this.stopAndRoute = new StopAndRoutePair(this.stopId, this.routeId); ;
+        }
+
+        public bool IsFavorite
+        {
+            get
+            {
+                return this.isFavorite;
+            }
+            set
+            {
+                SetProperty(ref this.isFavorite, value);
+            }
         }
 
         public string Context
@@ -149,7 +164,7 @@ namespace OneBusAway.Model
         {
             get
             {
-                return new StopAndRoutePair(this.stopId, this.routeId);
+                return this.stopAndRoute;
             }
         }
 

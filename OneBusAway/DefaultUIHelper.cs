@@ -1,6 +1,7 @@
 ﻿using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,24 @@ namespace OneBusAway
         public DefaultUIHelper(CoreDispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
+        }
+
+        /// <summary>
+        /// Batch-adds new items to the search result list in a way that prevents LayoutCycleExceptions. If 
+        /// we add too many at once, WinRT thinks we've entered an infinite loop.
+        /// </summary>
+        public async Task BatchAddItemsAsync<T>(ObservableCollection<T> collection, IEnumerable<T> newItems, bool clear = true)
+        {
+            if (clear)
+            {
+                collection.Clear();
+            }
+
+            foreach (var item in newItems)
+            {
+                collection.Add(item);
+                await Task.Delay(20);
+            }
         }
 
         /// <summary>

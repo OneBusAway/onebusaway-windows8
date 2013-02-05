@@ -261,8 +261,8 @@ namespace OneBusAway.Controls
             var mapControl = d as MapControl;
             var newValue = e.NewValue as MapView;
 
-            if (newValue.MapCenter.Latitude == mapControl.map.Center.Latitude &&
-                newValue.MapCenter.Longitude == mapControl.map.Center.Longitude)
+            if ((newValue == null) || 
+                (newValue.MapCenter.Latitude == mapControl.map.Center.Latitude && newValue.MapCenter.Longitude == mapControl.map.Center.Longitude))
             {
                 return;
             }

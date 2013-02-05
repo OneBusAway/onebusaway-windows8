@@ -515,53 +515,21 @@ namespace OneBusAway
 
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
         {
-            StopAndRoutePair pair = (StopAndRoutePair)arg2;
+            TrackingData trackingData = (TrackingData)arg2;
+            StopAndRoutePair stopAndRoute = trackingData.StopAndRoute;
 
-            if (Favorites.IsFavorite(pair))
+            if (trackingData.IsFavorite)
             {
-                bool removed = Favorites.Remove(pair);
+                trackingData.IsFavorite = false;
+                bool removed = Favorites.Remove(stopAndRoute);
             }
             else
             {
-                bool added = Favorites.Add(pair);
+                trackingData.IsFavorite = true;
+                bool added = Favorites.Add(stopAndRoute);
             }
 
             await Favorites.Persist();
-
-            //var md = new Windows.UI.Popups.MessageDialog("You have successfully pinned this to your favorites.", "Success!");
-            //md.Commands.Add(new Windows.UI.Popups.UICommand("Close"));
-            //await md.ShowAsync();
-
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
-            {
-                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
-                {
-                    var page = currentFrame.Content as MainPage;
-
-                    if (page != null)
-                    {
-                        if (page.DataContext is RealTimePageControlViewModel)
-                        {
-                            RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
-                            TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
-                            viewModel.RoutesAndStopsViewModel.RealTimeData = null;
-                            viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
-                        }
-                        else if (page.DataContext is FavoritesPageControlViewModel)
-                        {
-                            FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)page.DataContext;
-                            TrackingData[] tdata = viewModel.RoutesAndStopsViewModel.RealTimeData;
-                            viewModel.RoutesAndStopsViewModel.RealTimeData = null;
-                            viewModel.RoutesAndStopsViewModel.RealTimeData = tdata;
-                        }
-                        else
-                        {
-                            throw new Exception("NavigationController.OnAddToFavoritesCommandExecuted: shouldn't get here!");
-                        }
-                    }
-                }
-            }
         }
 
         private Task OnFilterByRouteCommandExecuted(object arg1, object arg2)
@@ -580,11 +548,12 @@ namespace OneBusAway
                         if (page.DataContext is RealTimePageControlViewModel)
                         {
                             RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
-                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRouteAsync(route);
+                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
                         }
                         else if (page.DataContext is FavoritesPageControlViewModel)
                         {
-                            // do we ever need to filter favorites?
+                            FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)page.DataContext;
+                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
                         }
                         else
                         {
