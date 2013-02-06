@@ -56,7 +56,6 @@ namespace OneBusAway.PageControls
             this.viewModel.MapControlViewModel.Shapes = null;
             this.viewModel.MapControlViewModel.UnSelectStop();
 
-            await Favorites.Initialize();
             await this.viewModel.MapControlViewModel.FindUserLocationAsync();
             await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
         }

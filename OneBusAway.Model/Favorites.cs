@@ -14,38 +14,51 @@ namespace OneBusAway.Model
     {
         private const string FavoritesFileName = "favs.xml";
 
+        private bool isInitialized;
         private List<StopAndRoutePair> favorites;
-        private static Favorites instance;
+        private static Favorites instance = new Favorites();        
 
+        /// <summary>
+        /// Create the favorites object.
+        /// </summary>
         private Favorites()
         {
-            favorites = new List<StopAndRoutePair>();
+            this.isInitialized = false;
+            this.favorites = new List<StopAndRoutePair>();
         }
 
-        public static async Task Initialize()
+        /// <summary>
+        /// Initialize the favorites.
+        /// </summary>
+        private static async Task InitializeAsync()
         {
-            if (instance != null) return;
-
-            instance = new Favorites();
-
-            try
+            if (!instance.isInitialized)
             {
-                using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(FavoritesFileName))
+                try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
-                    instance.favorites = (List<StopAndRoutePair>)serializer.Deserialize(stream);
+                    using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(FavoritesFileName))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
+                        instance.favorites = (List<StopAndRoutePair>)serializer.Deserialize(stream);
+                    }
+                }
+                catch
+                {
+                    // Ignore exception if file doesn't exist.
+                }
+                finally
+                {
+                    instance.isInitialized = true;
                 }
             }
-            catch
-            {
-                // Ignore exception if file doesn't exist.
-            }
         }
 
-        public static async Task Persist()
+        /// <summary>
+        /// Persists the favorites to disk.
+        /// </summary>
+        public static async Task PersistAsync()
         {
-            if (instance == null) return;
-
+            await InitializeAsync();
             using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(FavoritesFileName, CreationCollisionOption.ReplaceExisting))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
@@ -53,65 +66,36 @@ namespace OneBusAway.Model
             }
         }
 
-        public static List<StopAndRoutePair> Get()
+        public static async Task<List<StopAndRoutePair>> GetAsync()
         {
-            if (instance == null)
-            {
-                throw new Exception("Favorites.Get: Favorites not initialized.");
-            }
-
+            await InitializeAsync();
             return instance.favorites;
         }
 
-        public static bool Add(StopAndRoutePair pair)
+        /// <summary>
+        /// Adds a favorite to the collection.
+        /// </summary>
+        public static async Task AddAsync(StopAndRoutePair pair)
         {
-            if (instance == null)
-            {
-                throw new Exception("Favorites.Add: Favorites not initialized.");
-            }
-
-            if (pair == null)
-            {
-                return false;
-            }
-
-            if (instance.favorites.Contains(pair))
-            {
-                return false;
-            }
-
+            await InitializeAsync();
             instance.favorites.Add(pair);
-            return true;
         }
 
-        public static bool Remove(StopAndRoutePair pair)
+        /// <summary>
+        /// Removes a favorite from the collection.
+        /// </summary>
+        public static async Task RemoveAsync(StopAndRoutePair pair)
         {
-            if (instance == null)
-            {
-                throw new Exception("Favorites.Remove: Favorites not initialized.");
-            }
-
-            if (pair == null)
-            {
-                return false;
-            }
-
-            if (!instance.favorites.Contains(pair))
-            {
-                return false;
-            }
-
+            await InitializeAsync();
             instance.favorites.Remove(pair);
-            return true;
         }
 
-        public static bool IsFavorite(StopAndRoutePair pair)
+        /// <summary>
+        /// Returns true if the pair is a favorite.
+        /// </summary>
+        public static async Task<bool> IsFavoriteAsync(StopAndRoutePair pair)
         {
-            if (instance == null)
-            {
-                throw new Exception("Favorites.IsFavorite: Favorites not initialized.");
-            }
-
+            await InitializeAsync();
             return instance.favorites.Contains(pair);
         }
     }

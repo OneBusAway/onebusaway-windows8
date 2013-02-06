@@ -531,7 +531,7 @@ namespace OneBusAway
                         }
                     }
 
-                    Favorites.Remove(stopAndRoute);
+                    await Favorites.RemoveAsync(stopAndRoute);
                 }
                 else
                 {
@@ -543,10 +543,10 @@ namespace OneBusAway
                         }
                     }
 
-                    Favorites.Add(stopAndRoute);
+                    await Favorites.AddAsync(stopAndRoute);
                 }
 
-                await Favorites.Persist();
+                await Favorites.PersistAsync();
             }        
         }
 

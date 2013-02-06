@@ -170,7 +170,7 @@ namespace OneBusAway.ViewModels
         {
             List<TrackingData> trackingData = new List<TrackingData>();
 
-            var favs = Model.Favorites.Get();
+            var favs = await Model.Favorites.GetAsync();
 
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
@@ -220,7 +220,7 @@ namespace OneBusAway.ViewModels
 
                 foreach (var trackingData in this.RealTimeData)
                 {
-                    trackingData.IsFavorite = OneBusAway.Model.Favorites.IsFavorite(trackingData.StopAndRoute);
+                    trackingData.IsFavorite = await OneBusAway.Model.Favorites.IsFavoriteAsync(trackingData.StopAndRoute);
                 }
 
                 this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(this.StopId)
