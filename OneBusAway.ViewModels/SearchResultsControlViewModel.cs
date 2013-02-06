@@ -268,8 +268,8 @@ namespace OneBusAway.ViewModels
         {
             var listOfAllRoutes = await this.LoadAllRoutesAsync();
             await this.uiHelper.BatchAddItemsAsync(this.searchResults, from result in listOfAllRoutes
-                                                              where routeIds.Contains(result.Id)
-                                                              select new SearchRouteResultViewModel(result));
+                                                                       where routeIds.Contains(result.Id)
+                                                                       select new SearchRouteResultViewModel(result));
         }
 
         /// <summary>

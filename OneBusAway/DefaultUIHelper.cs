@@ -38,6 +38,7 @@ namespace OneBusAway
             foreach (var item in newItems)
             {
                 collection.Add(item);
+                await WaitForIdleAsync();
                 await Task.Delay(20);
             }
         }

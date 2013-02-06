@@ -345,5 +345,18 @@
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>43039MJBSoftware.ModernCheckers</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/9210f431-94f5-4bfa-8d0f-4a948d7fceb7" />
+  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/9210f431-94f5-4bfa-8d0f-4a948d7fceb7">
+    <PackageInfo>
+      <PackageArchitecture>arm</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.0.0.8</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <PackageArchitecture>x86</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.0.0.8</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <PackageArchitecture>x64</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.0.0.8</PackageMaxArchitectureVersion>
+    </PackageInfo>
+  </PackageInfoList>
 </StoreAssociation>
