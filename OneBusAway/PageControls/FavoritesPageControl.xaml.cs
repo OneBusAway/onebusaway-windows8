@@ -63,11 +63,14 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// Restore asynchronously.
         /// </summary>
-        public async Task RestoreAsync()
+        public Task RestoreAsync()
         {
             this.viewModel.MapControlViewModel.MapView = NavigationController.Instance.MapView;
             this.viewModel.MapControlViewModel.UnSelectStop();
-            await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
+
+            // Don't let this restore stop the page transition. Populate it on idle after we've refreshed the UI:
+            var ignored = this.Dispatcher.RunIdleAsync(async args => await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync());
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>

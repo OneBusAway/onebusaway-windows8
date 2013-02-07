@@ -218,15 +218,19 @@ namespace OneBusAway.ViewModels
         /// Selects a bus stop by a stop object. To do this we need to go through all
         /// of the map controls and find the one whose view model stop id matches the stop.
         /// </summary>
-        public void SelectStop(Stop stop)
+        public void SelectStop(Stop stop, bool zoomToStop = false)
         {
             this.SelectedBusStop = new BusStopControlViewModel(stop);
+            if (zoomToStop)
+            {
+                this.MapView = new MapView(new Point(stop.Latitude, stop.Longitude), this.mapView.ZoomLevel, true);
+            }
         }
 
         /// <summary>
         /// Selects a stop based on the stop Id.
         /// </summary>
-        public void SelectStop(string stopId)
+        public void SelectStop(string stopId, bool zoomToStop = false)
         {
             // Find the selected bus stop:
             var selectedStop = (from busStop in this.busStops
@@ -235,7 +239,7 @@ namespace OneBusAway.ViewModels
 
             if (selectedStop != null)
             {
-                SelectStop(selectedStop);
+                this.SelectStop(selectedStop, zoomToStop);
             }
         }
 

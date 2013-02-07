@@ -1,4 +1,5 @@
-﻿using OneBusAway.ViewModels;
+﻿using OneBusAway.Model;
+using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,6 +62,14 @@ namespace OneBusAway.PageControls
                     stopSelectedEventArgs.SelectedStopId,
                     stopSelectedEventArgs.StopName,
                     stopSelectedEventArgs.Direction);
+            }
+            else
+            {
+                TrackingData trackingData = parameter as TrackingData;
+                if (trackingData != null)
+                {                    
+                    await this.viewModel.NavigateDirectlyToStop(trackingData);
+                }
             }
         }
 

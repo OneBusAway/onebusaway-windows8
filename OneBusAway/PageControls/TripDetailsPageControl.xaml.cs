@@ -68,7 +68,7 @@ namespace OneBusAway.PageControls
             // Copy bus data into the map control:
             mapViewModel.BusStops = null;
             mapViewModel.BusStops = new BusStopList(tripViewModel.TripDetails.TripStops.Cast<Stop>());
-            mapViewModel.SelectStop(trackingData.StopId);
+            mapViewModel.SelectStop(trackingData.StopId, true);
             await mapViewModel.FindRouteShapeAsync(trackingData.RouteId, trackingData.StopId);
         }
 

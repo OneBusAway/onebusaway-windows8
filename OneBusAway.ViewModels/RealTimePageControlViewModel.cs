@@ -62,6 +62,22 @@ namespace OneBusAway.ViewModels
         }
 
         /// <summary>
+        /// Navigates directly to a stop by tracking data.
+        /// </summary>
+        public async Task NavigateDirectlyToStop(TrackingData trackingData)
+        {
+            Stop stop = await this.obaDataAccess.GetStopAsync(trackingData.StopId);
+
+            this.MapControlViewModel.MapView = new MapView(
+                new Model.Point(stop.Latitude, stop.Longitude),
+                ViewModelConstants.ZoomedInMapZoom + .1,
+                true);
+
+            await this.MapControlViewModel.RefreshStopsForLocationAsync();
+            await NavigateDirectlyToStop(stop.Latitude, stop.Longitude, stop.StopId, stop.Name, stop.Direction);            
+        }
+
+        /// <summary>
         /// Navigates directly to a particular stop.
         /// </summary>
         public async Task NavigateDirectlyToStop(double latitude, double longitude, string selectedStopId, string stopName, string direction)
@@ -75,7 +91,7 @@ namespace OneBusAway.ViewModels
                 stopName,
                 selectedStopId,
                 direction);
-        }
+        }        
 
         #endregion
         #region Event Handlers

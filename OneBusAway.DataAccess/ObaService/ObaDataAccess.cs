@@ -81,6 +81,27 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Returns data for a particular stop.
+        /// </summary>
+        public async Task<Stop> GetStopAsync(string stopId)
+        {
+            ObaMethod method = ObaMethod.stop;
+            XDocument doc = await ObaCache.GetCache(method, stopId, expectedCacheAge: 5 * 24 * 60 * 60 /* 5 days */);
+
+            if (doc == null)
+            {
+                var helper = this.Factory.CreateHelper(method);
+                helper.SetId(stopId);
+
+                doc = await helper.SendAndRecieveAsync();
+                await ObaCache.SaveCache(method, stopId, doc);
+            }
+
+            return (from dataElement in doc.Descendants("data")
+                    select new Stop(dataElement)).FirstOrDefault();
+        }
+
+        /// <summary>
         /// Returns all of the agencies that OBA serves.
         /// </summary>
         public async Task<Agency[]> GetAllAgencies()

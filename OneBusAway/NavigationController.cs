@@ -525,7 +525,8 @@ namespace OneBusAway
                     // Un-favorite all routes that match this tracking data:
                     foreach (var currentTrackingData in trackingDataViewModel.RealTimeData)
                     {
-                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(trackingData.StopId, currentTrackingData.StopId, StringComparison.OrdinalIgnoreCase))
                         {
                             currentTrackingData.IsFavorite = false;
                         }
@@ -537,7 +538,8 @@ namespace OneBusAway
                 {
                     foreach (var currentTrackingData in trackingDataViewModel.RealTimeData)
                     {
-                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(trackingData.RouteId, currentTrackingData.RouteId, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(trackingData.StopId, currentTrackingData.StopId, StringComparison.OrdinalIgnoreCase))
                         {
                             currentTrackingData.IsFavorite = true;
                         }
