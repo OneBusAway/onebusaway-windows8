@@ -43,7 +43,7 @@ namespace OneBusAway.ViewModels
                 if (this.isFiltered)
                 {
                     return (from trackingData in this.realTimeData
-                            where string.Equals(trackingData.Route.Id, this.filteredRouteId, StringComparison.OrdinalIgnoreCase)
+                            where trackingData.IsFiltered
                             select trackingData).ToArray();
                 }
                 else
@@ -212,6 +212,7 @@ namespace OneBusAway.ViewModels
                 {
                     if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
                     {
+                        tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
                         tdata.Context = TrackingData.Favorites;
                         tdata.IsFavorite = true;
                         trackingData.Add(tdata);
@@ -275,11 +276,21 @@ namespace OneBusAway.ViewModels
             {
                 this.filteredRouteId = null;
                 this.isFiltered = false;
+
+                foreach (var realTimeData in this.realTimeData)
+                {
+                    realTimeData.IsFiltered = false;
+                }
             }
             else
             {
                 this.filteredRouteId = route.Id;
                 this.isFiltered = true;
+
+                foreach (var realTimeData in this.realTimeData)
+                {
+                    realTimeData.IsFiltered = string.Equals(this.filteredRouteId, realTimeData.RouteId, StringComparison.OrdinalIgnoreCase);
+                }
             }
 
             FirePropertyChanged("RealTimeData");

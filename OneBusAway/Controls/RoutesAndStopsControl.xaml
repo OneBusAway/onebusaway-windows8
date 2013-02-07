@@ -20,6 +20,7 @@
         <conv:StringFormatConverter x:Key="stringFormatConverter" />
         <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <conv:IsFilteredToColorConverter x:Key="isFilteredToColorConverter" />
         <oba:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
@@ -105,6 +106,7 @@
                 <TextBlock Grid.Column="1"
                            Text="{Binding StopOrDestinationText}"
                            FontSize="9"
+                           Margin="10,0,0,0"
                            FontWeight="SemiBold"
                            TextAlignment="Left"
                            HorizontalAlignment="Left"
@@ -148,20 +150,26 @@
                                        Grid.Column="0"
                                        Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
 
+                            <Rectangle Grid.Row="0"
+                                       Grid.Column="1"
+                                       Visibility="{Binding IsFiltered, Converter={StaticResource boolToVisibilityConverter}}"
+                                       Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
+                            
                             <ctrls:ScalableTextBlock Grid.Row="0"
                                                      Grid.Column="1"
                                                      Text="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}"
                                                      Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
                                                      CommandParameter="{Binding Route}"
-                                                     Foreground="Black"
+                                                     Foreground="{Binding Converter={StaticResource isFilteredToColorConverter}}"
                                                      NormalFontSize="18"
                                                      SnappedFontSize="18"
                                                      FontWeight="Bold"
                                                      HorizontalTextAlignment="Center"
-                                                     VerticalTextAlignment="Center" />
+                                                     VerticalTextAlignment="Center" />                            
 
                             <ctrls:ScalableTextBlock Grid.Row="0"
                                                      Grid.Column="2"
+                                                     Margin="10,0,0,0"
                                                      Text="{Binding StopOrDestination, Converter={StaticResource capitalLetterConverter}}"
                                                      Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
                                                      CommandParameter="{Binding}"
@@ -254,7 +262,7 @@
                 <TextBlock Grid.Column="0"
                            Text="RTE"
                            FontSize="14"
-                           Margin="10,0,20,0"
+                           Margin="15,0,20,0"
                            FontWeight="SemiBold"
                            TextAlignment="Left"
                            HorizontalAlignment="Left"
@@ -299,11 +307,18 @@
                                 <RowDefinition Height="50" />
                             </Grid.RowDefinitions>
 
+                            <Rectangle Grid.Row="0"
+                                       Grid.Column="0"
+                                       Width="40"
+                                       Visibility="{Binding IsFiltered, Converter={StaticResource boolToVisibilityConverter}}"
+                                       Fill="{Binding Converter={StaticResource trackingDataToColorConverter}}" />
+                            
                             <ctrls:ScalableTextBlock Grid.Row="0"
                                                      Grid.Column="0"
                                                      Text="{Binding Route.ShortName, Converter={StaticResource capitalLetterConverter}}"
                                                      Command="{Binding FilterByRouteCommand, Source={StaticResource navigationProxy}}"
                                                      CommandParameter="{Binding Route}"
+                                                     Foreground="{Binding Converter={StaticResource isFilteredToColorConverter}}"
                                                      NormalFontSize="16"
                                                      SnappedFontSize="16"
                                                      FontWeight="SemiBold"

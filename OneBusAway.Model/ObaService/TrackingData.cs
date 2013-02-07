@@ -30,6 +30,7 @@ namespace OneBusAway.Model
         private string context;
         private string stopOrDestination;
         private bool isFavorite;
+        private bool isFiltered;
         private StopAndRoutePair stopAndRoute;
 
         /// <summary>
@@ -89,6 +90,18 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.isFavorite, value);
+            }
+        }
+
+        public bool IsFiltered
+        {
+            get
+            {
+                return this.isFiltered;
+            }
+            set
+            {
+                SetProperty(ref this.isFiltered, value);
             }
         }
 

@@ -165,6 +165,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\CapitalLetterConverter.cs" />
     <Compile Include="Converters\IsCurrentHourToThicknessConverter.cs" />
+    <Compile Include="Converters\IsFilteredToColorConverter.cs" />
     <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
     <Compile Include="Converters\NumberToDayOfTheWeekConverter.cs" />
     <Compile Include="Converters\StopAndRouteToFavoriteColorConverter.cs" />
