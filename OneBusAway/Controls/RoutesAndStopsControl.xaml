@@ -90,9 +90,9 @@
                   Height="25"
                   Background="{StaticResource obaGreen}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
@@ -115,7 +115,7 @@
                            Margin="10,0,10,0"
                            FontWeight="SemiBold"
                            TextAlignment="Center"
-                           HorizontalAlignment="Center"
+                           HorizontalAlignment="Right"
                            VerticalAlignment="Center" />
                 <TextBlock Grid.Column="3"
                            Text="MINS"
@@ -134,10 +134,10 @@
                               Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4" />
-                                <ColumnDefinition Width="56" />
+                                <ColumnDefinition Width="66" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="50" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -166,8 +166,8 @@
                                                      Command="{Binding GoToTripDetailsPageCommand, Source={StaticResource navigationProxy}}"
                                                      CommandParameter="{Binding}"
                                                      Foreground="Black"
-                                                     NormalFontSize="11"
-                                                     SnappedFontSize="11"
+                                                     NormalFontSize="14"
+                                                     SnappedFontSize="14"
                                                      FontWeight="Bold"
                                                      HorizontalTextAlignment="Left"
                                                      VerticalTextAlignment="Center" />
@@ -192,6 +192,7 @@
                                         Margin="15,0,10,0">
                                 <StackPanel Grid.Column="0"
                                             Grid.Row="1"
+                                            HorizontalAlignment="Right"
                                             Orientation="Horizontal">
                                     <TextBlock FontSize="11"
                                                Foreground="Black"
