@@ -201,6 +201,8 @@ namespace OneBusAway.ViewModels
 
             var favs = await Model.Favorites.GetAsync();
 
+            this.ShowNoFavoritesMessage = false;
+            this.ShowNoItemsMessage = false;
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
             
@@ -224,7 +226,15 @@ namespace OneBusAway.ViewModels
             this.RealTimeData = trackingData.ToArray();
             this.RouteAndMapsViewModels = null;
             this.LastUpdated = DateTime.Now;
-            this.ShowNoFavoritesMessage = trackingData.Count == 0;
+
+            if (favs.Count == 0)
+            {
+                this.ShowNoFavoritesMessage = true;
+            }
+            else
+            {                
+                this.ShowNoItemsMessage = trackingData.Count == 0;
+            }
         }
 
         /// <summary>
