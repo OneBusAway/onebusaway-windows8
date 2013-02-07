@@ -64,5 +64,13 @@ namespace OneBusAway.Controls
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:onebusaway@outlook.com"));
         }
+
+        /// <summary>
+        /// Sends the user to www.onebusaway.org
+        /// </summary>
+        private async void OnOBALinkClicked(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("http://onebusaway.org"));
+        }
     }
 }
