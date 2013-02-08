@@ -256,7 +256,26 @@ namespace OneBusAway.ViewModels
         {
             if (!string.IsNullOrEmpty(this.StopId))
             {
-                this.RealTimeData = await obaDataAccess.GetTrackingDataForStopAsync(this.StopId);
+                var realTimeData = await obaDataAccess.GetTrackingDataForStopAsync(this.StopId);
+
+                if (this.isFiltered)
+                {
+                    List<TrackingData> filteredList = new List<TrackingData>();
+                    foreach (var data in realTimeData)
+                    {
+                        if (string.Equals(this.filteredRouteId, data.RouteId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            data.IsFiltered = true;
+                            filteredList.Add(data);
+                        }
+                    }
+
+                    this.RealTimeData = filteredList.ToArray();
+                }
+                else
+                {
+                    this.RealTimeData = realTimeData;
+                }
 
                 foreach (var trackingData in this.RealTimeData)
                 {
