@@ -14,7 +14,19 @@ namespace OneBusAway.Model
             set;
         }
 
+        public string StopName
+        {
+            get;
+            set;
+        }
+
         public string Route
+        {
+            get;
+            set;
+        }
+
+        public string RouteName
         {
             get;
             set;
@@ -24,10 +36,12 @@ namespace OneBusAway.Model
         {
         }
 
-        public StopAndRoutePair(string stop, string route)
+        public StopAndRoutePair(TrackingData trackingData)
         {
-            Stop = stop;
-            Route = route;
+            this.Stop = trackingData.StopId;
+            this.StopName = trackingData.StopName;
+            this.Route = trackingData.RouteId;
+            this.RouteName = trackingData.Route.ShortName;
         }
 
         public static bool operator ==(StopAndRoutePair a, StopAndRoutePair b)

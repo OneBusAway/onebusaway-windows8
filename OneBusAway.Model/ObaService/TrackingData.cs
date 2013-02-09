@@ -31,7 +31,24 @@ namespace OneBusAway.Model
         private string stopOrDestination;
         private bool isFavorite;
         private bool isFiltered;
+        private bool isNoData;
         private StopAndRoutePair stopAndRoute;
+
+        /// <summary>
+        /// Makes a tracking data that's used to indicate no data.
+        /// </summary>
+        public TrackingData(StopAndRoutePair pair)
+        {
+            this.isNoData = true;
+            this.StopId = pair.Stop;
+            this.StopName = pair.StopName;
+            this.RouteId = pair.Route;
+            this.Status = "NO DATA";
+            this.Route = new Route()
+            {
+                ShortName = pair.RouteName
+            };
+        }
 
         /// <summary>
         /// Creates the tracking data out of an arrival and departure element.
@@ -78,7 +95,7 @@ namespace OneBusAway.Model
                                  select routeElement).ToList();
 
             this.Route = new Route(routeElements[0]);
-            this.stopAndRoute = new StopAndRoutePair(this.stopId, this.routeId); ;
+            this.stopAndRoute = new StopAndRoutePair(this);
         }
 
         public bool IsFavorite
@@ -102,6 +119,18 @@ namespace OneBusAway.Model
             set
             {
                 SetProperty(ref this.isFiltered, value);
+            }
+        }
+
+        /// <summary>
+        /// True when the tracking data has no real data behind it, such as a favorite 
+        /// stop / route pair that has no active trips.
+        /// </summary>
+        public bool IsNoData
+        {
+            get
+            {
+                return this.isNoData;
             }
         }
 

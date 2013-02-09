@@ -175,6 +175,7 @@
     <Compile Include="Converters\TimeToTextConverter.cs" />
     <Compile Include="Converters\SubTextConverter.cs" />
     <Compile Include="Converters\TrackingDataToColorConverter.cs" />
+    <Compile Include="Converters\TrackingDataToPredictedArrivalInMinutes.cs" />
     <Compile Include="DefaultUIHelper.cs" />
     <Compile Include="NavigationController.cs" />
     <Compile Include="NavigationControllerProxy.cs" />

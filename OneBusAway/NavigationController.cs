@@ -497,7 +497,18 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToTripDetailsPageCommandExecuted(object arg1, object arg2)
         {
-            await this.NavigateToPageControlAsync<TripDetailsPageControl>(arg2);
+            TrackingData trackingData = arg2 as TrackingData;
+            if (trackingData != null)
+            {
+                if (trackingData.IsNoData)
+                {
+                    await this.NavigateToPageControlAsync<TimeTablePageControl>(trackingData);
+                }
+                else
+                {
+                    await this.NavigateToPageControlAsync<TripDetailsPageControl>(trackingData);
+                }
+            }
         }
 
         /// <summary>

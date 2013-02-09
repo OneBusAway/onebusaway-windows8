@@ -16,14 +16,21 @@ namespace OneBusAway.Converters
         {
             TrackingData trackingData = (TrackingData)value;
 
-            int difference = trackingData.PredictedArrivalInMinutes - trackingData.ScheduledArrivalInMinutes;
-
-            if (difference > 0)
+            if (trackingData.IsNoData)
             {
-                return new SolidColorBrush(Color.FromArgb(0xFF, 0x24, 0xA0, 0xF2));
+                return new SolidColorBrush(Color.FromArgb(0xFF, 0xcc, 0x99, 0x00));
             }
+            else
+            {
+                int difference = trackingData.PredictedArrivalInMinutes - trackingData.ScheduledArrivalInMinutes;
 
-            return new SolidColorBrush(Color.FromArgb(0xFF, 0x66, 0x66, 0x66));
+                if (difference > 0)
+                {
+                    return new SolidColorBrush(Color.FromArgb(0xFF, 0x24, 0xA0, 0xF2));
+                }
+
+                return new SolidColorBrush(Color.FromArgb(0xFF, 0x66, 0x66, 0x66));
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

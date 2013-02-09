@@ -180,6 +180,7 @@ namespace OneBusAway.ViewModels
             foreach (StopAndRoutePair fav in favs)
             {
                 TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
+                bool foundActiveTrip = false;
 
                 foreach (TrackingData tdata in tdataArray)
                 {
@@ -189,8 +190,20 @@ namespace OneBusAway.ViewModels
                         tdata.Context = TrackingData.Favorites;
                         tdata.IsFavorite = true;
                         trackingData.Add(tdata);
+                        foundActiveTrip = true;
                         break;
                     }
+                }
+
+                // If we don't have an active trip for this favorite, add a dummy tracking data to the 
+                // list that links to the schedule page and shows NO DATA in the mins column.
+                if (!foundActiveTrip)
+                {
+                    TrackingData tdata = new TrackingData(fav);
+                    tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
+                    tdata.Context = TrackingData.Favorites;
+                    tdata.IsFavorite = true;
+                    trackingData.Add(tdata);
                 }
             }
 

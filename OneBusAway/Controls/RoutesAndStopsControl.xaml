@@ -21,6 +21,7 @@
         <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
         <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <conv:IsFilteredToColorConverter x:Key="isFilteredToColorConverter" />
+        <conv:TrackingDataToPredictedArrivalInMinutes x:Key="trackingDataToPredictedArrivalInMinutes" />
         <oba:NavigationControllerProxy x:Key="navigationProxy" />
     </UserControl.Resources>
 
@@ -200,6 +201,7 @@
                                         Margin="15,0,10,0">
                                 <StackPanel Grid.Column="0"
                                             Grid.Row="1"
+                                            Visibility="{Binding IsNoData, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
                                             HorizontalAlignment="Right"
                                             Orientation="Horizontal">
                                     <TextBlock FontSize="11"
@@ -226,7 +228,7 @@
                                   Grid.Column="5"
                                   Width="50"
                                   Background="{Binding Converter={StaticResource trackingDataToColorConverter}}">
-                                <TextBlock Text="{Binding PredictedArrivalInMinutes}"
+                                <TextBlock Text="{Binding Converter={StaticResource trackingDataToPredictedArrivalInMinutes}}"
                                            Foreground="White"
                                            FontSize="20"
                                            FontWeight="Bold"
@@ -363,6 +365,7 @@
 
                                             <StackPanel Grid.Column="0"
                                                         Grid.Row="1"
+                                                        Visibility="{Binding IsNoData, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"
                                                         Orientation="Horizontal">
                                                 <ctrls:ScalableTextBlock NormalFontSize="14"
                                                                          SnappedFontSize="12"
@@ -398,7 +401,7 @@
                                 <StackPanel VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Orientation="Vertical">
-                                    <ctrls:ScalableTextBlock Text="{Binding PredictedArrivalInMinutes}"
+                                    <ctrls:ScalableTextBlock Text="{Binding  Converter={StaticResource trackingDataToPredictedArrivalInMinutes}}"
                                                              Foreground="White"
                                                              NormalFontSize="16"
                                                              SnappedFontSize="16"
@@ -444,12 +447,12 @@
 
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
-                    Margin="0,30,0,40"
+                    Margin="0,50,0,40"
                     Visibility="{Binding ShowNoItemsMessage, Converter={StaticResource boolToVisibilityConverter}}">
             <TextBlock HorizontalAlignment="Center"
                        Foreground="Black"
-                       FontWeight="Bold"
-                       FontSize="18"
+                       FontWeight="SemiBold"
+                       FontSize="12"
                        Text="NO DATA CURRENTLY FOUND" />
         </StackPanel>
 
