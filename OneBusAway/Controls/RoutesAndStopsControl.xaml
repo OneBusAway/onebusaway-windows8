@@ -264,7 +264,7 @@
                 <TextBlock Grid.Column="0"
                            Text="RTE"
                            FontSize="14"
-                           Margin="13,0,23,0"
+                           Margin="13,0,18,0"
                            FontWeight="SemiBold"
                            TextAlignment="Left"
                            HorizontalAlignment="Left"
@@ -417,7 +417,7 @@
         <!-- no item messages -->
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
-                    Margin="0,30,0,0"
+                    Margin="0,50,0,0"
                     Visibility="{Binding ShowNoFavoritesMessage, Converter={StaticResource boolToVisibilityConverter}}">
 
             <StackPanel.Resources>
