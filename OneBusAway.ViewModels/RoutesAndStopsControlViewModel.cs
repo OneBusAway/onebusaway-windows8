@@ -54,35 +54,6 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.realTimeData, value);
-                FirePropertyChanged("DistinctStops");
-            }
-        }
-
-        /// <summary>
-        /// Returns a list of favorite bus stops.
-        /// </summary>
-        public TrackingData[] DistinctStops
-        {
-            get
-            {
-                if (this.RealTimeData == null)
-                {
-                    return new TrackingData[] { };
-                }
-
-                HashSet<string> seenStops = new HashSet<string>();
-                List<TrackingData> distinctStops = new List<TrackingData>();
-
-                foreach (var trackingData in this.realTimeData)
-                {
-                    if (!seenStops.Contains(trackingData.StopName))
-                    {
-                        distinctStops.Add(trackingData);
-                        seenStops.Add(trackingData.StopName);
-                    }
-                }
-
-                return distinctStops.ToArray();
             }
         }
 

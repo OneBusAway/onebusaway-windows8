@@ -6,8 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodel="using:OneBusAway.ViewModels"
              xmlns:ctrls="using:OneBusAway.Controls"
-             xmlns:trig="using:OneBusAway.Triggers"       
-             xmlns:conv="using:OneBusAway.Converters"
+             xmlns:trig="using:OneBusAway.Triggers"             
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -18,8 +17,6 @@
                 <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:NavigationControllerProxy x:Key="navigationProxy" />
-            <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
-            <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -33,79 +30,26 @@
                       VisualState="Default" />
     </trig:TriggerManager.Triggers>
 
-    <Grid>
+    <StackPanel x:Name="stackPanel" 
+                Margin="90,10,20,0">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*" />
-            <RowDefinition Height="5*" />
-        </Grid.RowDefinitions>
-
-        <ctrls:RoutesAndStopsControl x:Name="routesAndStopsControl" 
-                                     Margin="90,10,20,0"
-                                     DataContext="{Binding RoutesAndStopsViewModel}" />
-
-        <Grid Grid.Column="0"
-              Grid.Row="1"
-              Margin="0,20,0,0"
-              Background="#FFE5E5E5"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding RoutesAndStopsViewModel.RealTimeData, Converter={StaticResource arrayToVisibilityConverter}}">
-            
-            <Grid x:Name="favoriteStopsGrid"
-                  Margin="90,0,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0"
-                           Margin="0,20,0,0"
-                           Text="STOPS"
-                           Foreground="Black"
-                           FontSize="14"
-                           FontWeight="Bold" />
-                <ItemsControl Grid.Row="1"
-                              BorderThickness="0"
-                              Margin="10,0,0,30"
-                              ItemsSource="{Binding RoutesAndStopsViewModel.DistinctStops}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ctrls:ScalableTextBlock Text="{Binding StopName, Converter={StaticResource capitalLetterConverter}}"
-                                                     Command="{Binding GoToRealTimePageCommand, Source={StaticResource navigationProxy}}"
-                                                     CommandParameter="{Binding}"
-                                                     Foreground="Black"
-                                                     FontWeight="SemiBold"
-                                                     Margin="10,2,0,2"
-                                                     NormalFontSize="14"
-                                                     SnappedFontSize="12"
-                                                     HorizontalTextAlignment="Left"
-                                                     VerticalTextAlignment="Center" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>                    
-                </ItemsControl>
-            </Grid>
-        </Grid>
+        <ctrls:RoutesAndStopsControl DataContext="{Binding RoutesAndStopsViewModel}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
                 <VisualState x:Name="IsSnapped">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="routesAndStopsControl"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="0" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="favoriteStopsGrid"
-                                                       Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="10,0,0,0" />
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>        
-    </Grid>
+        </VisualStateManager.VisualStateGroups>
+
+    </StackPanel>    
+
 </UserControl>
