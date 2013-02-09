@@ -491,7 +491,7 @@ namespace OneBusAway.Controls
                         if (this.RefreshBusStopsOnMapViewChanged && this.MapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
                         {
                             this.hasShownOhMyDialog = true;
-                            var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level", "oh my");
+                            var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level.", "oh my");
                             messageDialog.DefaultCommandIndex = 0;
                             var ignored = messageDialog.ShowAsync().AsTask().ContinueWith(command =>
                                 {
