@@ -21,7 +21,7 @@ namespace OneBusAway.Converters
                 }
             }
 
-            return String.Empty;            
+            return "-";            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -46,7 +46,8 @@ namespace OneBusAway.Model
             this.Status = "NO DATA";
             this.Route = new Route()
             {
-                ShortName = pair.RouteName
+                ShortName = pair.RouteName,
+                Id = pair.Route
             };
         }
 
