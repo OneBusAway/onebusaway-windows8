@@ -30,10 +30,10 @@
                        FontWeight="Bold"
                        VerticalAlignment="Center" />
         </Grid>
-        <Canvas Grid.Column="0"
+        <Canvas Grid.Column="0"                
                 Grid.Row="1">
             <Polygon Fill="Red"
-                     Points="0,0 15,0, 0,25" />
+                     Points="0,-1 15,-1, 0,25" />
         </Canvas>
     </Grid>
     
