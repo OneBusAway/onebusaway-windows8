@@ -221,12 +221,8 @@ namespace OneBusAway.DataAccess
             }
 
             XElement dataElement = doc.Descendants("data").First();
-
-            string[] firstStops = (from stopGroupsElement in dataElement.Descendants("stopGroup")
-                                   select stopGroupsElement.Descendants("stopIds").First().Elements("string").First().Value).ToArray();
-
-            return (from stopId in firstStops
-                    select new RouteData(dataElement, stopId)).ToArray();
+            return (from stopGroupElement in dataElement.Descendants("stopGroup")
+                    select new RouteData(dataElement, stopGroupElement)).ToArray();
         }
 
         /// <summary>
