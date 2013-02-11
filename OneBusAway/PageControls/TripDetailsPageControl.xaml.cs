@@ -1,4 +1,5 @@
-﻿using OneBusAway.Model;
+﻿using OneBusAway.DataAccess;
+using OneBusAway.Model;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace OneBusAway.PageControls
         {
             var tripViewModel = this.viewModel.TripTimelineControlViewModel;
             var mapViewModel = this.viewModel.MapControlViewModel;
-            
+
             TrackingData trackingData = (TrackingData)parameter;
             tripViewModel.TrackingData = trackingData;
 
@@ -86,7 +87,14 @@ namespace OneBusAway.PageControls
         /// </summary>
         public async Task RefreshAsync()
         {
-            await this.viewModel.TripTimelineControlViewModel.GetTripDetailsAsync();
+            try
+            {
+                await this.viewModel.TripTimelineControlViewModel.GetTripDetailsAsync();
+            }
+            catch (ObaException)
+            {
+                // This trip is over. Just ignore the exception, the user will see that the bus is at the end.
+            }
         }
 
         /// <summary>
