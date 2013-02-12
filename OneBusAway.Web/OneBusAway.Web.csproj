@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PrivacyPolicy.html" />
+    <Content Include="StoreLogo.scale-100.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
