@@ -34,6 +34,11 @@ namespace OneBusAway.ViewModels
         private TripStop selectedStop;
 
         /// <summary>
+        /// The selected stop id.
+        /// </summary>
+        private string selectedStopId;
+
+        /// <summary>
         /// True when we are loading trip details.  Used to show the progress ring.
         /// </summary>
         private bool isLoadingTripDetails;
@@ -61,6 +66,18 @@ namespace OneBusAway.ViewModels
             set
             {
                 SetProperty(ref this.selectedStop, value);
+            }
+        }
+
+        public string SelectedStopId
+        {
+            get
+            {
+                return this.selectedStopId;
+            }
+            set
+            {
+                SetProperty(ref this.selectedStopId, value);
             }
         }
 
@@ -114,7 +131,14 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task GetTripDetailsAsync()
         {
+            
             this.TripDetails = await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
+
+            if (!string.IsNullOrEmpty(this.selectedStopId))
+            {
+                this.SelectStop(this.selectedStopId);
+            }
+
             this.IsLoadingTripDetails = false;
         }
 
@@ -127,11 +151,12 @@ namespace OneBusAway.ViewModels
             {
                 selectedStop.IsSelectedStop = false;
             }
-
+                        
             this.selectedStop = (from tripStop in this.tripDetails.TripStops
                                  where string.Equals(stopId, tripStop.StopId, StringComparison.OrdinalIgnoreCase)
                                  select tripStop).FirstOrDefault();
 
+            this.SelectedStopId = stopId;
             if (this.selectedStop != null)
             {
                 this.selectedStop.IsSelectedStop = true;

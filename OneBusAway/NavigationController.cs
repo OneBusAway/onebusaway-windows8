@@ -147,8 +147,8 @@ namespace OneBusAway
             this.RefreshCommand = new ObservableCommand();
             this.RefreshCommand.Executed += OnRefreshCommandExecuted;
 
-            this.pageControls = new Stack<IPageControl>();   
-        }
+            this.pageControls = new Stack<IPageControl>();               
+        }        
 
         /// <summary>
         /// Returns the main page.  Since we only have one page in the app, this is OK.

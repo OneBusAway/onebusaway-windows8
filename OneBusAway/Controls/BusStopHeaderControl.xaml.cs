@@ -35,7 +35,7 @@ namespace OneBusAway.Controls
         /// </summary>
         public void SetStopName(string stopName)
         {
-            stopNameTextBlock.Text = stopName;
+            stopNameTextBlock.Text = stopName.ToUpperInvariant();
         }
     }
 }
