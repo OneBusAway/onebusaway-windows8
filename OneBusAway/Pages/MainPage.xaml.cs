@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,7 +34,35 @@ namespace OneBusAway.Pages
     {
         public MainPage()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();      
+      
+            // Add settings options:
+            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;            
+        }
+
+        /// <summary>
+        /// Registers settings commands with the app.
+        /// </summary>
+        private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Add(new SettingsCommand("Privacy", "Privacy", new UICommandInvokedHandler(OnPrivacyCommandExecuted)));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("Help", "Help", new UICommandInvokedHandler(OnHelpCommandExecuted)));
+        }
+
+        /// <summary>
+        /// Called when the privacy command is invoked.
+        /// </summary>
+        private async void OnPrivacyCommandExecuted(IUICommand command)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("http://onebusaway.azurewebsites.net/PrivacyPolicy.html"));
+        }
+
+        /// <summary>
+        /// Called when the help command is invoked.
+        /// </summary>
+        private void OnHelpCommandExecuted(IUICommand command)
+        {
+            NavigationController.Instance.GoToHelpPageCommand.Execute(null);
         }
 
         /// <summary>
