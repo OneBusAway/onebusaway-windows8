@@ -22,6 +22,11 @@ namespace OneBusAway.ViewModels
         public const double ZoomedInMapZoom = 15.5;
 
         /// <summary>
+        /// Map zoom for the default closest zoom.
+        /// </summary>
+        public const double DefaultZoomedInMapZoom = 15.6;
+
+        /// <summary>
         /// The name of the route data cache file.
         /// </summary>
         public const string CacheFileName = "RouteData.xml";

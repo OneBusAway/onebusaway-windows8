@@ -481,26 +481,26 @@ namespace OneBusAway.Controls
 
             NavigationController.Instance.MapView = this.MapView;
 
-            if (!this.hasShownOhMyDialog)
-            {
-                lock (this)
-                {
-                    if (!this.hasShownOhMyDialog)
-                    {
-                        // If we're zoomed out too far and we haven't shown the oh my dialog yet, show it now:
-                        if (this.RefreshBusStopsOnMapViewChanged && this.MapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
-                        {
-                            this.hasShownOhMyDialog = true;
-                            var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level.", "oh my");
-                            messageDialog.DefaultCommandIndex = 0;
-                            var ignored = messageDialog.ShowAsync().AsTask().ContinueWith(command =>
-                                {
-                                    ApplicationData.Current.LocalSettings.Values[UtilitiesConstants.OH_MY_KEY] = true;
-                                });
-                        }
-                    }
-                }
-            }
+            //if (!this.hasShownOhMyDialog)
+            //{
+            //    lock (this)
+            //    {
+            //        if (!this.hasShownOhMyDialog)
+            //        {
+            //            // If we're zoomed out too far and we haven't shown the oh my dialog yet, show it now:
+            //            if (this.RefreshBusStopsOnMapViewChanged && this.MapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
+            //            {
+            //                this.hasShownOhMyDialog = true;
+            //                var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level.", "oh my");
+            //                messageDialog.DefaultCommandIndex = 0;
+            //                var ignored = messageDialog.ShowAsync().AsTask().ContinueWith(command =>
+            //                    {
+            //                        ApplicationData.Current.LocalSettings.Values[UtilitiesConstants.OH_MY_KEY] = true;
+            //                    });
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 }

@@ -53,10 +53,16 @@ namespace OneBusAway.PageControls
         /// </summary>
         public async Task InitializeAsync(object parameter)
         {
-            this.viewModel.MapControlViewModel.Shapes = null;
-            this.viewModel.MapControlViewModel.UnSelectStop();
+            var mapVM = this.viewModel.MapControlViewModel;
+            mapVM.Shapes = null;
+            mapVM.UnSelectStop();
 
-            await this.viewModel.MapControlViewModel.FindUserLocationAsync();
+            if (!await this.viewModel.MapControlViewModel.FindUserLocationAsync())
+            {
+                mapVM.UserLocation = new OneBusAway.Model.Point(ViewModelConstants.SeattleLatitude, ViewModelConstants.SeattleLongitude);
+                mapVM.MapView = new MapView(mapVM.UserLocation, ViewModelConstants.DefaultMapZoom);
+            }
+
             await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync();
         }
 

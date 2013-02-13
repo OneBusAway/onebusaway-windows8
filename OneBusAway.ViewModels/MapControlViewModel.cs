@@ -138,27 +138,27 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Finds the users location asynchronously using the Geolocator.
         /// </summary>
-        public async Task FindUserLocationAsync()
+        public async Task<bool> FindUserLocationAsync(bool force = false)
         {
-            // If we already have a location, don't get it again:
-            if (this.UserLocation == null)
+            if (this.userLocation == null || force)
             {
-                this.UserLocation = new Point(ViewModelConstants.SeattleLatitude, ViewModelConstants.SeattleLongitude);
-                this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
-
                 try
                 {
                     Geolocator geolocator = new Geolocator();
                     var position = await geolocator.GetGeopositionAsync();
 
                     this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
-                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
+                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultZoomedInMapZoom);
+                    return true;
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    // the user didn't give us permission to use their location. OK, fine, have it your way :P
+                    // the user didn't give us permission to use their location. OK, fine, have it your way :P                                       
+                    return false;
                 }
             }
+
+            return true;
         }
 
         public async Task RefreshStopsForLocationAsync()
