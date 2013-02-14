@@ -161,6 +161,26 @@ namespace OneBusAway.ViewModels
             }
         }
 
+        /// <summary>
+        /// Finds the users location asynchronously using the Geolocator.
+        /// </summary>
+        public async Task<bool> TryFindUserLocationAsync()
+        {            
+            try
+            {
+                Geolocator geolocator = new Geolocator();
+                var position = await geolocator.GetGeopositionAsync();
+
+                this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
+                this.MapView = new MapView(this.UserLocation, this.MapView.ZoomLevel, true);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+        }
+
         public async Task RefreshStopsForLocationAsync()
         {
             this.BusStops = new BusStopList(await this.obaDataAccess.GetStopsForLocationAsync(

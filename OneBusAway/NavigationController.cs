@@ -64,6 +64,11 @@ namespace OneBusAway
         /// Tells the current PageControl to refreshes its data.
         /// </summary>
         private ObservableCommand refreshCommand;
+
+        /// <summary>
+        /// Tells the current PageControl to go to the users location.
+        /// </summary>
+        private ObservableCommand goToUsersLocationCommand;
                 
         /// <summary>
         /// Adds a favorite.
@@ -146,6 +151,9 @@ namespace OneBusAway
 
             this.RefreshCommand = new ObservableCommand();
             this.RefreshCommand.Executed += OnRefreshCommandExecuted;
+
+            this.GoToUsersLocationCommand = new ObservableCommand();
+            this.GoToUsersLocationCommand.Executed += OnGoToUsersLocationCommandExecuted;
 
             this.pageControls = new Stack<IPageControl>();               
         }        
@@ -316,6 +324,21 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.refreshCommand, value);
+            }
+        }
+
+        /// <summary>
+        /// Returns the go to users location command.
+        /// </summary>
+        public ObservableCommand GoToUsersLocationCommand
+        {
+            get
+            {
+                return this.goToUsersLocationCommand;
+            }
+            set
+            {
+                SetProperty(ref this.goToUsersLocationCommand, value);
             }
         }
 
@@ -522,6 +545,22 @@ namespace OneBusAway
                 await this.currentPageControl.RefreshAsync();
             }
         }
+
+        /// <summary>
+        /// Called when the user wants to go to their current location.
+        /// </summary>
+        private async Task OnGoToUsersLocationCommandExecuted(object arg1, object arg2)
+        {
+            if (this.currentPageControl != null)
+            {
+                if (!await this.currentPageControl.ViewModel.MapControlViewModel.TryFindUserLocationAsync())
+                {
+                    var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
+                    messageDialog.DefaultCommandIndex = 0;
+                    await messageDialog.ShowAsync().AsTask();
+                }
+            }
+        }        
 
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
         {

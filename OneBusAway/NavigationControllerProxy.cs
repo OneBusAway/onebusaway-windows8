@@ -97,6 +97,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns the go to users location command.
+        /// </summary>
+        public ObservableCommand GoToUsersLocationCommand
+        {
+            get
+            {
+                return NavigationController.Instance.GoToUsersLocationCommand;
+            }
+        }
+
+        /// <summary>
         /// Returns the go to favorites page command.
         /// </summary>
         public ObservableCommand GoToFavoritesPageCommand

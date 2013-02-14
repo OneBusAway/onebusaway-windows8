@@ -45,7 +45,7 @@ namespace OneBusAway.Pages
         /// </summary>
         private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
-            args.Request.ApplicationCommands.Add(new SettingsCommand("Privacy", "Privacy", new UICommandInvokedHandler(OnPrivacyCommandExecuted)));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("Privacy", "Privacy Policy", new UICommandInvokedHandler(OnPrivacyCommandExecuted)));
             args.Request.ApplicationCommands.Add(new SettingsCommand("Help", "Help", new UICommandInvokedHandler(OnHelpCommandExecuted)));
         }
 
