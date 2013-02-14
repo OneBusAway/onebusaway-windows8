@@ -553,9 +553,9 @@ namespace OneBusAway
         {
             if (this.currentPageControl != null)
             {
-                if (! await this.currentPageControl.ViewModel.MapControlViewModel.FindUserLocationAsync(force: true))
+                if (!await this.currentPageControl.ViewModel.MapControlViewModel.TryFindUserLocationAsync())
                 {
-                    var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "Oops");
+                    var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
                     messageDialog.DefaultCommandIndex = 0;
                     await messageDialog.ShowAsync().AsTask();
                 }

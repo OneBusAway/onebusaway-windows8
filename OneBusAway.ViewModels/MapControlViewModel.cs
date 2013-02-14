@@ -138,27 +138,47 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Finds the users location asynchronously using the Geolocator.
         /// </summary>
-        public async Task<bool> FindUserLocationAsync(bool force = false)
+        public async Task FindUserLocationAsync()
         {
-            if (this.userLocation == null || force)
+            // If we already have a location, don't get it again:
+            if (this.UserLocation == null)
             {
+                this.UserLocation = new Point(ViewModelConstants.SeattleLatitude, ViewModelConstants.SeattleLongitude);
+                this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
+
                 try
                 {
                     Geolocator geolocator = new Geolocator();
                     var position = await geolocator.GetGeopositionAsync();
 
                     this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
-                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultZoomedInMapZoom);
-                    return true;
+                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    // the user didn't give us permission to use their location. OK, fine, have it your way :P                                       
-                    return false;
+                    // the user didn't give us permission to use their location. OK, fine, have it your way :P
                 }
             }
+        }
 
-            return true;
+        /// <summary>
+        /// Finds the users location asynchronously using the Geolocator.
+        /// </summary>
+        public async Task<bool> TryFindUserLocationAsync()
+        {            
+            try
+            {
+                Geolocator geolocator = new Geolocator();
+                var position = await geolocator.GetGeopositionAsync();
+
+                this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
+                this.MapView = new MapView(this.UserLocation, this.MapView.ZoomLevel, true);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
         }
 
         public async Task RefreshStopsForLocationAsync()
