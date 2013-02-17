@@ -35,6 +35,25 @@ namespace OneBusAway.Model
         private StopAndRoutePair stopAndRoute;
 
         /// <summary>
+        /// Creates a no data tracking data out of the specific stop & route.
+        /// </summary>
+        public TrackingData(string stopId, string stopName, string routeId, string routeName, string routeDescription)
+        {
+            this.isNoData = true;
+            this.StopId = stopId;
+            this.StopName = stopName;
+            this.RouteId = routeId;
+            this.Status = "NO DATA";
+            this.StopOrDestination = routeDescription;
+            this.Route = new Route()
+            {
+                ShortName = routeName,
+                Id = routeId
+            };
+            this.stopAndRoute = new StopAndRoutePair(this);
+        }
+
+        /// <summary>
         /// Makes a tracking data that's used to indicate no data.
         /// </summary>
         public TrackingData(StopAndRoutePair pair)
@@ -49,6 +68,7 @@ namespace OneBusAway.Model
                 ShortName = pair.RouteName,
                 Id = pair.Route
             };
+            this.stopAndRoute = new StopAndRoutePair(this);
         }
 
         /// <summary>

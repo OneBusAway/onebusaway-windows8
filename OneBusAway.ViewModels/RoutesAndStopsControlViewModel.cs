@@ -240,40 +240,54 @@ namespace OneBusAway.ViewModels
         {
             if (!string.IsNullOrEmpty(this.StopId))
             {
-                var realTimeData = await obaDataAccess.GetTrackingDataForStopAsync(this.StopId);
-
-                if (this.isFiltered)
-                {
-                    List<TrackingData> filteredList = new List<TrackingData>();
-                    foreach (var data in realTimeData)
-                    {
-                        if (string.Equals(this.filteredRouteId, data.RouteId, StringComparison.OrdinalIgnoreCase))
-                        {
-                            data.IsFiltered = true;
-                            filteredList.Add(data);
-                        }
-                    }
-
-                    this.RealTimeData = filteredList.ToArray();
-                }
-                else
-                {
-                    this.RealTimeData = realTimeData;
-                }
-
-                foreach (var trackingData in this.RealTimeData)
-                {
-                    trackingData.IsFavorite = await OneBusAway.Model.Favorites.IsFavoriteAsync(trackingData.StopAndRoute);
-                }
-
                 this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(this.StopId)
                                                select new RouteMapsAndSchedulesControlViewModel()
                                                {
                                                    StopId = this.stopId,
                                                    RouteId = route.Id,
                                                    RouteName = route.ShortName,
-                                                   StopName = this.StopHeaderText
+                                                   StopName = this.StopHeaderText,
+                                                   RouteDescription = route.Description
                                                }).ToArray();
+
+                List<TrackingData> realTimeDataList = new List<TrackingData>();
+                realTimeDataList.AddRange(await obaDataAccess.GetTrackingDataForStopAsync(this.StopId));
+
+                // Add no data items for any routes that aren't coming at the moment:
+                foreach (var viewModel in this.RouteAndMapsViewModels)
+                {
+                    if (! realTimeDataList.Any(trackingData => string.Equals(trackingData.RouteId, viewModel.RouteId, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        realTimeDataList.Add(new TrackingData(
+                            viewModel.StopId,
+                            viewModel.StopName,
+                            viewModel.RouteId,
+                            viewModel.RouteName,
+                            viewModel.RouteDescription));
+                    }
+                }
+
+                if (this.isFiltered)
+                {
+                    foreach (var data in realTimeDataList)
+                    {
+                        if (string.Equals(this.filteredRouteId, data.RouteId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            data.IsFiltered = true;
+                        }
+                    }
+
+                    this.RealTimeData = realTimeDataList.ToArray();
+                }
+                else
+                {
+                    this.RealTimeData = realTimeDataList.ToArray();
+                }
+
+                foreach (var trackingData in this.RealTimeData)
+                {
+                    trackingData.IsFavorite = await OneBusAway.Model.Favorites.IsFavoriteAsync(trackingData.StopAndRoute);
+                }                
 
                 this.LastUpdated = DateTime.Now;    
                 this.ShowNoItemsMessage = this.RealTimeData.Length == 0;
