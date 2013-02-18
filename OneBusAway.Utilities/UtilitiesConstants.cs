@@ -58,7 +58,7 @@ namespace OneBusAway.Utilities
         /// <summary>
         /// Minimum zoom required for bus stops to be visible
         /// </summary>
-        public const double MinBusStopVisibleZoom = 15.0;
+        public const double MinBusStopVisibleZoom = 14.5;
 
         /// <summary>
         /// Default latitude in case user position can't be found. Defaulting to Puget Sound area

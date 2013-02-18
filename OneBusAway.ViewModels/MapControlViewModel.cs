@@ -152,7 +152,7 @@ namespace OneBusAway.ViewModels
                     var position = await geolocator.GetGeopositionAsync();
 
                     this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
-                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
+                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.ZoomedInMapZoom);
                 }
                 catch (UnauthorizedAccessException)
                 {
