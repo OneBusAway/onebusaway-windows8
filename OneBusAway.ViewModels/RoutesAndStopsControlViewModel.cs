@@ -176,35 +176,57 @@ namespace OneBusAway.ViewModels
             this.ShowNoItemsMessage = false;
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
-            
+
+            var failedFavorites = new List<StopAndRoutePair>();
+
             foreach (StopAndRoutePair fav in favs)
             {
-                TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
-                bool foundActiveTrip = false;
-
-                foreach (TrackingData tdata in tdataArray)
+                try
                 {
-                    if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
+                    TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
+                    bool foundActiveTrip = false;
+
+                    foreach (TrackingData tdata in tdataArray)
                     {
+                        if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
+                            tdata.Context = TrackingData.Favorites;
+                            tdata.IsFavorite = true;
+                            trackingData.Add(tdata);
+                            foundActiveTrip = true;
+                            break;
+                        }
+                    }
+
+                    // If we don't have an active trip for this favorite, add a dummy tracking data to the 
+                    // list that links to the schedule page and shows NO DATA in the mins column.
+                    if (!foundActiveTrip)
+                    {
+                        TrackingData tdata = new TrackingData(fav);
                         tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
                         tdata.Context = TrackingData.Favorites;
                         tdata.IsFavorite = true;
                         trackingData.Add(tdata);
-                        foundActiveTrip = true;
-                        break;
                     }
                 }
-
-                // If we don't have an active trip for this favorite, add a dummy tracking data to the 
-                // list that links to the schedule page and shows NO DATA in the mins column.
-                if (!foundActiveTrip)
+                catch
                 {
-                    TrackingData tdata = new TrackingData(fav);
-                    tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
-                    tdata.Context = TrackingData.Favorites;
-                    tdata.IsFavorite = true;
-                    trackingData.Add(tdata);
+                    // Favorite likely no longer exists: remove it from the list!
+                    // For now, let's just eat the exception
+                    failedFavorites.Add(fav);
+                }                
+            }
+
+            // If any favorites failed to load, remove them from the list:
+            if (failedFavorites.Count > 0)
+            {
+                foreach (var failedFav in failedFavorites)
+                {
+                    await Model.Favorites.RemoveAsync(failedFav);
                 }
+
+                await Model.Favorites.PersistAsync();
             }
 
             this.RealTimeData = trackingData.ToArray();
