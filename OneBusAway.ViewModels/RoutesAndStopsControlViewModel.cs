@@ -183,26 +183,24 @@ namespace OneBusAway.ViewModels
             {
                 try
                 {
-                    TrackingData[] tdataArray = await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop);
-                    bool foundActiveTrip = false;
+                    TrackingData[] tdataArray = (from tdData in await obaDataAccess.GetTrackingDataForStopAsync(fav.Stop)
+                                                 where string.Equals(fav.Route, tdData.RouteId, StringComparison.OrdinalIgnoreCase)
+                                                 select tdData).Take(2).ToArray();
 
-                    foreach (TrackingData tdata in tdataArray)
+                    if (tdataArray.Length > 0)
                     {
-                        if (string.Equals(fav.Route, tdata.RouteId, StringComparison.OrdinalIgnoreCase))
+                        foreach (TrackingData tdata in tdataArray)
                         {
                             tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
                             tdata.Context = TrackingData.Favorites;
                             tdata.IsFavorite = true;
                             trackingData.Add(tdata);
-                            foundActiveTrip = true;
-                            break;
                         }
-                    }
-
-                    // If we don't have an active trip for this favorite, add a dummy tracking data to the 
-                    // list that links to the schedule page and shows NO DATA in the mins column.
-                    if (!foundActiveTrip)
+                    } 
+                    else
                     {
+                        // If we don't have an active trip for this favorite, add a dummy tracking data to the 
+                        // list that links to the schedule page and shows NO DATA in the mins column.                    
                         TrackingData tdata = new TrackingData(fav);
                         tdata.IsFiltered = (this.isFiltered && string.Equals(this.filteredRouteId, tdata.RouteId, StringComparison.OrdinalIgnoreCase));
                         tdata.Context = TrackingData.Favorites;
