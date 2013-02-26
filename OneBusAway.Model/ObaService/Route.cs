@@ -49,6 +49,11 @@ namespace OneBusAway.Model
             this.Description = routeElement.GetFirstElementValue<string>("description");
             this.ScheduleUri = routeElement.GetFirstElementValue<string>("url");
 
+            if (string.IsNullOrEmpty(this.Description))
+            {
+                this.Description = routeElement.GetFirstElementValue<string>("longName");
+            }
+
             // Throw if there is no agency.  There should always be an agency:
             var agencyElement = routeElement.Descendants("agency").FirstOrDefault();
             if (agencyElement != null)
