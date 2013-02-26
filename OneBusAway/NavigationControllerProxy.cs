@@ -75,6 +75,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns true when the app is in portrait mode.
+        /// </summary>
+        public bool IsPortrait
+        {
+            get
+            {
+                return NavigationController.Instance.IsPortrait;
+            }
+        }
+
+        /// <summary>
         /// Return the go back command.
         /// </summary>
         public ObservableCommand GoBackCommand

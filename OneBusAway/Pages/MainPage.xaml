@@ -32,6 +32,12 @@
         <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
                       Value="False"
                       VisualState="Default" />
+        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationProxy}}"
+                      Value="True"
+                      VisualState="IsPortrait" />
+        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationProxy}}"
+                      Value="False"
+                      VisualState="Default" />
     </trig:TriggerManager.Triggers>
 
     <Grid Background="White"
@@ -44,8 +50,8 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" x:Name="snappedOrPortraitRow" />
+            <RowDefinition Height="*" x:Name="defaultRow" />
         </Grid.RowDefinitions>
 
         <!-- Header control -->
@@ -106,6 +112,45 @@
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="0,10,0,10" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="IsPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainPageMap"
+                                                       Storyboard.TargetProperty="(Grid.Row)">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="1" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainPageMap"
+                                                       Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainPageMap"
+                                                       Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="scrollViewer"
+                                                       Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="snappedOrPortraitRow"
+                                                       Storyboard.TargetProperty="Height">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value=".5*" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="defaultRow"
+                                                       Storyboard.TargetProperty="Height">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value=".5*" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainPageMap"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="90,10,20,0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

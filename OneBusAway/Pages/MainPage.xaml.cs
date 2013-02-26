@@ -106,6 +106,7 @@ namespace OneBusAway.Pages
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             NavigationController.Instance.IsSnapped = (ApplicationView.Value == ApplicationViewState.Snapped);
+            NavigationController.Instance.IsPortrait = (ApplicationView.Value == ApplicationViewState.FullScreenPortrait);
         }
     }
 }

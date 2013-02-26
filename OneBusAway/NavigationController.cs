@@ -108,6 +108,11 @@ namespace OneBusAway
         private bool isSnapped;
 
         /// <summary>
+        /// True when the app is in portrait mode.
+        /// </summary>
+        private bool isPortrait;
+
+        /// <summary>
         /// This cancellation token source is used to cancel an existing refresh loop so that we can start a new one.
         /// </summary>
         private CancellationTokenSource refreshLoopCancelationToken;
@@ -193,6 +198,21 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.isSnapped, value);
+            }
+        }
+
+        /// <summary>
+        /// True when we are in portrait mode.
+        /// </summary>
+        public bool IsPortrait
+        {
+            get
+            {
+                return this.isPortrait;
+            }
+            set
+            {
+                SetProperty(ref this.isPortrait, value);
             }
         }
 
