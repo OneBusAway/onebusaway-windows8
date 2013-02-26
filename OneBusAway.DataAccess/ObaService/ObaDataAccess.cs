@@ -254,6 +254,7 @@ namespace OneBusAway.DataAccess
             ObaMethod method = ObaMethod.arrivals_and_departures_for_stop;
             var helper = this.Factory.CreateHelper(method);
             helper.SetId(stopId);
+            helper.AddToQueryString("minutesAfter", "60");
 
             XDocument doc = await helper.SendAndRecieveAsync();
             DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
