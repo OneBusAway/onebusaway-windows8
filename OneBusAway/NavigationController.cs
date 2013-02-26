@@ -410,10 +410,10 @@ namespace OneBusAway
         }       
         
         /// <summary>
-        /// Refreshes the active page control every 60 seconds. If we navigate to another page, then this
+        /// Refreshes the active page control every 30 seconds. If we navigate to another page, then this
         /// loop will be cancelled. The NavigateToPageControlAsync method will cancel this task and wait for 
         /// it to exit before it kicks off another one. That way, we can't navigate to a page and have it refresh 
-        /// immediately - there will always be 60 seconds between a page navigation and a page refresh.
+        /// immediately - there will always be 30 seconds between a page navigation and a page refresh.
         /// </summary>
         private async Task RefreshLoopAsync()
         {
@@ -421,7 +421,7 @@ namespace OneBusAway
             {
                 while (true)
                 {
-                    await Task.Delay(60000, this.refreshLoopCancelationToken.Token);
+                    await Task.Delay(30000, this.refreshLoopCancelationToken.Token);
                     this.refreshLoopCancelationToken.Token.ThrowIfCancellationRequested();
 
                     // Call refresh asyn directly here to make sure we don't have a loop:
