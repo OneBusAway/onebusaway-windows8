@@ -62,6 +62,12 @@
         <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationControllerProxy}}"
                       Value="False"
                       VisualState="Default" />
+        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationControllerProxy}}"
+                      Value="True"
+                      VisualState="IsPortrait" />
+        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationControllerProxy}}"
+                      Value="False"
+                      VisualState="Default" />
     </trig:TriggerManager.Triggers>
 
     <!-- Header where the OBA logo & some links appear -->
@@ -175,17 +181,20 @@
                 </Style>
             </Grid.Resources>
 
-            <Button Grid.Column="0"
+            <Button x:Name="favoritesButton" 
+                    Grid.Column="0"
                     Grid.Row="0"
                     Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="40,0,40,0">FAVORITES</Button>
 
-            <Button Grid.Column="1"
+            <Button x:Name="helpButton"
+                    Grid.Column="1"
                     Grid.Row="0"
                     Command="{Binding GoToHelpPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,40,0">HELP</Button>
 
-            <Button Grid.Column="2"
+            <Button x:Name="searchButton"
+                    Grid.Column="2"
                     Grid.Row="0"
                     Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationControllerProxy}}"
                     Margin="0,0,40,0">SEARCH</Button>
@@ -216,6 +225,25 @@
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="11,0,0,-6" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="IsPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="favoritesButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,20,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="helpButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,20,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,20,0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
