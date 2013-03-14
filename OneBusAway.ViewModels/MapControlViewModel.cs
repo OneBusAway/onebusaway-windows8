@@ -158,6 +158,11 @@ namespace OneBusAway.ViewModels
                 {
                     // the user didn't give us permission to use their location. OK, fine, have it your way :P
                 }
+                catch (Exception)
+                {
+                    // geolocator failed for some other reason.
+                    // [Ghulam] Apparently on server 2102 GetGeopositionAsync throws FileNotFoundException.
+                }
             }
         }
 
@@ -165,7 +170,7 @@ namespace OneBusAway.ViewModels
         /// Finds the users location asynchronously using the Geolocator.
         /// </summary>
         public async Task<bool> TryFindUserLocationAsync()
-        {            
+        {
             try
             {
                 Geolocator geolocator = new Geolocator();
@@ -177,6 +182,12 @@ namespace OneBusAway.ViewModels
             }
             catch (UnauthorizedAccessException)
             {
+                return false;
+            }
+            catch (Exception)
+            {
+                // geolocator failed for some other reason.
+                // [Ghulam] Apparently on server 2102 GetGeopositionAsync throws FileNotFoundException.
                 return false;
             }
         }
