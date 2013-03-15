@@ -124,6 +124,9 @@
     <Compile Include="Controls\DayOfTheWeekControl.xaml.cs">
       <DependentUpon>DayOfTheWeekControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FavoriteControl.xaml.cs">
+      <DependentUpon>FavoriteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HeaderControl.xaml.cs">
       <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
@@ -244,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DayOfTheWeekControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FavoriteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
