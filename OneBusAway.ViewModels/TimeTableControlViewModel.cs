@@ -209,6 +209,7 @@ namespace OneBusAway.ViewModels
                 // No schedule available for this stop:
                 this.ScheduleAvailable = false;
                 this.ScheduleData = null;
+                this.HasSecondTripHeadsign = false;
             }
             finally
             {

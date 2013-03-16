@@ -31,7 +31,7 @@
                         <ItemsPanelTemplate>
                             <WrapGrid Orientation="Horizontal"
                                       Background="#F3F3F3"
-                                      ItemWidth="40" />
+                                      ItemWidth="42" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
