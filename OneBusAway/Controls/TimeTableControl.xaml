@@ -19,6 +19,39 @@
         <conv:IsCurrentHourToThicknessConverter x:Key="isCurrentHourToThicknessConverter" />
         <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
         <local:NavigationControllerProxy x:Key="navigationProxy" />
+
+        <DataTemplate x:Key="dateTimesDataTemplate">
+            <Grid>
+                <ItemsControl HorizontalAlignment="Stretch"
+                              Margin="0,5,0,0"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                              ItemsSource="{Binding}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal"
+                                      Background="#F3F3F3"
+                                      ItemWidth="40" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Foreground="Black"
+                                       FontSize="12"
+                                       Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}"
+                                       Margin="10,5,0,5"
+                                       FontWeight="{Binding Converter={StaticResource timeToFontWeightConverter}}"
+                                       TextAlignment="Left" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Border Margin="0,5,0,0"
+                        BorderBrush="{StaticResource obaGreen}"
+                        BorderThickness="{Binding Converter={StaticResource isCurrentHourToThicknessConverter}, ConverterParameter=2}" />
+
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
 
     <trig:TriggerManager.Triggers>
@@ -41,9 +74,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="headerStackPanel" 
+        <StackPanel x:Name="headerStackPanel"
                     Grid.Row="0"
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
@@ -75,7 +109,7 @@
                            FontWeight="Bold"
                            Foreground="Black"
                            Text="PM = Darker type" />
-                <TextBlock x:Name="informationTextBlock" 
+                <TextBlock x:Name="informationTextBlock"
                            Grid.Column="2"
                            Grid.Row="0"
                            FontSize="12"
@@ -86,8 +120,8 @@
             </Grid>
         </StackPanel>
 
-        <Grid Grid.Column="0" 
-              Grid.Row="1" 
+        <Grid Grid.Column="0"
+              Grid.Row="1"
               Background="{StaticResource obaGreen}"
               x:Name="banner">
             <TextBlock FontSize="14"
@@ -97,56 +131,40 @@
                        Margin="10,5,0,5" />
         </Grid>
 
-        <ctrls:DayOfTheWeekControl x:Name="dayOfTheWeekControl" 
+        <ctrls:DayOfTheWeekControl x:Name="dayOfTheWeekControl"
                                    Grid.Column="0"
-                                   Grid.Row="2" 
+                                   Grid.Row="2"
                                    DataContext="{Binding DayOfTheWeekControlViewModel}" />
 
         <ItemsControl Grid.Column="0"
                       Grid.Row="3"
                       BorderThickness="0"
-                      ItemsSource="{Binding ScheduleData}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
+                      ItemsSource="{Binding ScheduleData}"
+                      ItemTemplate="{StaticResource dateTimesDataTemplate}" />
 
-                    <Grid>
+        <!-- Secondary items control for schedule data on stops where there are two trip headsigns -->
+        <StackPanel x:Name="secondHeaderStackPanel"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Visibility="{Binding HasSecondTripHeadsign, Converter={StaticResource boolToVisibilityConverter}}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top">        
 
-                        <ItemsControl HorizontalAlignment="Stretch"
-                                      Margin="0,5,0,0"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                      ItemsSource="{Binding}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapGrid Orientation="Horizontal"
-                                                  Background="#F3F3F3"
-                                                  ItemWidth="40" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Foreground="Black"
-                                                   FontSize="12"
-                                                   Text="{Binding Converter={StaticResource timeToTextConverter}, ConverterParameter='h:mm'}"
-                                                   Margin="10,5,0,5"
-                                                   FontWeight="{Binding Converter={StaticResource timeToFontWeightConverter}}"
-                                                   TextAlignment="Left" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+            <TextBlock FontSize="14"
+                       Margin="0,15,0,10"
+                       FontWeight="Bold"
+                       Foreground="Black"
+                       Text="{Binding SecondTripHeadsign, Converter={StaticResource capitalLetterConverter}}" />
 
-                        <Border Margin="0,5,0,0"
-                                BorderBrush="{StaticResource obaGreen}"
-                                BorderThickness="{Binding Converter={StaticResource isCurrentHourToThicknessConverter}, ConverterParameter=2}" />
-
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            <ItemsControl BorderThickness="0"
+                          ItemsSource="{Binding SecondScheduleData}"
+                          ItemTemplate="{StaticResource dateTimesDataTemplate}" />
+            
+        </StackPanel>
 
         <Grid Grid.Row="3"
               Grid.Column="0"
-              Margin="20"
+              Margin="20"              
               Visibility="{Binding IsLoadingSchedule, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
             <TextBlock HorizontalAlignment="Center"
                        FontSize="14"
@@ -175,6 +193,11 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="10" />
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="secondHeaderStackPanel"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="10,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>                        
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="dayOfTheWeekControl"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"

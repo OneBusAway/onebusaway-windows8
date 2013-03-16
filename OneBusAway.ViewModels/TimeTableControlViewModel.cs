@@ -14,7 +14,7 @@ namespace OneBusAway.ViewModels
     public class TimeTableControlViewModel : ViewModelBase
     {
         private string routeNumber;
-        private string routeDescription;
+        private string tripHeadsign;
         private string stopDescription;
         private bool? scheduleAvailable;
         private bool isLoadingSchedule;
@@ -22,6 +22,10 @@ namespace OneBusAway.ViewModels
         private int dayOfTheWeek;
         private string stopId;
         private string routeId;
+
+        private bool hasSecondTripHeadsign;
+        private string secondTripHeadsign;
+        private DateTime[][] secondScheduleData;
 
         private ObaDataAccess obaDataAccess;
         private DayOfTheWeekControlViewModel dayOfTheWeekControlViewModel;
@@ -108,11 +112,47 @@ namespace OneBusAway.ViewModels
         {
             get
             {
-                return this.routeDescription;
+                return this.tripHeadsign;
             }
             set
             {
-                SetProperty(ref this.routeDescription, value);
+                SetProperty(ref this.tripHeadsign, value);
+            }
+        }
+
+        public DateTime[][] SecondScheduleData
+        {
+            get
+            {
+                return this.secondScheduleData;
+            }
+            set
+            {
+                SetProperty(ref this.secondScheduleData, value);
+            }
+        }
+
+        public string SecondTripHeadsign
+        {
+            get
+            {
+                return this.secondTripHeadsign;
+            }
+            set
+            {
+                SetProperty(ref this.secondTripHeadsign, value);
+            }
+        }
+
+        public bool HasSecondTripHeadsign
+        {
+            get
+            {
+                return this.hasSecondTripHeadsign;
+            }
+            set
+            {
+                SetProperty(ref this.hasSecondTripHeadsign, value);
             }
         }
 
@@ -141,7 +181,7 @@ namespace OneBusAway.ViewModels
 
             if (this.dayOfTheWeek != (int)date.DayOfWeek)
             {
-                int daysFromNow = (7 + this.dayOfTheWeek - (int)date.DayOfWeek) % 7; // Always query for future date
+                int daysFromNow = this.dayOfTheWeek - (int)date.DayOfWeek;
                 date = date.AddDays(daysFromNow);
             }
 
@@ -149,22 +189,20 @@ namespace OneBusAway.ViewModels
             {
                 var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId, date);
 
-                // TO DO: support more than one trip headsign. 
-                // Not sure what the UI for this should be.
-
-                var query = from scheduleStopTime in scheduleData[0].ScheduleStopTimes
-                            orderby scheduleStopTime.ArrivalTime ascending
-                            where scheduleStopTime.ArrivalTime.Day == date.Day
-                            group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
-                            select (from byHourStopTime in groupedByHourData
-                                    orderby byHourStopTime.ArrivalTime ascending
-                                    select byHourStopTime.ArrivalTime).ToArray();
-
                 this.ScheduleAvailable = true;
-                this.ScheduleData = (from arrivalsByHour in query
-                                     select arrivalsByHour).ToArray();
-
+                this.ScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[0].ScheduleStopTimes);
                 this.TripHeadsign = scheduleData[0].TripHeadsign;
+
+                if (scheduleData.Length == 2)
+                {
+                    this.HasSecondTripHeadsign = true;
+                    this.SecondScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[1].ScheduleStopTimes);
+                    this.SecondTripHeadsign = scheduleData[1].TripHeadsign;
+                }
+                else
+                {
+                    this.HasSecondTripHeadsign = false;
+                }
             }
             catch (ArgumentException)
             {
@@ -176,6 +214,22 @@ namespace OneBusAway.ViewModels
             {
                 this.IsLoadingSchedule = false;
             }
+        }
+
+        /// <summary>
+        /// Sorts the schedule stop times and turns it into an array of date times.
+        /// </summary>
+        private DateTime[][] GetDateTimesFromScheduleStopTimes(ScheduleStopTime[] stopTimes)
+        {
+            var query = from scheduleStopTime in stopTimes
+                        orderby scheduleStopTime.ArrivalTime ascending
+                        group scheduleStopTime by scheduleStopTime.ArrivalTime.Hour into groupedByHourData
+                        select (from byHourStopTime in groupedByHourData
+                                orderby byHourStopTime.ArrivalTime ascending
+                                select byHourStopTime.ArrivalTime).ToArray();
+
+            return (from arrivalsByHour in query 
+                    select arrivalsByHour).ToArray();
         }
 
         /// <summary>
