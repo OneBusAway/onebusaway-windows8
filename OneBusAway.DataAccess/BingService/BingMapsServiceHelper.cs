@@ -40,7 +40,7 @@ namespace OneBusAway.DataAccess.BingService
 
             Response response = await Helpers.GetJsonResponse<Response>(url);
 
-            return Helpers.FilterResults<Location>(response, minimumConfidence);            
+            return Helpers.FilterResults<Location>(response, minimumConfidence, region);
         }        
     }
 }
