@@ -138,12 +138,12 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Finds the users location asynchronously using the Geolocator.
         /// </summary>
-        public async Task FindUserLocationAsync()
+        public async Task FindUserLocationAsync(double defaultLat, double defautLon)
         {
             // If we already have a location, don't get it again:
             if (this.UserLocation == null)
             {
-                this.UserLocation = new Point(ViewModelConstants.SeattleLatitude, ViewModelConstants.SeattleLongitude);
+                this.UserLocation = new Point(defaultLat, defautLon);
                 this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
 
                 try

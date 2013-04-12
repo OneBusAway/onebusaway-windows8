@@ -15,23 +15,13 @@ namespace OneBusAway.DataAccess.BingService
     public class BingMapsServiceHelper
     {
         /// <summary>
-        /// Queries the Bing Maps Service with a given search query and returns a list of locations that match the query
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public static async Task<List<Location>> GetLocationByQuery(string query)
-        {
-            return await GetLocationByQuery(query, Confidence.Low);
-        }
-
-        /// <summary>
         /// Queries the Bing Maps Service with a given search query, confidence and userLocation and returns a list of locations that match the query
         /// </summary>
         /// <param name="query">Search query</param>
         /// <param name="minimumConfidence">Minimum confidence by which to filter the search results</param>
         /// <param name="userPosition">User's location that is used to improve search results</param>
         /// <returns></returns>
-        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, OneBusAway.Model.Point userPosition = null)
+        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, OneBusAway.Model.Point userPosition, string region)
         {
             if (string.IsNullOrEmpty(query))
             {

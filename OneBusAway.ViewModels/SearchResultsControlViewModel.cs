@@ -181,7 +181,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches all agencies for all bus numbers.
         /// </summary>
-        public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation = null)
+        public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation, string region)
         {
             this.NoSearchResultsText = string.Format(CultureInfo.CurrentCulture, "SEARCHING FOR '{0}'", query);
 
@@ -212,7 +212,7 @@ namespace OneBusAway.ViewModels
 
                         await this.uiHelper.BatchAddItemsAsync(this.searchResults, newItems);
 
-                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
+                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation, region);
                         this.BingMapsSearchResults = (from result in bingMapResults
                                                       select new SearchLocationResultViewModel(result)).ToArray();
                     }

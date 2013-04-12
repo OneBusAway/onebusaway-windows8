@@ -121,6 +121,21 @@ namespace OneBusAway
         /// Before we can start a new refresh loop, wait for the old one to exit.
         /// </summary>
         private Task refreshLoopTask;
+
+        /// <summary>
+        /// This is the region where the user currently resides.
+        /// </summary>
+        private string region;
+
+        /// <summary>
+        /// Ths is the region's default laitude.
+        /// </summary>
+        private double regionDefaultLat;
+
+        /// <summary>
+        /// This is the region's default longitude.
+        /// </summary>
+        private double regionDefaultLon;
         
         /// <summary>
         /// Creates the controller.
@@ -160,7 +175,11 @@ namespace OneBusAway
             this.GoToUsersLocationCommand = new ObservableCommand();
             this.GoToUsersLocationCommand.Executed += OnGoToUsersLocationCommandExecuted;
 
-            this.pageControls = new Stack<IPageControl>();               
+            this.pageControls = new Stack<IPageControl>();
+
+            this.Region = "WA";
+            this.RegionDefaultLat = ViewModelConstants.SeattleLatitude;
+            this.regionDefaultLon = ViewModelConstants.SeattleLongitude;
         }        
 
         /// <summary>
@@ -213,6 +232,51 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.isPortrait, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the region.
+        /// </summary>
+        public string Region
+        {
+            get
+            {
+                return this.region;
+            }
+            set
+            {
+                SetProperty(ref this.region, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the region's default latitude.
+        /// </summary>
+        public double RegionDefaultLat
+        {
+            get
+            {
+                return this.regionDefaultLat;
+            }
+            set
+            {
+                SetProperty(ref this.regionDefaultLat, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the region's default longitude.
+        /// </summary>
+        public double RegionDefaultLon
+        {
+            get
+            {
+                return this.regionDefaultLon;
+            }
+            set
+            {
+                SetProperty(ref this.regionDefaultLon, value);
             }
         }
 

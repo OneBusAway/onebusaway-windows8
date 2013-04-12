@@ -49,9 +49,9 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches asynchronously for a stop with the given name.
         /// </summary>
-        public async Task SearchAsync(string queryText)
+        public async Task SearchAsync(string queryText, string region)
         {            
-            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation);
+            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation, region);
         }
 
         /// <summary>
