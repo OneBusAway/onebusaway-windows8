@@ -27,7 +27,6 @@ namespace OneBusAway.ViewModels
         private string secondTripHeadsign;
         private DateTime[][] secondScheduleData;
 
-        private ObaDataAccess obaDataAccess;
         private DayOfTheWeekControlViewModel dayOfTheWeekControlViewModel;
 
         /// <summary>
@@ -37,7 +36,6 @@ namespace OneBusAway.ViewModels
         {
             this.scheduleAvailable = null;
             this.IsLoadingSchedule = true;
-            this.obaDataAccess = new ObaDataAccess();
 
             this.dayOfTheWeek = (int)DateTime.Now.DayOfWeek;
 
@@ -187,7 +185,8 @@ namespace OneBusAway.ViewModels
 
             try
             {
-                var scheduleData = await this.obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId, date);
+                var obaDataAccess = ObaDataAccess.Create();
+                var scheduleData = await obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId, date);
 
                 this.ScheduleAvailable = true;
                 this.ScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[0].ScheduleStopTimes);

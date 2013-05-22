@@ -15,6 +15,12 @@ namespace OneBusAway.Model
         private Stop[] stops;
         private Shape[] shapes;
 
+        public RouteData()
+        {
+            this.stops = new Stop[] { };
+            this.Shapes = new Shape[] { };
+        }
+
         /// <summary>
         /// Creates a route data with stops from both routes.
         /// </summary>

@@ -15,7 +15,6 @@ namespace OneBusAway.ViewModels
         private const string Favorites = "FAVORITES";
         private const string RealTime = "REALTIME";
 
-        private ObaDataAccess obaDataAccess;
         private TrackingData[] realTimeData;
         private RouteMapsAndSchedulesControlViewModel[] routeAndMapsViewModels;
         private string stopId;
@@ -30,7 +29,6 @@ namespace OneBusAway.ViewModels
 
         public RoutesAndStopsControlViewModel()
         {
-            this.obaDataAccess = new ObaDataAccess();
             this.StopHeaderText = Favorites;
             this.StopSubHeaderText = RealTime;
             this.LastUpdated = DateTime.Now;
@@ -178,6 +176,7 @@ namespace OneBusAway.ViewModels
             this.StopSubHeaderText = RealTime;
 
             var failedFavorites = new List<StopAndRoutePair>();
+            var obaDataAccess = ObaDataAccess.Create();
 
             foreach (StopAndRoutePair fav in favs)
             {
@@ -260,6 +259,7 @@ namespace OneBusAway.ViewModels
         {
             if (!string.IsNullOrEmpty(this.StopId))
             {
+                var obaDataAccess = ObaDataAccess.Create();
                 this.RouteAndMapsViewModels = (from route in await obaDataAccess.GetRoutesForStopAsync(this.StopId)
                                                select new RouteMapsAndSchedulesControlViewModel()
                                                {

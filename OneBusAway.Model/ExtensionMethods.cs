@@ -26,7 +26,7 @@ namespace OneBusAway.Model
 
             try
             {
-                return (T)Convert.ChangeType(childNode.Value, typeof(T));
+                return (T)Convert.ChangeType(childNode.Value.Trim(), typeof(T));
             }
             catch
             {

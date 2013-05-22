@@ -15,7 +15,6 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class MapControlViewModel : ViewModelBase
     {
-        private ObaDataAccess obaDataAccess;
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
         private BusStopList busStops;
@@ -31,7 +30,6 @@ namespace OneBusAway.ViewModels
         public MapControlViewModel()
         {
             this.mapView = MapView.Current;
-            this.obaDataAccess = new ObaDataAccess();
             this.RefreshBusStopsOnMapViewChanged = true;
         }
 
@@ -138,12 +136,12 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Finds the users location asynchronously using the Geolocator.
         /// </summary>
-        public async Task FindUserLocationAsync(double defaultLat, double defautLon)
+        public async Task FindUserLocationAsync()
         {
             // If we already have a location, don't get it again:
             if (this.UserLocation == null)
             {
-                this.UserLocation = new Point(defaultLat, defautLon);
+                this.UserLocation = MapView.Current.MapCenter;
                 this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
 
                 try
@@ -191,10 +189,10 @@ namespace OneBusAway.ViewModels
                 return false;
             }
         }
-
+        
         public async Task RefreshStopsForLocationAsync()
         {
-            this.BusStops = new BusStopList(await this.obaDataAccess.GetStopsForLocationAsync(
+            this.BusStops = new BusStopList(await ObaDataAccess.Create().GetStopsForLocationAsync(
                 mapView.MapCenter.Latitude,
                 mapView.MapCenter.Longitude,
                 mapView.BoundsHeight,
@@ -209,7 +207,7 @@ namespace OneBusAway.ViewModels
             SetProperty(ref this.mapView, mapView);
             MapView.Current = mapView;
 
-            this.BusStops = new BusStopList(await this.obaDataAccess.GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude));
+            this.BusStops = new BusStopList(await ObaDataAccess.Create().GetStopsForLocationAsync(mapView.MapCenter.Latitude, mapView.MapCenter.Longitude));
         }
 
         /// <summary>
@@ -279,7 +277,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task FindRouteShapeAsync(string routeId, string stopId)
         {
-            var routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, stopId);
+            var routeData = await ObaDataAccess.Create().GetRouteDataAsync(routeId, stopId);
             this.Shapes = routeData.Shapes.ToList();
         }
 

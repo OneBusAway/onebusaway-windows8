@@ -21,7 +21,7 @@ namespace OneBusAway.DataAccess.BingService
         /// <param name="minimumConfidence">Minimum confidence by which to filter the search results</param>
         /// <param name="userPosition">User's location that is used to improve search results</param>
         /// <returns></returns>
-        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, OneBusAway.Model.Point userPosition, string region)
+        public static async Task<List<Location>> GetLocationByQuery(string query, Confidence minimumConfidence, OneBusAway.Model.Point userPosition)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -40,7 +40,7 @@ namespace OneBusAway.DataAccess.BingService
 
             Response response = await Helpers.GetJsonResponse<Response>(url);
 
-            return Helpers.FilterResults<Location>(response, minimumConfidence, region);
+            return Helpers.FilterResults<Location>(response, minimumConfidence, "WA");
         }        
     }
 }

@@ -17,8 +17,7 @@ namespace OneBusAway.ViewModels
     /// </summary>
     public class RealTimePageControlViewModel : PageViewModelBase, ITrackingDataViewModel
     {
-        private RoutesAndStopsControlViewModel routesAndStopsViewModel;        
-        private ObaDataAccess obaDataAccess;
+        private RoutesAndStopsControlViewModel routesAndStopsViewModel;
         
         public RealTimePageControlViewModel()
         {
@@ -26,7 +25,6 @@ namespace OneBusAway.ViewModels
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
 
             this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelectedAsync;
-            this.obaDataAccess = new ObaDataAccess();
         }
 
         #region Public Properties

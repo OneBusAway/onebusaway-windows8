@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using OneBusAway.Model;
 using OneBusAway.Utilities;
+using OneBusAway.DataAccess.ObaService;
 
 namespace OneBusAway.DataAccess
 {
@@ -18,11 +19,20 @@ namespace OneBusAway.DataAccess
     public class ObaDataAccess
     {
         /// <summary>
+        /// Creates the data access out of the current map view.
+        /// </summary>
+        /// <returns>A new ObaDataAccess object</returns>
+        public static ObaDataAccess Create()
+        {
+            return new ObaDataAccess(MapView.Current.MapCenter.Latitude, MapView.Current.MapCenter.Longitude);
+        }
+
+        /// <summary>
         /// Creates the data access.
         /// </summary>
-        public ObaDataAccess()
+        private ObaDataAccess(double latitude, double longitude)
         {
-            this.Factory = new ObaServiceHelperFactory(UtilitiesConstants.SERVER_URL);
+            this.Factory = new ObaServiceHelperFactory(latitude, longitude);
         }
 
         /// <summary>
@@ -61,23 +71,30 @@ namespace OneBusAway.DataAccess
         /// </summary>
         private async Task<Stop[]> GetStopsForLocationAsync(double latitude, double longitude, double radius, double latitudeSpan, double longitudeSpan)
         {
-            var helper = this.Factory.CreateHelper(ObaMethod.stops_for_location);
-            helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
-            helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
-
-            if (radius > 0)
+            try
             {
-                helper.AddToQueryString("radius", radius.ToString(CultureInfo.CurrentCulture));
-            }
-            else if (latitudeSpan > 0 && longitude > 0)
-            {
-                helper.AddToQueryString("latSpan", latitudeSpan.ToString(CultureInfo.CurrentCulture));
-                helper.AddToQueryString("lonSpan", longitudeSpan.ToString(CultureInfo.CurrentCulture));
-            }
+                var helper = await this.Factory.CreateHelperAsync(ObaMethod.stops_for_location);
+                helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
+                helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
 
-            XDocument doc = await helper.SendAndRecieveAsync();
-            return (from stopElement in doc.Descendants("stop")
-                    select new Stop(stopElement)).ToArray();
+                if (radius > 0)
+                {
+                    helper.AddToQueryString("radius", radius.ToString(CultureInfo.CurrentCulture));
+                }
+                else if (latitudeSpan > 0 && longitude > 0)
+                {
+                    helper.AddToQueryString("latSpan", latitudeSpan.ToString(CultureInfo.CurrentCulture));
+                    helper.AddToQueryString("lonSpan", longitudeSpan.ToString(CultureInfo.CurrentCulture));
+                }
+
+                XDocument doc = await helper.SendAndRecieveAsync();
+                return (from stopElement in doc.Descendants("stop")
+                        select new Stop(stopElement)).ToArray();
+            }
+            catch
+            {
+                return new Stop[] { };
+            }
         }
 
         /// <summary>
@@ -85,19 +102,25 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Agency[]> GetAllAgencies()
         {
-            ObaMethod method = ObaMethod.agencies_with_coverage;
-            XDocument doc = await ObaCache.GetCache(method, "AllAgencies", expectedCacheAge: 5*24*60*60 /* 5 days */);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
+                ObaMethod method = ObaMethod.agencies_with_coverage;
+                XDocument doc = await ObaCache.GetCache(method, "AllAgencies", expectedCacheAge: 5 * 24 * 60 * 60 /* 5 days */);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, "AllAgencies", doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, "AllAgencies", doc);
+                }
+
+                return (from agencyWithCoverageElement in doc.Descendants("agency")
+                        select new Agency(agencyWithCoverageElement)).ToArray();
             }
-
-            return (from agencyWithCoverageElement in doc.Descendants("agency")
-                    select new Agency(agencyWithCoverageElement)).ToArray();
+            catch
+            {
+                return new Agency[] { };
+            }
         }
 
         /// <summary>
@@ -105,23 +128,30 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Route[]> GetAllRouteIdsForAgency(Agency agency)
         {
-            ObaMethod method = ObaMethod.routes_for_agency;
-            XDocument doc = await ObaCache.GetCache(method, agency.Id, expectedCacheAge: 5 * 24 * 60 * 60 /* 5 days */);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(agency.Id);
+                ObaMethod method = ObaMethod.routes_for_agency;
+                XDocument doc = await ObaCache.GetCache(method, agency.Id, expectedCacheAge: 5 * 24 * 60 * 60 /* 5 days */);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, agency.Id, doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+                    helper.SetId(agency.Id);
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, agency.Id, doc);
+                }
+
+                return (from routeElement in doc.Descendants("route")
+                        select new Route(routeElement)
+                        {
+                            Agency = agency
+                        }).ToArray();
             }
-
-            return (from routeElement in doc.Descendants("route")
-                    select new Route(routeElement)
-                    {
-                        Agency = agency
-                    }).ToArray();
+            catch
+            {
+                return new Route[] { };
+            }
         }
 
         /// <summary>
@@ -129,20 +159,28 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Route[]> GetRoutesForStopAsync(string stopId)
         {
-            ObaMethod method = ObaMethod.stop;
-            XDocument doc = await ObaCache.GetCache(method, stopId, expectedCacheAge: 24 * 60 * 60 /* 1 day */);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(stopId);
+                ObaMethod method = ObaMethod.stop;
+                XDocument doc = await ObaCache.GetCache(method, stopId, expectedCacheAge: 24 * 60 * 60 /* 1 day */);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, stopId, doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+
+                    helper.SetId(stopId);
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, stopId, doc);
+                }
+
+                return (from routeElement in doc.Descendants("route")
+                        select new Route(routeElement)).ToArray();
             }
-
-            return (from routeElement in doc.Descendants("route")
-                    select new Route(routeElement)).ToArray();
+            catch
+            {
+                return new Route[] { };
+            }
         }
 
         /// <summary>
@@ -150,21 +188,29 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<Stop[]> GetStopsForRouteAsync(string routeId)
         {
-            ObaMethod method = ObaMethod.stops_for_route;
-            XDocument doc = await ObaCache.GetCache(method, routeId);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(routeId);
+                ObaMethod method = ObaMethod.stops_for_route;
+                XDocument doc = await ObaCache.GetCache(method, routeId);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, routeId, doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+
+                    helper.SetId(routeId);
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, routeId, doc);
+                }
+
+                // Find all of the stops in the payload that have this route id:
+                return (from stopElement in doc.Descendants("stop")
+                        select new Stop(stopElement)).ToArray();
             }
-
-            // Find all of the stops in the payload that have this route id:
-            return (from stopElement in doc.Descendants("stop")
-                    select new Stop(stopElement)).ToArray();
+            catch
+            {
+                return new Stop[] { };
+            }
         }
 
         /// <summary>
@@ -172,34 +218,48 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId, DateTime date)
         {
-            ObaMethod method = ObaMethod.schedule_for_stop;
-            string cacheId = stopId + "_" + date.DayOfWeek.ToString();
-            XDocument doc = await ObaCache.GetCache(method, cacheId, 24 * 60 * 60);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(stopId);
-                helper.AddToQueryString("date", date.ToString("yyyy-MM-dd"));
+                ObaMethod method = ObaMethod.schedule_for_stop;
+                string cacheId = stopId + "_" + date.DayOfWeek.ToString();
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, cacheId, doc);
+                XDocument doc = await ObaCache.GetCache(method, cacheId, 24 * 60 * 60);
+
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+
+                    helper.SetId(stopId);
+                    helper.AddToQueryString("date", date.ToString("yyyy-MM-dd"));
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, cacheId, doc);
+                }
+
+                // Find all of the stops in the payload that have this route id:
+
+                var stopRouteScheduleElement = doc.Descendants("stopRouteSchedule")
+                    .Where(xe => string.Equals(xe.GetFirstElementValue<string>("routeId"), routeId, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+
+                if (stopRouteScheduleElement == null)
+                {
+                    throw new ArgumentException(string.Format("Unknown route / stop combination {0}/{1}", routeId, stopId));
+                }
+
+                DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+                return (from stopRouteDirectionScheduleElement in stopRouteScheduleElement.Descendants("stopRouteDirectionSchedule")
+                        select new StopRouteSchedule(serverTime, stopRouteDirectionScheduleElement)).ToArray();
             }
-
-            // Find all of the stops in the payload that have this route id:
-
-            var stopRouteScheduleElement = doc.Descendants("stopRouteSchedule")
-                .Where(xe => string.Equals(xe.GetFirstElementValue<string>("routeId"), routeId, StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
-
-            if (stopRouteScheduleElement == null)
+            catch(Exception e)
             {
-                throw new ArgumentException(string.Format("Unknown route / stop combination {0}/{1}", routeId, stopId));
-            }
+                if (e is ArgumentException)
+                {
+                    throw;
+                }
 
-            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
-            return (from stopRouteDirectionScheduleElement in stopRouteScheduleElement.Descendants("stopRouteDirectionSchedule")
-                    select new StopRouteSchedule(serverTime, stopRouteDirectionScheduleElement)).ToArray();
+                return new StopRouteSchedule[] { };
+            }
         }
 
         /// <summary>
@@ -208,21 +268,29 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<RouteData[]> GetRouteDataAsync(string routeId)
         {
-            ObaMethod method = ObaMethod.stops_for_route;
-            XDocument doc = await ObaCache.GetCache(method, routeId);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(routeId);
+                ObaMethod method = ObaMethod.stops_for_route;
+                XDocument doc = await ObaCache.GetCache(method, routeId);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, routeId, doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+
+                    helper.SetId(routeId);
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, routeId, doc);
+                }
+
+                XElement dataElement = doc.Descendants("data").First();
+                return (from stopGroupElement in dataElement.Descendants("stopGroup")
+                        select new RouteData(dataElement, stopGroupElement)).ToArray();
             }
-
-            XElement dataElement = doc.Descendants("data").First();
-            return (from stopGroupElement in dataElement.Descendants("stopGroup")
-                    select new RouteData(dataElement, stopGroupElement)).ToArray();
+            catch
+            {
+                return new RouteData[] { };
+            }
         }
 
         /// <summary>
@@ -230,20 +298,27 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<RouteData> GetRouteDataAsync(string routeId, string stopId)
         {
-            ObaMethod method = ObaMethod.stops_for_route;
-            XDocument doc = await ObaCache.GetCache(method, routeId);
-
-            if (doc == null)
+            try
             {
-                var helper = this.Factory.CreateHelper(method);
-                helper.SetId(routeId);
+                ObaMethod method = ObaMethod.stops_for_route;
+                XDocument doc = await ObaCache.GetCache(method, routeId);
 
-                doc = await helper.SendAndRecieveAsync();
-                await ObaCache.SaveCache(method, routeId, doc);
+                if (doc == null)
+                {
+                    var helper = await this.Factory.CreateHelperAsync(method);
+                    helper.SetId(routeId);
+
+                    doc = await helper.SendAndRecieveAsync();
+                    await ObaCache.SaveCache(method, routeId, doc);
+                }
+
+                XElement dataElement = doc.Descendants("data").First();
+                return new RouteData(dataElement, stopId);
             }
-
-            XElement dataElement = doc.Descendants("data").First();
-            return new RouteData(dataElement, stopId);
+            catch
+            {
+                return new RouteData();
+            }
         }
 
         /// <summary>
@@ -251,19 +326,27 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId)
         {
-            ObaMethod method = ObaMethod.arrivals_and_departures_for_stop;
-            var helper = this.Factory.CreateHelper(method);
-            helper.SetId(stopId);
-            helper.AddToQueryString("minutesAfter", "60");
+            try
+            {
+                ObaMethod method = ObaMethod.arrivals_and_departures_for_stop;
+                var helper = await this.Factory.CreateHelperAsync(method);
 
-            XDocument doc = await helper.SendAndRecieveAsync();
-            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+                helper.SetId(stopId);
+                helper.AddToQueryString("minutesAfter", "60");
 
-            string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");
+                XDocument doc = await helper.SendAndRecieveAsync();
+                DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
 
-            // Find all of the stops in the payload that have this route id:
-            return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
-                    select new TrackingData(serverTime, stopId, stopName, arrivalAndDepartureElement)).ToArray();
+                string stopName = doc.Descendants("stop").First().GetFirstElementValue<string>("name");
+
+                // Find all of the stops in the payload that have this route id:
+                return (from arrivalAndDepartureElement in doc.Descendants("arrivalAndDeparture")
+                        select new TrackingData(serverTime, stopId, stopName, arrivalAndDepartureElement)).ToArray();
+            }
+            catch
+            {
+                return new TrackingData[] { };
+            }
         }
 
         /// <summary>
@@ -271,17 +354,24 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task<TripDetails> GetTripDetailsAsync(string tripId)
         {
-            ObaMethod method = ObaMethod.trip_details;
-            
-            var helper = this.Factory.CreateHelper(method);
-            helper.SetId(tripId);
+            try
+            {
+                ObaMethod method = ObaMethod.trip_details;
 
-            XDocument doc = await helper.SendAndRecieveAsync();
+                var helper = await this.Factory.CreateHelperAsync(method);
+                helper.SetId(tripId);
 
-            DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+                XDocument doc = await helper.SendAndRecieveAsync();
 
-            XElement entryElement = doc.Descendants("entry").First();
-            return new TripDetails(entryElement, serverTime);
+                DateTime serverTime = doc.Root.GetFirstElementValue<long>("currentTime").ToDateTime();
+
+                XElement entryElement = doc.Descendants("entry").First();
+                return new TripDetails(entryElement, serverTime);
+            }
+            catch
+            {
+                return new TripDetails();
+            }
         }
     }
 }

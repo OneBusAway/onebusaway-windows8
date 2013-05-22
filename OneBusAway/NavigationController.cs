@@ -176,10 +176,6 @@ namespace OneBusAway
             this.GoToUsersLocationCommand.Executed += OnGoToUsersLocationCommandExecuted;
 
             this.pageControls = new Stack<IPageControl>();
-
-            this.Region = "WA";
-            this.RegionDefaultLat = ViewModelConstants.SeattleLatitude;
-            this.regionDefaultLon = ViewModelConstants.SeattleLongitude;
         }        
 
         /// <summary>
@@ -232,51 +228,6 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.isPortrait, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets / sets the region.
-        /// </summary>
-        public string Region
-        {
-            get
-            {
-                return this.region;
-            }
-            set
-            {
-                SetProperty(ref this.region, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets / sets the region's default latitude.
-        /// </summary>
-        public double RegionDefaultLat
-        {
-            get
-            {
-                return this.regionDefaultLat;
-            }
-            set
-            {
-                SetProperty(ref this.regionDefaultLat, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets / sets the region's default longitude.
-        /// </summary>
-        public double RegionDefaultLon
-        {
-            get
-            {
-                return this.regionDefaultLon;
-            }
-            set
-            {
-                SetProperty(ref this.regionDefaultLon, value);
             }
         }
 

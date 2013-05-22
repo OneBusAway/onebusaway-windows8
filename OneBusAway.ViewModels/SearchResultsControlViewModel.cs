@@ -26,11 +26,6 @@ namespace OneBusAway.ViewModels
         private const int MAX_STOPS_AT_ONCE = 25;
 
         /// <summary>
-        /// Data access to OneBusAway.
-        /// </summary>
-        private ObaDataAccess obaDataAccess;
-
-        /// <summary>
         /// These are the search results.
         /// </summary>
         private ObservableCollection<SearchRouteResultViewModel> searchResults;
@@ -81,7 +76,6 @@ namespace OneBusAway.ViewModels
         public SearchResultsControlViewModel(IUIHelper uiHelper)
         {
             this.uiHelper = uiHelper;
-            this.obaDataAccess = new ObaDataAccess();
             this.IsLoadingRoutes = AllRoutesCache.IsCacheUpToDate();
 
             this.searchResults = new ObservableCollection<SearchRouteResultViewModel>();
@@ -181,7 +175,7 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches all agencies for all bus numbers.
         /// </summary>
-        public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation, string region)
+        public async Task SearchAsync(string query, OneBusAway.Model.Point userLocation)
         {
             this.NoSearchResultsText = string.Format(CultureInfo.CurrentCulture, "SEARCHING FOR '{0}'", query);
 
@@ -212,7 +206,7 @@ namespace OneBusAway.ViewModels
 
                         await this.uiHelper.BatchAddItemsAsync(this.searchResults, newItems);
 
-                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation, region);
+                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
                         this.BingMapsSearchResults = (from result in bingMapResults
                                                       select new SearchLocationResultViewModel(result)).ToArray();
                     }

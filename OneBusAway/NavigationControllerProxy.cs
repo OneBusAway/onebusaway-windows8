@@ -86,39 +86,6 @@ namespace OneBusAway
         }
 
         /// <summary>
-        /// Gets the region.
-        /// </summary>
-        public string Region
-        {
-            get
-            {
-                return NavigationController.Instance.Region;
-            }
-        }
-
-        /// <summary>
-        /// Gets the region's default latitude.
-        /// </summary>
-        public double RegionDefaultLat
-        {
-            get
-            {
-                return NavigationController.Instance.RegionDefaultLat;
-            }
-        }
-
-        /// <summary>
-        /// Gets the region's default longitude.
-        /// </summary>
-        public double RegionDefaultLon
-        {
-            get
-            {
-                return NavigationController.Instance.RegionDefaultLon;
-            }
-        }
-
-        /// <summary>
         /// Return the go back command.
         /// </summary>
         public ObservableCommand GoBackCommand

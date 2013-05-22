@@ -17,7 +17,6 @@ namespace OneBusAway.ViewModels
     public class SearchResultsPageControlViewModel : PageViewModelBase
     {
         private SearchResultsControlViewModel searchResultsControlViewModel;
-        private ObaDataAccess obaDataAccess;
 
         /// <summary>
         /// Creates the search results page view model.
@@ -31,7 +30,6 @@ namespace OneBusAway.ViewModels
             this.SearchResultsControlViewModel.LocationSelected += OnSearchResultsControlViewModelLocationSelected;
 
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
-            this.obaDataAccess = new ObaDataAccess();
         }            
 
         public SearchResultsControlViewModel SearchResultsControlViewModel
@@ -49,9 +47,9 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Searches asynchronously for a stop with the given name.
         /// </summary>
-        public async Task SearchAsync(string queryText, string region)
+        public async Task SearchAsync(string queryText)
         {            
-            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation, region);
+            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation);
         }
 
         /// <summary>
@@ -71,7 +69,8 @@ namespace OneBusAway.ViewModels
 
             try
             {
-                var routes = await this.obaDataAccess.GetRouteDataAsync(e.RouteId);
+                var obaDataAccess = ObaDataAccess.Create();
+                var routes = await obaDataAccess.GetRouteDataAsync(e.RouteId);
 
                 this.MapControlViewModel.BusStops = new BusStopList(from route in routes
                                                                     from stop in route.Stops

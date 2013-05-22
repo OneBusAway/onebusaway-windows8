@@ -10,7 +10,7 @@ using System.Xml.Linq;
 using OneBusAway.Model;
 using OneBusAway.Utilities;
 
-namespace OneBusAway.DataAccess
+namespace OneBusAway.DataAccess.ObaService
 {
     /// <summary>
     /// This class wraps HttpWebRequest and makes it easier to read / write data to a REST web service.
@@ -18,24 +18,86 @@ namespace OneBusAway.DataAccess
     public class ObaServiceHelperFactory
     {
         /// <summary>
+        /// This is the URL of the regions web service.
+        /// </summary>
+        private const string REGIONS_SERVICE_URI = "http://regions.onebusaway.org/regions.xml";
+
+        /// <summary>
         /// This is the URL of the service that we're talking to.
         /// </summary>
         private string serviceUrl;
 
         /// <summary>
+        /// A task that this class will wait on until we have the regions
+        /// </summary>
+        private static Task<Region[]> regionsLookupTask;
+
+        /// <summary>
+        /// This is the users longitude.
+        /// </summary>
+        private double usersLongitude;
+
+        /// <summary>
+        /// This is the user latitude.
+        /// </summary>
+        private double usersLatitude;
+
+        /// <summary>
+        /// Static constructor creates the regions task.
+        /// </summary>
+        static ObaServiceHelperFactory()
+        {
+            regionsLookupTask = Task.Run(async () =>
+                {
+                    // Refresh once a week. Should be often enough.
+                    XDocument doc = await ObaCache.GetCache(ObaMethod.regions, "ALL", 24 * 60 * 60 * 7);
+
+                    if (doc == null)
+                    {
+                        var webRequest = WebRequest.CreateHttp(REGIONS_SERVICE_URI);
+
+                        var response = await webRequest.GetResponseAsync();
+                        var responseStream = response.GetResponseStream();
+
+                        using (var streamReader = new StreamReader(responseStream))
+                        {
+                            string xml = await streamReader.ReadToEndAsync();
+                            doc = XDocument.Parse(xml);
+                        }
+                    }
+
+                    return (from regionElement in doc.Descendants("region")
+                            let region = new Region(regionElement)
+                            where region.IsActive && region.SupportsObaRealtimeApis
+                            select region).ToArray();
+                });
+        }
+
+        /// <summary>
         /// Creates the service helper.
         /// </summary>
-        public ObaServiceHelperFactory(string serviceUrl)
+        public ObaServiceHelperFactory(double usersLatitude, double usersLongitude)
         {
-            this.serviceUrl = serviceUrl;
+            this.usersLatitude = usersLatitude;
+            this.usersLongitude = usersLongitude;
         }
 
         /// <summary>
         /// Factory method creates a service helper.
         /// </summary>
-        public virtual IObaServiceHelper CreateHelper(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
+        public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
         {
-            return new ObaServiceHelper(this.serviceUrl, obaMethod, httpMethod);
+            // Find the region that matches the users current location:
+            var serviceUrl = (from region in await regionsLookupTask
+                              where region.FallsInside(this.usersLatitude, this.usersLongitude)
+                              select region.RegionUrl).FirstOrDefault();
+
+            if (serviceUrl == null)
+            {
+                throw new UnknownRegionException();
+            }
+
+            return new ObaServiceHelper(serviceUrl, obaMethod, httpMethod);
         }
 
         /// <summary>
@@ -83,11 +145,7 @@ namespace OneBusAway.DataAccess
                 this.serviceUrl = serviceUrl;
 
                 this.uriBuilder = new UriBuilder(serviceUrl);
-
-                string obaMethodString = obaMethod.ToString();
-                obaMethodString = obaMethodString.Replace('_', '-');
-                obaMethodString += ".xml";
-                this.uriBuilder.Path += obaMethodString;
+                this.SetDefaultPath();
 
                 this.queryStringMap = new Dictionary<string, string>();
                 this.queryStringMap["key"] = UtilitiesConstants.API_KEY;
@@ -107,11 +165,40 @@ namespace OneBusAway.DataAccess
             public void SetId(string id)
             {
                 this.uriBuilder = new UriBuilder(serviceUrl);
+                this.SetPath(id);
+            }
+
+            /// <summary>
+            /// Sets the default path.
+            /// </summary>
+            private void SetDefaultPath()
+            {
+                this.SetPath(null);
+            }
+
+            /// <summary>
+            /// Sets the path of the uri.
+            /// </summary>
+            /// <param name="id">The ID to set</param>
+            private void SetPath(string id)
+            {
+                // If the URI we get back is missing a backslash, add it first:
+                if (!String.IsNullOrEmpty(this.uriBuilder.Path) && !this.uriBuilder.Path.EndsWith("/"))
+                {
+                    this.uriBuilder.Path += "/";
+                }
+
+                this.uriBuilder.Path += "api/where/";
 
                 string obaMethodString = obaMethod.ToString();
                 obaMethodString = obaMethodString.Replace('_', '-');
-                obaMethodString += "/";
-                obaMethodString += id;
+
+                if (!string.IsNullOrEmpty(id))
+                {
+                    obaMethodString += "/";
+                    obaMethodString += id;
+                }
+
                 obaMethodString += ".xml";
                 this.uriBuilder.Path += obaMethodString;
             }

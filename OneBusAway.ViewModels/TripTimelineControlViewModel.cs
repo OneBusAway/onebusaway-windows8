@@ -22,12 +22,7 @@ namespace OneBusAway.ViewModels
         /// Trip details for this particular trip.
         /// </summary>
         private TripDetails tripDetails;
-
-        /// <summary>
-        /// Data access to OneBusAway.
-        /// </summary>
-        private ObaDataAccess obaDataAccess;
-
+        
         /// <summary>
         /// The currently selected stop.
         /// </summary>
@@ -53,7 +48,6 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public TripTimelineControlViewModel()
         {
-            this.obaDataAccess = new ObaDataAccess();
             this.IsLoadingTripDetails = true;
         }
 
@@ -131,8 +125,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task GetTripDetailsAsync()
         {
-            
-            this.TripDetails = await this.obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
+            var obaDataAccess = ObaDataAccess.Create();
+            this.TripDetails = await obaDataAccess.GetTripDetailsAsync(this.trackingData.TripId);
 
             if (!string.IsNullOrEmpty(this.selectedStopId))
             {

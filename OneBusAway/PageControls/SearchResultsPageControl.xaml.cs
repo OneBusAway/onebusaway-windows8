@@ -51,12 +51,12 @@ namespace OneBusAway.PageControls
         public async Task InitializeAsync(object parameter)
         {
             this.viewModel.MapControlViewModel.Shapes = null;
-            await this.viewModel.MapControlViewModel.FindUserLocationAsync(NavigationController.Instance.RegionDefaultLat, NavigationController.Instance.RegionDefaultLon);
+            await this.viewModel.MapControlViewModel.FindUserLocationAsync();
 
             var queryText = parameter as string;
             if (!String.IsNullOrEmpty(queryText))
             {
-                await this.viewModel.SearchAsync(queryText, NavigationController.Instance.Region);
+                await this.viewModel.SearchAsync(queryText);
             }
         }
 

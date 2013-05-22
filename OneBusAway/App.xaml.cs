@@ -125,7 +125,7 @@ namespace OneBusAway
                     var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
                     if (viewModel != null)
                     {
-                        await viewModel.SearchAsync(args.QueryText, NavigationController.Instance.Region);
+                        await viewModel.SearchAsync(args.QueryText);
                     }
                     else
                     {

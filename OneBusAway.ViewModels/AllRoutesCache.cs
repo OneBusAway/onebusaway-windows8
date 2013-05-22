@@ -91,7 +91,7 @@ namespace OneBusAway.ViewModels
                         XDocument document = new XDocument();
                         document.Add(new XElement("routes"));
 
-                        var obaDataAccess = new ObaDataAccess();
+                        var obaDataAccess = ObaDataAccess.Create();
 
                         foreach (Agency agency in await obaDataAccess.GetAllAgencies())
                         {

@@ -18,12 +18,7 @@ namespace OneBusAway.ViewModels
         /// The view model for the time table page control.
         /// </summary>
         private TimeTableControlViewModel timeTableControlViewModel;
-                
-        /// <summary>
-        /// Get shape data for the route.
-        /// </summary>
-        private ObaDataAccess obaDataAccess;
-
+        
         /// <summary>
         /// This is the route id that we are displaying schedule data for.
         /// </summary>
@@ -35,7 +30,6 @@ namespace OneBusAway.ViewModels
         public TimeTablePageControlViewModel()
         {
             this.HeaderViewModel.SubText = "TIMETABLE";
-            this.obaDataAccess = new ObaDataAccess();
             this.TimeTableControlViewModel = new TimeTableControlViewModel();
 
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
@@ -73,7 +67,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task GetRouteData(string stopId, string routeId)
         {
-            RouteData routeData = await this.obaDataAccess.GetRouteDataAsync(routeId, stopId);
+            var obaDataAccess = ObaDataAccess.Create();
+            RouteData routeData = await obaDataAccess.GetRouteDataAsync(routeId, stopId);
             this.MapControlViewModel.BusStops = new BusStopList(routeData.Stops);
             this.MapControlViewModel.Shapes = routeData.Shapes.ToList();
             this.MapControlViewModel.SelectStop(stopId);

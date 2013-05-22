@@ -21,6 +21,13 @@ namespace OneBusAway.Model
         private TripStop[] tripStops;
 
         /// <summary>
+        /// Should never really be called...
+        /// </summary>
+        public TripDetails()
+        {
+        }
+
+        /// <summary>
         /// Creates the trip details.
         /// </summary>
         public TripDetails(XElement entryElement, DateTime serverTime)

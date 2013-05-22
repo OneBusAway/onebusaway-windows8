@@ -29,7 +29,10 @@ namespace OneBusAway.Utilities
         trip_for_vehicle,
         trip,
         trips_for_location,
-        trips_for_route
+        trips_for_route,
+
+        // Not a real OBA method - just identifies the regions service separately.
+        regions,
     };
 
     /// <summary>
