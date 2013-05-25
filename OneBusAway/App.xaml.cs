@@ -36,9 +36,6 @@ namespace OneBusAway
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            
-            // Queue a task to refresh the search cache:
-            Task.Run(() => AllRoutesCache.EnsureUpToDateAsync());
         }
 
         /// <summary>

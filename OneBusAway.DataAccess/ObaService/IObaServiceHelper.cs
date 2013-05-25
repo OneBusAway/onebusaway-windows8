@@ -30,6 +30,14 @@ namespace OneBusAway.DataAccess
         void SetId(string id);
 
         /// <summary>
+        /// Returns the region name that the helper will talk to.
+        /// </summary>
+        string RegionName
+        {
+            get;
+        }
+
+        /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
         Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge);

@@ -76,10 +76,14 @@ namespace OneBusAway.ViewModels
         public SearchResultsControlViewModel(IUIHelper uiHelper)
         {
             this.uiHelper = uiHelper;
-            this.IsLoadingRoutes = AllRoutesCache.IsCacheUpToDate();
-
             this.searchResults = new ObservableCollection<SearchRouteResultViewModel>();
             this.searchResults.CollectionChanged += OnSearchResultsCollectionChanged;
+
+            // When the up to date task finishes, set the IsLoadingRoutes value:
+            AllRoutesCache.IsCacheUpToDateAsync().ContinueWith(result =>
+            {
+                this.IsLoadingRoutes = result.Result;
+            });
         }
 
         /// <summary>

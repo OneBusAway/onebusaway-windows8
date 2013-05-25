@@ -27,47 +27,70 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// A task that represents communicating to OBA to get the complete routes data.
         /// </summary>
-        private Task refreshTask;
+        private Dictionary<string, Task> refreshTasks;
 
         /// <summary>
         /// A list of all the routes.
         /// </summary>
-        private List<Route> allRoutes;
+        private Dictionary<string, List<Route>> allRoutes;
 
         /// <summary>
         /// Creates the cache.
         /// </summary>
         private AllRoutesCache()
         {
-            this.allRoutes = new List<Route>();
+            this.refreshTasks = new Dictionary<string, Task>();
+            this.allRoutes = new Dictionary<string, List<Route>>();
         }
 
         /// <summary>
         /// Ensures that the cache is up to date. If it's not then we will ping OBA for the latest.
         /// </summary>
-        public static async Task EnsureUpToDateAsync()
+        public static async Task<string> EnsureUpToDateAsync()
         {
-            // If this is null, then let's try and populate the list of all routes:
-            if (instance.refreshTask == null)
+            var dataAccess = ObaDataAccess.Create();
+            string regionName = await dataAccess.FindRegionNameAsync();
+
+            if (!string.IsNullOrEmpty(regionName))
             {
-                lock (instance)
+                // If this is null, then let's try and populate the list of all routes:
+                if (!instance.refreshTasks.ContainsKey(regionName))
                 {
-                    if (instance.refreshTask == null)
+                    lock (instance)
                     {
-                        instance.refreshTask = GetAllResultsAsync();
+                        if (!instance.refreshTasks.ContainsKey(regionName))
+                        {
+                            instance.refreshTasks[regionName] = GetAllResultsAsync(regionName);
+                        }
                     }
                 }
+
+                await instance.refreshTasks[regionName];
             }
 
-            await instance.refreshTask;
+            return regionName;
         }
 
         /// <summary>
         /// Returns true if the cache is up to date.
         /// </summary>
-        public static bool IsCacheUpToDate()
+        public static async Task<bool> IsCacheUpToDateAsync()
         {
-            return (instance.refreshTask == null || !instance.refreshTask.IsCompleted);
+            // This will do a blocking wait, but that shouldn't result in lots of 
+            // blocked time, usually, because the only thing this is waiting on
+            // is the regions xml file. And that 
+            string regionName = await ObaDataAccess.Create().FindRegionNameAsync();
+
+            if (!string.IsNullOrEmpty(regionName))
+            {
+                Task refreshTask = null;
+                if (instance.refreshTasks.TryGetValue(regionName, out refreshTask))
+                {
+                    return refreshTask.IsCompleted;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -75,36 +98,51 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public static async Task<List<Route>> GetAllRoutesAsync()
         {
-            await EnsureUpToDateAsync();
-            return instance.allRoutes;
+            List<Route> allRoutes = null;
+            string regionName = await EnsureUpToDateAsync();
+
+            if (string.IsNullOrEmpty(regionName) || !instance.allRoutes.TryGetValue(regionName, out allRoutes))
+            {
+                // In this case, the region is either empty or there are no routes for this region.
+                // Return an empty list:
+                allRoutes = new List<Route>();
+            }
+
+            return allRoutes;
         }
 
         /// <summary>
         /// Gets all of the results.
         /// </summary>
-        private static Task GetAllResultsAsync()
+        private static Task GetAllResultsAsync(string regionName)
         {
-            return Task.Run(async delegate 
+            return Task.Run(async delegate
                 {
-                    if (!await ReadResultsFromCacheFileAsync())
+                    if (!await ReadResultsFromCacheFileAsync(regionName))
                     {
                         XDocument document = new XDocument();
                         document.Add(new XElement("routes"));
 
-                        var obaDataAccess = ObaDataAccess.Create();
+                        List<Route> allRoutes = null;
+                        if (!instance.allRoutes.TryGetValue(regionName, out allRoutes))
+                        {
+                            allRoutes = new List<Route>();
+                            instance.allRoutes[regionName] = allRoutes;
+                        }
 
+                        var obaDataAccess = ObaDataAccess.Create();
                         foreach (Agency agency in await obaDataAccess.GetAllAgencies())
                         {
                             foreach (Route route in await obaDataAccess.GetAllRouteIdsForAgency(agency))
                             {
-                                instance.allRoutes.Add(route);
+                                allRoutes.Add(route);
                                 document.Root.Add(route.ToXElement());
                             }
                         }
 
                         try
                         {
-                            var newFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(ViewModelConstants.CacheFileName, CreationCollisionOption.ReplaceExisting);
+                            var newFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(ComputeCacheFilePath(regionName), CreationCollisionOption.ReplaceExisting);
                             using (var stream = await newFile.OpenStreamForWriteAsync())
                             {
                                 document.Save(stream);
@@ -122,11 +160,11 @@ namespace OneBusAway.ViewModels
         /// <summary>
         /// Reads all the results from the cache file.
         /// </summary>
-        private static async Task<bool> ReadResultsFromCacheFileAsync()
+        private static async Task<bool> ReadResultsFromCacheFileAsync(string regionName)
         {
             try
             {
-                var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(ViewModelConstants.CacheFileName);
+                var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(ComputeCacheFilePath(regionName));
                 var properties = await existingFile.GetBasicPropertiesAsync();
 
                 // If the existing cache file is more than 7 days old, let's invalidate it:
@@ -142,9 +180,9 @@ namespace OneBusAway.ViewModels
                         var document = XDocument.Load(stream, LoadOptions.None);
 
                         // Read all routes from the cache file:
-                        instance.allRoutes = (from routeElement in document.Descendants("route")
-                                              select new Route(routeElement)).ToList();
-                    }                
+                        instance.allRoutes[regionName] = (from routeElement in document.Descendants("route")
+                                                          select new Route(routeElement)).ToList();
+                    }
                 }
             }
             catch
@@ -153,6 +191,17 @@ namespace OneBusAway.ViewModels
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Computes the path to the cache file for a region.
+        /// </summary>
+        /// <param name="regionName"></param>
+        /// <returns></returns>
+        private static string ComputeCacheFilePath(string regionName)
+        {
+            string filePath = Path.Combine("ObaCache", regionName);
+            return Path.Combine(filePath, ViewModelConstants.CacheFileName);
         }
     }
 }

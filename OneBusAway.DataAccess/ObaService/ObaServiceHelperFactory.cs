@@ -200,6 +200,17 @@ namespace OneBusAway.DataAccess.ObaService
             }
 
             /// <summary>
+            /// Returns the region name that the helper will talk to.
+            /// </summary>
+            public string RegionName
+            {
+                get
+                {
+                    return this.region.RegionName;
+                }
+            }
+
+            /// <summary>
             /// Adds a name / value pair to the query string.
             /// </summary>
             public void AddToQueryString(string name, string value)
@@ -318,7 +329,7 @@ namespace OneBusAway.DataAccess.ObaService
                         var properties = await storageFile.GetBasicPropertiesAsync();
 
                         // Make sure the file hasn't expired yet:
-                        if ((properties.DateModified - DateTime.Now).TotalSeconds < cacheTimeout)
+                        if ((DateTime.Now - properties.DateModified).TotalSeconds < cacheTimeout)
                         {
                             using (var stream = await storageFile.OpenStreamForReadAsync())
                             {

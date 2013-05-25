@@ -45,6 +45,24 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Finds the region for this data access object.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> FindRegionNameAsync()
+        {
+            try
+            {
+                var helper = await this.Factory.CreateHelperAsync(ObaMethod.regions);
+                return helper.RegionName;
+            }
+            catch
+            {
+            }
+
+            return String.Empty;
+        }
+
+        /// <summary>
         /// Gets stops near a location
         /// </summary>
         /// <param name="latitude"></param>
