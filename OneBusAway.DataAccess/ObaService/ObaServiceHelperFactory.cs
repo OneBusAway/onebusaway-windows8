@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using OneBusAway.Model;
 using OneBusAway.Utilities;
+using Windows.Storage;
+using System.Threading;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -23,10 +25,10 @@ namespace OneBusAway.DataAccess.ObaService
         private const string REGIONS_SERVICE_URI = "http://regions.onebusaway.org/regions.xml";
 
         /// <summary>
-        /// This is the URL of the service that we're talking to.
+        /// This is the name of the regions XML file.
         /// </summary>
-        private string serviceUrl;
-
+        private const string REGIONS_XML_FILE = "Regions.xml";
+        
         /// <summary>
         /// A task that this class will wait on until we have the regions
         /// </summary>
@@ -49,27 +51,61 @@ namespace OneBusAway.DataAccess.ObaService
         {
             regionsLookupTask = Task.Run(async () =>
                 {
-                    // Refresh once a week. Should be often enough.
-                    XDocument doc = await ObaCache.GetCache(ObaMethod.regions, "ALL", 24 * 60 * 60 * 7);
-
-                    if (doc == null)
+                    XDocument doc = null;
+                    try
                     {
-                        var webRequest = WebRequest.CreateHttp(REGIONS_SERVICE_URI);
-
-                        var response = await webRequest.GetResponseAsync();
-                        var responseStream = response.GetResponseStream();
-
-                        using (var streamReader = new StreamReader(responseStream))
+                        // Try and load the regions xml file locally:
+                        try
                         {
-                            string xml = await streamReader.ReadToEndAsync();
-                            doc = XDocument.Parse(xml);
+                            var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(REGIONS_XML_FILE);
+                            using (var stream = await existingFile.OpenStreamForReadAsync())
+                            {
+                                doc = XDocument.Load(stream);
+                            }
                         }
-                    }
+                        catch
+                        {
+                            // OK, couldn't load.
+                        }
 
-                    return (from regionElement in doc.Descendants("region")
-                            let region = new Region(regionElement)
-                            where region.IsActive && region.SupportsObaRealtimeApis
-                            select region).ToArray();
+                        if (doc == null)
+                        {
+                            var webRequest = WebRequest.CreateHttp(REGIONS_SERVICE_URI);
+
+                            var response = await webRequest.GetResponseAsync();
+                            var responseStream = response.GetResponseStream();
+
+                            using (var streamReader = new StreamReader(responseStream))
+                            {
+                                string xml = await streamReader.ReadToEndAsync();
+                                doc = XDocument.Parse(xml);
+                            }
+
+                            try
+                            {
+                                var newFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(REGIONS_XML_FILE, CreationCollisionOption.ReplaceExisting);
+                                using (var stream = await newFile.OpenStreamForWriteAsync())
+                                {
+                                    doc.Save(stream);
+                                }
+                            }
+                            catch
+                            {
+                                // OK, couldn't save.
+                                // Who knows why. We have a document so let's not fail here
+                            }
+                        }
+
+                        return (from regionElement in doc.Descendants("region")
+                                let region = new Region(regionElement)
+                                where region.IsActive && region.SupportsObaRealtimeApis
+                                select region).ToArray();
+                    }
+                    catch
+                    {
+                        // Better than crashing I guess...
+                        return new Region[] { };
+                    }
                 });
         }
 
@@ -88,16 +124,16 @@ namespace OneBusAway.DataAccess.ObaService
         public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
         {
             // Find the region that matches the users current location:
-            var serviceUrl = (from region in await regionsLookupTask
-                              where region.FallsInside(this.usersLatitude, this.usersLongitude)
-                              select region.RegionUrl).FirstOrDefault();
+            var usersRegion = (from region in await regionsLookupTask
+                               where region.FallsInside(this.usersLatitude, this.usersLongitude)
+                               select region).FirstOrDefault();
 
-            if (serviceUrl == null)
+            if (usersRegion == null)
             {
                 throw new UnknownRegionException();
             }
 
-            return new ObaServiceHelper(serviceUrl, obaMethod, httpMethod);
+            return new ObaServiceHelper(usersRegion, obaMethod, httpMethod);
         }
 
         /// <summary>
@@ -131,6 +167,16 @@ namespace OneBusAway.DataAccess.ObaService
             private string serviceUrl;
 
             /// <summary>
+            /// This is the region where the request is being made to.
+            /// </summary>
+            private Region region;
+
+            /// <summary>
+            /// If there is an id for the request we store it here.
+            /// </summary>
+            private string id;
+
+            /// <summary>
             /// Maps name / value pairs to the query string.
             /// </summary>
             private Dictionary<string, string> queryStringMap;
@@ -138,11 +184,13 @@ namespace OneBusAway.DataAccess.ObaService
             /// <summary>
             /// Creates the service helper.
             /// </summary>
-            public ObaServiceHelper(string serviceUrl, ObaMethod obaMethod, HttpMethod httpMethod)
+            public ObaServiceHelper(Region region, ObaMethod obaMethod, HttpMethod httpMethod)
             {
                 this.obaMethod = obaMethod;
                 this.httpMethod = httpMethod;
-                this.serviceUrl = serviceUrl;
+                this.region = region;
+                this.serviceUrl = this.region.RegionUrl;
+                this.id = null;
 
                 this.uriBuilder = new UriBuilder(serviceUrl);
                 this.SetDefaultPath();
@@ -150,7 +198,7 @@ namespace OneBusAway.DataAccess.ObaService
                 this.queryStringMap = new Dictionary<string, string>();
                 this.queryStringMap["key"] = UtilitiesConstants.API_KEY;
             }
-            
+
             /// <summary>
             /// Adds a name / value pair to the query string.
             /// </summary>
@@ -164,6 +212,7 @@ namespace OneBusAway.DataAccess.ObaService
             /// </summary>
             public void SetId(string id)
             {
+                this.id = id;
                 this.uriBuilder = new UriBuilder(serviceUrl);
                 this.SetPath(id);
             }
@@ -206,43 +255,123 @@ namespace OneBusAway.DataAccess.ObaService
             /// <summary>
             /// Sends a payload to the service asynchronously.
             /// </summary>
-            public async Task<XDocument> SendAndRecieveAsync(string payload)
-            {                
-                while (true)
+            public async Task<XDocument> SendAndRecieveAsync(int cacheTimeout)
+            {
+                XDocument doc = await this.GetCachedDocument(cacheTimeout);
+                if (doc == null)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        try
+                        {
+                            this.uriBuilder.Query = this.CreateQueryString();
+                            this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
+                            this.request.Method = this.httpMethod.ToString();
+
+                            doc = await WebRequestQueue.SendAsync(request);
+
+                            // Verify that OBA sent us a valid document and that it's status code is 200:                
+                            int returnCode = doc.Root.GetFirstElementValue<int>("code");
+                            if (returnCode != 200)
+                            {
+                                string text = doc.Root.GetFirstElementValue<string>("text");
+                                throw new ObaException(returnCode, text);
+                            }
+
+                            await this.TrySaveCachedDocument(doc, cacheTimeout);
+                            return doc;
+                        }
+                        catch (Exception e)
+                        {
+                            // Make sure ObaExceptions bubble up because we expect them. 
+                            // Note 401 means busy
+                            ObaException obaException = e as ObaException;
+                            if(obaException != null && obaException.ErrorCode != 401)
+                            {
+                                throw;
+                            }
+                        }
+
+                        // If we keep getting 401s (permission denied), then we just need to keep retrying.
+                        await Task.Delay(50);
+                    }
+                }
+
+                // We tried and waited as long as we could....or we had a cached copy:
+                return doc;
+            }
+
+            /// <summary>
+            /// Get cached query.
+            /// </summary>
+            /// 
+            /// 
+            /// <param name="cacheTimeout">Expected cache age in seconds</param>
+            /// <returns>Cached query if existed and new; null otherwise.</returns>
+            private async Task<XDocument> GetCachedDocument(int cacheTimeout = UtilitiesConstants.DefaultCacheAge)
+            {
+                if (!string.IsNullOrEmpty(this.id) && cacheTimeout != UtilitiesConstants.NoCacheAge)
                 {
                     try
                     {
-                        this.uriBuilder.Query = this.CreateQueryString();
-                        this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
-                        this.request.Method = this.httpMethod.ToString();
+                        var storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(this.GetCachedFilePath());
+                        var properties = await storageFile.GetBasicPropertiesAsync();
 
-                        XDocument doc = await WebRequestQueue.SendAsync(request);
-
-                        // Verify that OBA sent us a valid document and that it's status code is 200:                
-                        int returnCode = doc.Root.GetFirstElementValue<int>("code");
-                        if (returnCode != 200)
+                        // Make sure the file hasn't expired yet:
+                        if ((properties.DateModified - DateTime.Now).TotalSeconds < cacheTimeout)
                         {
-                            string text = doc.Root.GetFirstElementValue<string>("text");
-                            throw new ObaException(returnCode, text);
-                        }
-
-                        return doc;
-                    }
-                    catch (ObaException e)
-                    {
-                        if (e.ErrorCode != 401)
-                        {
-                            throw;
+                            using (var stream = await storageFile.OpenStreamForReadAsync())
+                            {
+                                return XDocument.Load(stream);
+                            }
                         }
                     }
-                    catch (IOException)
+                    catch
                     {
-                        // ignored....
+                        // Can't get the document? Fine. We'll just have to requery.
                     }
-
-                    // If we keep getting 401s (permission denied), then we just need to keep retrying.
-                    await Task.Delay(20);
                 }
+
+                return null;
+            }
+
+            /// <summary>
+            /// Saves a cached document to disk.
+            /// </summary>
+            /// <param name="doc">The document to save</param>
+            /// <returns>An awaitable task</returns>
+            private async Task<bool> TrySaveCachedDocument(XDocument doc, int expectedCacheAge)
+            {
+                if (!String.IsNullOrEmpty(this.id) && expectedCacheAge != UtilitiesConstants.NoCacheAge && doc != null)
+                {
+                    try
+                    {
+                        string path = this.GetCachedFilePath();
+                        var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(path, CreationCollisionOption.ReplaceExisting);
+
+                        using (var stream = await file.OpenStreamForWriteAsync())
+                        {
+                            doc.Save(stream);
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        // Eat the exception. Not the end of the world. Just nothing to save.
+                    }
+                }
+
+                return false;
+            }            
+
+            /// <summary>
+            /// Returns the name of the cached file.
+            /// </summary>
+            /// <returns></returns>
+            private string GetCachedFilePath()
+            {
+                string fileName = Path.Combine("ObaCache", this.region.RegionName);
+                return Path.Combine(fileName, string.Format("{0}_{1}.xml", this.obaMethod.ToString(), this.id));
             }
 
             /// <summary>

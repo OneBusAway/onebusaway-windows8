@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneBusAway.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,6 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
-        Task<XDocument> SendAndRecieveAsync(string payload = null);
+        Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge);
     }
 }

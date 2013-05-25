@@ -206,7 +206,7 @@ namespace OneBusAway.ViewModels
 
                         await this.uiHelper.BatchAddItemsAsync(this.searchResults, newItems);
 
-                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Low, userLocation);
+                        var bingMapResults = await BingMapsServiceHelper.GetLocationByQuery(query, Utilities.Confidence.Medium, userLocation);
                         this.BingMapsSearchResults = (from result in bingMapResults
                                                       select new SearchLocationResultViewModel(result)).ToArray();
                     }

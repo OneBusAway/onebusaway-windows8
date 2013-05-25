@@ -71,8 +71,13 @@ namespace OneBusAway.Utilities
         public const double DefaultLongitude = -122.97295385181809;
 
         /// <summary>
-        /// Default numer of seconds that we will keep the cache result for live data. Defaulting to 5 minutes
+        /// Default number of seconds that we will keep the cache result for live data. Defaulting to 5 minutes
         /// </summary>
         public const int DefaultCacheAge = 3000;
+
+        /// <summary>
+        /// This constant should be used in cases where we do not want the document to be cached.
+        /// </summary>
+        public const int NoCacheAge = -1;
     }
 }

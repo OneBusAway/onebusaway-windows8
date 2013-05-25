@@ -121,21 +121,6 @@ namespace OneBusAway
         /// Before we can start a new refresh loop, wait for the old one to exit.
         /// </summary>
         private Task refreshLoopTask;
-
-        /// <summary>
-        /// This is the region where the user currently resides.
-        /// </summary>
-        private string region;
-
-        /// <summary>
-        /// Ths is the region's default laitude.
-        /// </summary>
-        private double regionDefaultLat;
-
-        /// <summary>
-        /// This is the region's default longitude.
-        /// </summary>
-        private double regionDefaultLon;
         
         /// <summary>
         /// Creates the controller.
