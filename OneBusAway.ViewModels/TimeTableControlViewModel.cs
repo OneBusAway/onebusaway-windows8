@@ -188,18 +188,27 @@ namespace OneBusAway.ViewModels
                 var obaDataAccess = ObaDataAccess.Create();
                 var scheduleData = await obaDataAccess.GetScheduleForStopAndRouteAsync(stopId, routeId, date);
 
-                this.ScheduleAvailable = true;
-                this.ScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[0].ScheduleStopTimes);
-                this.TripHeadsign = scheduleData[0].TripHeadsign;
-
-                if (scheduleData.Length == 2)
+                if (scheduleData != null && scheduleData.Length > 0)
                 {
-                    this.HasSecondTripHeadsign = true;
-                    this.SecondScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[1].ScheduleStopTimes);
-                    this.SecondTripHeadsign = scheduleData[1].TripHeadsign;
+                    this.ScheduleAvailable = true;
+                    this.ScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[0].ScheduleStopTimes);
+                    this.TripHeadsign = scheduleData[0].TripHeadsign;
+
+                    if (scheduleData.Length == 2)
+                    {
+                        this.HasSecondTripHeadsign = true;
+                        this.SecondScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[1].ScheduleStopTimes);
+                        this.SecondTripHeadsign = scheduleData[1].TripHeadsign;
+                    }
+                    else
+                    {
+                        this.HasSecondTripHeadsign = false;
+                    }
                 }
                 else
                 {
+                    this.ScheduleAvailable = false;
+                    this.ScheduleData = null;
                     this.HasSecondTripHeadsign = false;
                 }
             }
