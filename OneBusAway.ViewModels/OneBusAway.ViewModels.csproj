@@ -123,7 +123,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllRoutesCache.cs" />
     <Compile Include="BusStopControlViewModel.cs" />
     <Compile Include="BusStopList.cs" />
     <Compile Include="DayChangedEventArgs.cs" />

@@ -186,7 +186,7 @@ namespace OneBusAway.ViewModels
             try
             {
                 var obaDataAccess = ObaDataAccess.Create();
-                var scheduleData = await obaDataAccess.GetScheduleForStopAndRoute(stopId, routeId, date);
+                var scheduleData = await obaDataAccess.GetScheduleForStopAndRouteAsync(stopId, routeId, date);
 
                 this.ScheduleAvailable = true;
                 this.ScheduleData = this.GetDateTimesFromScheduleStopTimes(scheduleData[0].ScheduleStopTimes);

@@ -28,7 +28,7 @@ namespace OneBusAway.DataAccess.ObaService
         /// This is the name of the regions XML file.
         /// </summary>
         private const string REGIONS_XML_FILE = "Regions.xml";
-        
+
         /// <summary>
         /// A task that this class will wait on until we have the regions
         /// </summary>
@@ -124,12 +124,21 @@ namespace OneBusAway.DataAccess.ObaService
         public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
         {
             // Find the closest region to the user's location:
-            var usersRegion = (from region in await regionsLookupTask
-                               let distance = region.DistanceFrom(this.usersLatitude, this.usersLongitude)
-                               orderby distance ascending
-                               select region).First();
-
+            var usersRegion = await this.FindClosestRegionAsync();
             return new ObaServiceHelper(usersRegion, obaMethod, httpMethod);
+        }
+
+        /// <summary>
+        /// Returns the closest region to the current user.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<Region> FindClosestRegionAsync()
+        {
+            // Find the closest region to the user's location:
+            return (from region in await regionsLookupTask
+                    let distance = region.DistanceFrom(this.usersLatitude, this.usersLongitude)
+                    orderby distance ascending
+                    select region).First();
         }
 
         /// <summary>
@@ -293,7 +302,7 @@ namespace OneBusAway.DataAccess.ObaService
                             // Make sure ObaExceptions bubble up because we expect them. 
                             // Note 401 means busy
                             ObaException obaException = e as ObaException;
-                            if(obaException != null && obaException.ErrorCode != 401)
+                            if (obaException != null && obaException.ErrorCode != 401)
                             {
                                 throw;
                             }
@@ -369,7 +378,7 @@ namespace OneBusAway.DataAccess.ObaService
                 }
 
                 return false;
-            }            
+            }
 
             /// <summary>
             /// Returns the name of the cached file.

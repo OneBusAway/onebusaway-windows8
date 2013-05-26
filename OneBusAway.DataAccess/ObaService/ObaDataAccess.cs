@@ -19,6 +19,11 @@ namespace OneBusAway.DataAccess
     public class ObaDataAccess
     {
         /// <summary>
+        /// This dictionary caches the lists of routes for a particular region.
+        /// </summary>
+        private static Dictionary<string, List<Route>> allRoutesCache = new Dictionary<string, List<Route>>();
+
+        /// <summary>
         /// Creates the data access out of the current map view.
         /// </summary>
         /// <returns>A new ObaDataAccess object</returns>
@@ -45,21 +50,39 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
-        /// Finds the region for this data access object.
+        /// Returns true if the current region has had routes loaded for it.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> FindRegionNameAsync()
+        public bool HasLoadedRoutesForCurrentRegion()
         {
-            try
+            var closestRegion = this.Factory.FindClosestRegionAsync().Result;
+            return allRoutesCache.ContainsKey(closestRegion.RegionName);
+        }
+
+        /// <summary>
+        /// Returns a list of all routes for the current location.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Route>> GetAllRoutesForCurrentRegionAsync()
+        {
+            List<Route> allRoutes = null;
+            Region closestRegion = await this.Factory.FindClosestRegionAsync();
+
+            if (!allRoutesCache.TryGetValue(closestRegion.RegionName, out allRoutes))
             {
-                var helper = await this.Factory.CreateHelperAsync(ObaMethod.regions);
-                return helper.RegionName;
-            }
-            catch
-            {
+                allRoutes = new List<Route>();
+                foreach (Agency agency in await this.GetAllAgenciesAsync())
+                {
+                    foreach (Route route in await this.GetAllRouteIdsForAgencyAsync(agency))
+                    {
+                        allRoutes.Add(route);
+                    }
+                }
+
+                allRoutesCache[closestRegion.RegionName] = allRoutes;
             }
 
-            return String.Empty;
+            return allRoutes;
         }
 
         /// <summary>
@@ -125,13 +148,13 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Returns all of the agencies that OBA serves.
         /// </summary>
-        public async Task<Agency[]> GetAllAgencies()
+        public async Task<Agency[]> GetAllAgenciesAsync()
         {
             try
             {
                 ObaMethod method = ObaMethod.agencies_with_coverage;
                 var helper = await this.Factory.CreateHelperAsync(method);
-                var doc = await helper.SendAndRecieveAsync(cacheTimeout: 5 * 24 * 60 * 60 /* 5 days */);
+                var doc = await helper.SendAndRecieveAsync(cacheTimeout: 30 * 24 * 60 * 60 /* 30 days */);
 
                 if (doc != null)
                 {
@@ -149,7 +172,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Returns all of the route Ids for a particular agency.
         /// </summary>
-        public async Task<Route[]> GetAllRouteIdsForAgency(Agency agency)
+        public async Task<Route[]> GetAllRouteIdsForAgencyAsync(Agency agency)
         {
             try
             {
@@ -230,7 +253,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Returns the schedule for a particular stop / route combination.
         /// </summary>
-        public async Task<StopRouteSchedule[]> GetScheduleForStopAndRoute(string stopId, string routeId, DateTime date)
+        public async Task<StopRouteSchedule[]> GetScheduleForStopAndRouteAsync(string stopId, string routeId, DateTime date)
         {
             XDocument doc = null;
             try

@@ -78,12 +78,7 @@ namespace OneBusAway.ViewModels
             this.uiHelper = uiHelper;
             this.searchResults = new ObservableCollection<SearchRouteResultViewModel>();
             this.searchResults.CollectionChanged += OnSearchResultsCollectionChanged;
-
-            // When the up to date task finishes, set the IsLoadingRoutes value:
-            AllRoutesCache.IsCacheUpToDateAsync().ContinueWith(result =>
-            {
-                this.IsLoadingRoutes = result.Result;
-            });
+            this.IsLoadingRoutes = !ObaDataAccess.Create().HasLoadedRoutesForCurrentRegion();
         }
 
         /// <summary>
@@ -171,7 +166,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         private async Task<List<Route>> LoadAllRoutesAsync()
         {
-            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            var obaDataAccess = ObaDataAccess.Create();
+            var listOfAllRoutes = await obaDataAccess.GetAllRoutesForCurrentRegionAsync();
             this.IsLoadingRoutes = false;
             return listOfAllRoutes;
         }
@@ -252,7 +248,8 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task<IEnumerable<string>> GetSuggestionsAsync(string query, OneBusAway.Model.Point userLocation)
         {
-            var listOfAllRoutes = await AllRoutesCache.GetAllRoutesAsync();
+            var obaDataAccess = ObaDataAccess.Create();
+            var listOfAllRoutes = await obaDataAccess.GetAllRoutesForCurrentRegionAsync();
             return from result in listOfAllRoutes
                    where (result.ShortName != null && result.ShortName.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
                       || (result.Description != null && result.Description.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
