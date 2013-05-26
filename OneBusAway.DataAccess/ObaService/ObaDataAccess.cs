@@ -360,7 +360,7 @@ namespace OneBusAway.DataAccess
                 helper.SetId(stopId);
                 helper.AddToQueryString("minutesAfter", "60");
 
-                XDocument doc = await helper.SendAndRecieveAsync();
+                XDocument doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
 
                 if (doc != null)
                 {
@@ -392,7 +392,7 @@ namespace OneBusAway.DataAccess
                 var helper = await this.Factory.CreateHelperAsync(method);
                 helper.SetId(tripId);
 
-                XDocument doc = await helper.SendAndRecieveAsync();
+                XDocument doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
 
                 if (doc != null)
                 {

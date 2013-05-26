@@ -59,10 +59,17 @@ namespace OneBusAway.Model
         public static async Task PersistAsync()
         {
             await InitializeAsync();
-            using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(FavoritesFileName, CreationCollisionOption.ReplaceExisting))
+            try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
-                serializer.Serialize(stream, instance.favorites);
+                using (Stream stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(FavoritesFileName, CreationCollisionOption.ReplaceExisting))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
+                    serializer.Serialize(stream, instance.favorites);
+                }
+            }
+            catch
+            {
+                // Ignore any IO exceptions...don't take down the process if we can't persist favs!
             }
         }
 
