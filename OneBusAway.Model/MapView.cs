@@ -12,12 +12,12 @@ namespace OneBusAway.Model
         /// <summary>
         /// The latitude of Seattle's city center.
         /// </summary>
-        public const double DefaultLatitude = 47.603561401367188;
+        public const double DefaultLatitude = 39.450000762939453;
 
         /// <summary>
         /// The longitude of Seattle's city center.
         /// </summary>
-        public const double DefaultLongitude = -122.32943725585937;
+        public const double DefaultLongitude = -98.907997131347656;
 
         /// <summary>
         /// This is the current map view.
@@ -50,10 +50,7 @@ namespace OneBusAway.Model
             {
                 if (current == null)
                 {
-                    current = new MapView(
-                        GetDefaultLocation(),
-                        12.0,
-                        false);
+                    current = GetDefaultMapView();
                 }
 
                 return current;
@@ -61,28 +58,36 @@ namespace OneBusAway.Model
             set
             {
                 current = value;
-                ApplicationData.Current.RoamingSettings.Values["DefaultLatitude"] = current.MapCenter.Latitude;
-                ApplicationData.Current.RoamingSettings.Values["DefaultLongitude"] = current.MapCenter.Longitude;
+                ApplicationData.Current.LocalSettings.Values["DefaultLatitude"] = current.MapCenter.Latitude;
+                ApplicationData.Current.LocalSettings.Values["DefaultLongitude"] = current.MapCenter.Longitude;
+                ApplicationData.Current.LocalSettings.Values["DefaultZoom"] = current.ZoomLevel;
             }
         }
 
-        private static Point GetDefaultLocation()
+        /// <summary>
+        /// Returns the default location of the user, or their last known location.
+        /// </summary>
+        /// <returns></returns>
+        private static MapView GetDefaultMapView()
         {
             double latitude = DefaultLatitude;
             double longitude = DefaultLongitude;
-            var roamingProperties = ApplicationData.Current.RoamingSettings.Values;
+            double zoom = 4.0;
 
-            if (roamingProperties.ContainsKey("DefaultLatitide"))
+            var localProperties = ApplicationData.Current.LocalSettings;
+            if (localProperties.Values.ContainsKey("DefaultLatitude") && 
+                localProperties.Values.ContainsKey("DefaultLongitude") &&
+                localProperties.Values.ContainsKey("DefaultZoom"))
             {
-                Double.TryParse(roamingProperties["DefaultLatitude"] as string, out latitude);
+                latitude = (double)localProperties.Values["DefaultLatitude"];
+                longitude = (double)localProperties.Values["DefaultLongitude"];
+                zoom = (double)localProperties.Values["DefaultZoom"];
             }
 
-            if (roamingProperties.ContainsKey("DefaultLongitude"))
-            {
-                Double.TryParse(roamingProperties["DefaultLongitude"] as string, out longitude);
-            }
-
-            return new Point(latitude, longitude);
+            return new MapView(
+                new Point(latitude, longitude),
+                zoom,
+                false);
         }
 
         public Point MapCenter { get; set; }

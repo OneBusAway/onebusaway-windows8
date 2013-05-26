@@ -78,7 +78,7 @@ namespace OneBusAway.ViewModels
             this.uiHelper = uiHelper;
             this.searchResults = new ObservableCollection<SearchRouteResultViewModel>();
             this.searchResults.CollectionChanged += OnSearchResultsCollectionChanged;
-            this.IsLoadingRoutes = !ObaDataAccess.Create().HasLoadedRoutesForCurrentRegion();
+            this.IsLoadingRoutes = true;
         }
 
         /// <summary>

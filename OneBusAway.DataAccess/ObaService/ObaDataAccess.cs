@@ -50,16 +50,6 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
-        /// Returns true if the current region has had routes loaded for it.
-        /// </summary>
-        /// <returns></returns>
-        public bool HasLoadedRoutesForCurrentRegion()
-        {
-            var closestRegion = this.Factory.FindClosestRegionAsync().Result;
-            return allRoutesCache.ContainsKey(closestRegion.RegionName);
-        }
-
-        /// <summary>
         /// Returns a list of all routes for the current location.
         /// </summary>
         /// <returns></returns>
