@@ -30,16 +30,20 @@ namespace OneBusAway.DataAccess.ObaService
             this.regionLongitudeSpan = boundsElement.GetFirstElementValue<double>("lonSpan");
         }
 
-        /// <summary>
-        /// Returns true if the lat / lon falls inside this region's bounds.
-        /// </summary>
-        /// <param name="latitude">The lat</param>
-        /// <param name="longitude">The lon</param>
-        /// <returns>True if it falls inside the bounds</returns>
-        public bool FallsInside(double latitude, double longitude)
+        public double Latitude
         {
-            return (regionLatitude <= latitude && latitude <= regionLatitude + regionLatitudeSpan)
-                && (regionLongitude <= longitude && longitude <= regionLongitude + regionLongitudeSpan);
+            get
+            {
+                return this.regionLatitude;
+            }
+        }
+
+        public double Longitude
+        {
+            get
+            {
+                return this.regionLongitude;
+            }
         }
     }
 }

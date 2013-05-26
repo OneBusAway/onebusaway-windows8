@@ -123,15 +123,11 @@ namespace OneBusAway.DataAccess.ObaService
         /// </summary>
         public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
         {
-            // Find the region that matches the users current location:
+            // Find the closest region to the user's location:
             var usersRegion = (from region in await regionsLookupTask
-                               where region.FallsInside(this.usersLatitude, this.usersLongitude)
-                               select region).FirstOrDefault();
-
-            if (usersRegion == null)
-            {
-                throw new UnknownRegionException();
-            }
+                               let distance = region.DistanceFrom(this.usersLatitude, this.usersLongitude)
+                               orderby distance ascending
+                               select region).First();
 
             return new ObaServiceHelper(usersRegion, obaMethod, httpMethod);
         }

@@ -152,11 +152,7 @@ namespace OneBusAway.ViewModels
                     this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
                     this.MapView = new MapView(this.UserLocation, ViewModelConstants.ZoomedInMapZoom);
                 }
-                catch (UnauthorizedAccessException)
-                {
-                    // the user didn't give us permission to use their location. OK, fine, have it your way :P
-                }
-                catch (Exception)
+                catch
                 {
                     // geolocator failed for some other reason.
                     // [Ghulam] Apparently on server 2102 GetGeopositionAsync throws FileNotFoundException.

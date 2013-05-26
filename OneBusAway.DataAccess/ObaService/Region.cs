@@ -34,16 +34,22 @@ namespace OneBusAway.DataAccess.ObaService
         }
 
         /// <summary>
-        /// Returns true if any of the regions fall inside the lat / lon.
+        /// Returns the distance from this region's closest bounds.
         /// </summary>
-        /// <param name="latitude">The latitide</param>
-        /// <param name="longitude">The longitude</param>
-        /// <returns>True if it falls inside</returns>
-        public bool FallsInside(double latitude, double longitude)
+        public double DistanceFrom(double latitude, double longitude)
         {
-            return this.RegionBounds.Any(regionBounds => regionBounds.FallsInside(latitude, longitude));
-        }
+            double closestRegion = double.MaxValue;
+            foreach (var bounds in this.RegionBounds)
+            {
+                double x = latitude - bounds.Latitude;
+                double y = longitude - bounds.Longitude;
+                double distance = Math.Sqrt(x * x + y * y);
+                closestRegion = Math.Min(closestRegion, distance);
+            }
 
+            return closestRegion;
+        }
+        
         /// <summary>
         /// Gets / sets the region URI.
         /// </summary>
