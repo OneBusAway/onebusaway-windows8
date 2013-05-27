@@ -247,6 +247,7 @@ namespace OneBusAway.ViewModels
         {
             this.StopId = stopId;            
             this.StopHeaderText = stopName;
+            this.isFiltered = false;
             this.StopSubHeaderText = string.Format(CultureInfo.CurrentCulture, "{0} BOUND", direction);
 
             await this.RefreshStopAsync();
