@@ -108,6 +108,8 @@ namespace OneBusAway.DataAccess
             try
             {
                 var helper = await this.Factory.CreateHelperAsync(ObaMethod.stops_for_location);
+
+                helper.AddToQueryString("version", "1");
                 helper.AddToQueryString("lat", latitude.ToString(CultureInfo.CurrentCulture));
                 helper.AddToQueryString("lon", longitude.ToString(CultureInfo.CurrentCulture));
 
