@@ -34,33 +34,20 @@ namespace OneBusAway.Model
         {
             // Xml for a stop:
             //<stop>
-            //<id>1_10914</id>
-            //<lat>47.656426</lat>
-            //<lon>-122.312164</lon>
-            //<direction>S</direction>
-            //<name>15TH AVE NE &amp; NE CAMPUS PKWY</name>
-            //<code>10914</code>
-            //<locationType>0</locationType>
-            //<routes>
-            //    <route>
-            //    <id>1_43</id>
-            //    <shortName>43</shortName>
-            //    <description>cbd/u-district</description>
-            //    <type>3</type>
-            //    <url>http://metro.kingcounty.gov/tops/bus/schedules/s043_0_.html</url>
-            //    <agency>
-            //        <id>1</id>
-            //        <name>Metro Transit</name>
-            //        <url>http://metro.kingcounty.gov</url>
-            //        <timezone>America/Los_Angeles</timezone>
-            //        <lang>en</lang>
-            //        <phone>206-553-3000</phone>
-            //        <disclaimer>Transit scheduling, geographic, and real-time data provided by permission of King County.  Some real-time info provided by UW Intelligent Transportation Systems.</disclaimer>
-            //        <privateService>false</privateService>
-            //    </agency>
-            //    </route>
-            //</routes>
-            //</stop>
+            //    <id>3_3465</id>
+            //    <lat>47.610756</lat>
+            //    <lon>-122.337204</lon>
+            //    <direction>NW</direction>
+            //    <name>4th / Pike</name>
+            //    <code>3465</code>
+            //    <locationType>0</locationType>
+            //    <routeIds>
+            //      <string>40_590</string>
+            //      <string>40_592</string>
+            //      <string>40_594</string>
+            //      <string>40_595</string>
+            //    </routeIds>
+            //  </stop>
             this.StopId = stopElement.GetFirstElementValue<string>("id");
             this.Latitude = stopElement.GetFirstElementValue<double>("lat");
             this.Longitude = stopElement.GetFirstElementValue<double>("lon");
@@ -68,7 +55,12 @@ namespace OneBusAway.Model
             this.Name = stopElement.GetFirstElementValue<string>("name");
             this.Code = stopElement.GetFirstElementValue<string>("code");
 
-            this.Routes = (from routeElement in stopElement.Descendants("route")
+            HashSet<string> routeIds = new HashSet<string>(from routeString in stopElement.Element("routeIds").Descendants("string")
+                                                           select routeString.Value);
+
+            // The routes are stored at the begining of the document:
+            this.Routes = (from routeElement in stopElement.Document.Descendants("route")
+                           where routeIds.Contains(routeElement.GetFirstElementValue<string>("id"))
                            select new Route(routeElement)).ToArray();
         }
 

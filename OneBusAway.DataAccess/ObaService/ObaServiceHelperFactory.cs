@@ -201,7 +201,8 @@ namespace OneBusAway.DataAccess.ObaService
                 this.SetDefaultPath();
 
                 this.queryStringMap = new Dictionary<string, string>();
-                this.queryStringMap["key"] = UtilitiesConstants.API_KEY;                
+                this.queryStringMap["key"] = UtilitiesConstants.API_KEY;
+                this.queryStringMap["Version"] = "2";
             }
 
             /// <summary>
