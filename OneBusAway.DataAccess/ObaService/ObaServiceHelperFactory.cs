@@ -57,10 +57,14 @@ namespace OneBusAway.DataAccess.ObaService
                         // Try and load the regions xml file locally:
                         try
                         {
+                            // Expire the regions xml file after 7 days:
                             var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(REGIONS_XML_FILE);
-                            using (var stream = await existingFile.OpenStreamForReadAsync())
+                            if ((DateTime.Now - existingFile.DateCreated).TotalDays <= 7)
                             {
-                                doc = XDocument.Load(stream);
+                                using (var stream = await existingFile.OpenStreamForReadAsync())
+                                {
+                                    doc = XDocument.Load(stream);
+                                }
                             }
                         }
                         catch
