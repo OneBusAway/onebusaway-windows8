@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace OneBusAway
 {
@@ -16,25 +17,16 @@ namespace OneBusAway
     public class NavigationControllerProxy : INotifyPropertyChanged
     {
         /// <summary>
+        /// This is the event that everybody registers.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         /// Creates the proxy.
         /// </summary>
         public NavigationControllerProxy()
         {
-        }
-
-        /// <summary>
-        /// Make the property changed handler just route to the NavigationController singleton.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add
-            {
-                NavigationController.Instance.PropertyChanged += value;
-            }
-            remove
-            {
-                NavigationController.Instance.PropertyChanged -= value;
-            }
+            NavigationController.Instance.RegisterProxy(this, this.OnControllerPropertyChanged);
         }
 
         /// <summary>
@@ -88,117 +80,134 @@ namespace OneBusAway
         /// <summary>
         /// Return the go back command.
         /// </summary>
-        public ObservableCommand GoBackCommand
+        public ICommand GoBackCommand
         {
             get
             {
-                return NavigationController.Instance.GoBackCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoBackCommand);
             }
         }
 
         /// <summary>
         /// Returns the refresh command.
         /// </summary>
-        public ObservableCommand RefreshCommand
+        public ICommand RefreshCommand
         {
             get
             {
-                return NavigationController.Instance.RefreshCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.RefreshCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to users location command.
         /// </summary>
-        public ObservableCommand GoToUsersLocationCommand
+        public ICommand GoToUsersLocationCommand
         {
             get
             {
-                return NavigationController.Instance.GoToUsersLocationCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToUsersLocationCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to favorites page command.
         /// </summary>
-        public ObservableCommand GoToFavoritesPageCommand
+        public ICommand GoToFavoritesPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToFavoritesPageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToFavoritesPageCommand);
             }
         }
 
         /// <summary>
         /// Returns the real time page command.
         /// </summary>
-        public ObservableCommand GoToRealTimePageCommand
+        public ICommand GoToRealTimePageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToRealTimePageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToRealTimePageCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to help page command.
         /// </summary>
-        public ObservableCommand GoToHelpPageCommand
+        public ICommand GoToHelpPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToHelpPageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToHelpPageCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to time table page command.
         /// </summary>
-        public ObservableCommand GoToTimeTablePageCommand
+        public ICommand GoToTimeTablePageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToTimeTablePageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToTimeTablePageCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to search page command.
         /// </summary>
-        public ObservableCommand GoToSearchPageCommand
+        public ICommand GoToSearchPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToSearchPageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToSearchPageCommand);
             }
         }
 
-        public ObservableCommand AddToFavoritesCommand
+        /// <summary>
+        /// Adds an item to the favorites list.
+        /// </summary>
+        public ICommand AddToFavoritesCommand
         {
             get
             {
-                return NavigationController.Instance.AddToFavoritesCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.AddToFavoritesCommand);
             }
         }
 
-        public ObservableCommand FilterByRouteCommand
+        /// <summary>
+        /// Filters by route.
+        /// </summary>
+        public ICommand FilterByRouteCommand
         {
             get
             {
-                return NavigationController.Instance.FilterByRouteCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.FilterByRouteCommand);
             }
         }
 
         /// <summary>
         /// Returns the go to trip details page command.
         /// </summary>
-        public ObservableCommand GoToTripDetailsPageCommand
+        public ICommand GoToTripDetailsPageCommand
         {
             get
             {
-                return NavigationController.Instance.GoToTripDetailsPageCommand;
+                return new ObservableCommandProxy(NavigationController.Instance.GoToTripDetailsPageCommand);
             }
         }
 
+        /// <summary>
+        /// Called when the navigation controller fires an event.
+        /// </summary>
+        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs changedArgs)
+        {
+            var propChanged = this.PropertyChanged;
+            if (propChanged != null)
+            {
+                propChanged(sender, changedArgs);
+            }
+        }
     }
 }

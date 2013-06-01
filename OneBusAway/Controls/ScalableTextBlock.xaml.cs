@@ -75,8 +75,9 @@ namespace OneBusAway.Controls
             this.InitializeComponent();
             
             this.proxy = new NavigationControllerProxy();
-            this.proxy.PropertyChanged += OnProxyPropertyChanged;           
-        }
+            this.proxy.PropertyChanged += OnProxyPropertyChanged;
+            this.Unloaded += (sender, args) => this.proxy.PropertyChanged -= OnProxyPropertyChanged;
+        }        
 
         public string Text
         {

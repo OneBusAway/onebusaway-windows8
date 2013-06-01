@@ -5,7 +5,9 @@ using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +31,16 @@ namespace OneBusAway
         /// The one & only instance.
         /// </summary>
         private static NavigationController instance = new NavigationController();
+
+        /// <summary>
+        /// This is a list of proxy objects that are registered with us.
+        /// </summary>
+        private List<WeakReference<NavigationControllerProxy>> proxies;
+
+        /// <summary>
+        /// A list of proxy callbacks.
+        /// </summary>
+        private ConditionalWeakTable<NavigationControllerProxy, PropertyChangedEventHandler> callbackTable;
         
         /// <summary>
         /// Command to go to the favorites page.
@@ -86,6 +98,11 @@ namespace OneBusAway
         private ObservableCommand goToStopAndRoutesPageCommand;
 
         /// <summary>
+        /// A list of all the commands.
+        /// </summary>
+        private List<ObservableCommand> allCommands;
+
+        /// <summary>
         /// This is the page control that is currently on display.  It is NOT kept in the stack because
         /// we only keep page controls in the stack that we have to go back to, and the current control
         /// can only be navigated back to if we go to another page first.
@@ -127,38 +144,53 @@ namespace OneBusAway
         /// </summary>
         private NavigationController()
         {
+            this.allCommands = new List<ObservableCommand>();
+            this.proxies = new List<WeakReference<NavigationControllerProxy>>();
+            this.callbackTable = new ConditionalWeakTable<NavigationControllerProxy, PropertyChangedEventHandler>();
+
             this.GoBackCommand = new ObservableCommand();
             this.GoBackCommand.Executed += OnGoBackCommandExecuted;
+            this.allCommands.Add(this.GoBackCommand);
 
             this.GoToFavoritesPageCommand = new ObservableCommand();
             this.GoToFavoritesPageCommand.Executed += OnGoToFavoritesPageCommandExecuted;
+            this.allCommands.Add(this.GoToFavoritesPageCommand);
 
             this.GoToRealTimePageCommand = new ObservableCommand();
             this.GoToRealTimePageCommand.Executed += OnGoToRealTimePageCommandExecuted;
+            this.allCommands.Add(this.GoToRealTimePageCommand);
 
             this.GoToHelpPageCommand = new ObservableCommand();
             this.GoToHelpPageCommand.Executed += OnGoToHelpPageCommandExecuted;
+            this.allCommands.Add(this.GoToHelpPageCommand);
 
             this.GoToSearchPageCommand = new ObservableCommand();
             this.GoToSearchPageCommand.Executed += OnGoToSearchPageCommandExecuted;
+            this.allCommands.Add(this.GoToSearchPageCommand);
 
             this.GoToTimeTablePageCommand = new ObservableCommand();
             this.GoToTimeTablePageCommand.Executed += OnGoToTimeTablePageCommandExecuted;
+            this.allCommands.Add(this.GoToTimeTablePageCommand);
 
             this.AddToFavoritesCommand = new ObservableCommand();
             this.AddToFavoritesCommand.Executed += OnAddToFavoritesCommandExecuted;
+            this.allCommands.Add(this.AddToFavoritesCommand);
 
             this.FilterByRouteCommand = new ObservableCommand();
             this.FilterByRouteCommand.Executed += OnFilterByRouteCommandExecuted;
+            this.allCommands.Add(this.FilterByRouteCommand);
 
             this.GoToTripDetailsPageCommand = new ObservableCommand();
             this.GoToTripDetailsPageCommand.Executed += OnGoToTripDetailsPageCommandExecuted;
+            this.allCommands.Add(this.GoToTripDetailsPageCommand);
 
             this.RefreshCommand = new ObservableCommand();
             this.RefreshCommand.Executed += OnRefreshCommandExecuted;
+            this.allCommands.Add(this.RefreshCommand);
 
             this.GoToUsersLocationCommand = new ObservableCommand();
             this.GoToUsersLocationCommand.Executed += OnGoToUsersLocationCommandExecuted;
+            this.allCommands.Add(this.GoToUsersLocationCommand);
 
             this.pageControls = new Stack<IPageControl>();
         }        
@@ -402,6 +434,16 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Registers a navigation proxy with the controller. This is a weak reference.
+        /// </summary>
+        /// <param name="proxy">The proxy to register</param>
+        public void RegisterProxy(NavigationControllerProxy proxy, PropertyChangedEventHandler callback)
+        {
+            this.proxies.Add(new WeakReference<NavigationControllerProxy>(proxy));
+            this.callbackTable.Add(proxy, callback);
+        }
+
+        /// <summary>
         /// Navigates to a page control.
         /// </summary>
         public async Task<T> NavigateToPageControlAsync<T>(object parameter)
@@ -421,14 +463,57 @@ namespace OneBusAway
                 this.pageControls.Push(currentPageControl);
             }
 
+            // Only keep the last 10 page controls to limit memory usage:
+            int difference = this.pageControls.Count - 10;
+            if (difference > 0)
+            {
+                var list = this.pageControls.ToList();
+                this.pageControls = new Stack<IPageControl>(list.Skip(difference));
+            }
+
             this.currentPageControl = newPageControl;
             this.FirePropertyChanged("CanGoBack");
 
             await newPageControl.InitializeAsync(parameter);
             await this.RestartRefreshLoopAsync();            
             return newPageControl;
-        }       
-        
+        }
+
+        /// <summary>
+        /// Overrides the FirePropertyChanged method to fire the weakly held proxy events.
+        /// </summary>
+        protected override void FirePropertyChanged(string propName)
+        {
+            base.FirePropertyChanged(propName);
+
+            bool shouldScavenge = false;
+            for (int i = this.proxies.Count - 1; i >= 0; i--)
+            {
+                NavigationControllerProxy proxy = null;
+                PropertyChangedEventHandler callback = null;
+                WeakReference<NavigationControllerProxy> weakReference = this.proxies[i];
+
+                if (weakReference.TryGetTarget(out proxy) && this.callbackTable.TryGetValue(proxy, out callback))
+                {
+                    callback(this, new PropertyChangedEventArgs(propName));
+                }
+                else
+                {
+                    this.proxies.RemoveAt(i);
+                    shouldScavenge = true;
+                }
+            }
+
+            // Remove all of the commands that have been GCed:
+            if (shouldScavenge)
+            {
+                foreach (ObservableCommand command in this.allCommands)
+                {
+                    command.CleanupUnheldProxies();
+                }
+            }
+        }
+
         /// <summary>
         /// Refreshes the active page control every 30 seconds. If we navigate to another page, then this
         /// loop will be cancelled. The NavigateToPageControlAsync method will cancel this task and wait for 
@@ -465,6 +550,7 @@ namespace OneBusAway
             {
                 this.refreshLoopCancelationToken.Cancel();
                 await this.refreshLoopTask;
+                this.refreshLoopCancelationToken.Dispose();
             }
 
             // Start the refresh loop:

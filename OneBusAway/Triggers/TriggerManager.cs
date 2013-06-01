@@ -49,9 +49,22 @@ namespace OneBusAway.Triggers
             {
                 collection = new TriggerCollection(control);
                 instance.triggerLookup[control] = collection;
+                control.Unloaded += OnControlUnloaded;
             }
 
             return collection;
+        }
+
+        /// <summary>
+        /// Unregisters triggers when the control is unloaded.
+        /// </summary>
+        private static void OnControlUnloaded(object sender, RoutedEventArgs e)
+        {
+            Control control = sender as Control;
+            if (control != null)
+            {
+                instance.triggerLookup.Remove(control);
+            }
         }
     }
 }

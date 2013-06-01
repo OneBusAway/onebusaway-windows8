@@ -43,7 +43,7 @@ namespace OneBusAway.Model
         /// <summary>
         /// Fires a property changed event.
         /// </summary>
-        protected void FirePropertyChanged(string propName)
+        protected virtual void FirePropertyChanged(string propName)
         {
             var propChanged = this.PropertyChanged;
             if (propChanged != null)
