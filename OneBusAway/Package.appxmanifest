@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="43039MJBSoftware.OneBusAway" Publisher="CN=ACBBFA9F-E0ED-4D10-87F8-1AFBA7940876" Version="1.0.0.28" />
+  <Identity Name="43039MJBSoftware.OneBusAway" Publisher="CN=ACBBFA9F-E0ED-4D10-87F8-1AFBA7940876" Version="1.0.0.29" />
   <Properties>
     <DisplayName>OneBusAway</DisplayName>
     <PublisherDisplayName>MJB Software</PublisherDisplayName>
