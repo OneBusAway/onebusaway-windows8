@@ -463,14 +463,6 @@ namespace OneBusAway
                 this.pageControls.Push(currentPageControl);
             }
 
-            // Only keep the last 10 page controls to limit memory usage:
-            int difference = this.pageControls.Count - 10;
-            if (difference > 0)
-            {
-                var list = this.pageControls.ToList();
-                this.pageControls = new Stack<IPageControl>(list.Skip(difference));
-            }
-
             this.currentPageControl = newPageControl;
             this.FirePropertyChanged("CanGoBack");
 
