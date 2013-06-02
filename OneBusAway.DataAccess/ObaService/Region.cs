@@ -16,6 +16,7 @@ namespace OneBusAway.DataAccess.ObaService
         private string regionName;
         private string regionUrl;
         private bool supportsObaRealtimeApis;
+        private bool supportsObaDiscoveryApis;
         private bool isActive;
         private List<RegionBounds> regionBounds;
 
@@ -28,6 +29,7 @@ namespace OneBusAway.DataAccess.ObaService
             this.RegionName = regionElement.GetFirstElementValue<string>("regionName");
             this.RegionUrl = regionElement.GetFirstElementValue<string>("obaBaseUrl");
             this.SupportsObaRealtimeApis = regionElement.GetFirstElementValue<bool>("supportsObaRealtimeApis");
+            this.SupportsObaDiscoveryApis = regionElement.GetFirstElementValue<bool>("supportsObaDiscoveryApis");
             this.IsActive = regionElement.GetFirstElementValue<bool>("active");
             this.RegionBounds = new List<RegionBounds>(from boundsElement in regionElement.Descendants("bound")
                                                        select new RegionBounds(boundsElement));
@@ -92,6 +94,21 @@ namespace OneBusAway.DataAccess.ObaService
             set
             {
                 SetProperty(ref this.supportsObaRealtimeApis, value);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the region supports discovery APIs
+        /// </summary>
+        public bool SupportsObaDiscoveryApis
+        {
+            get
+            {
+                return this.supportsObaDiscoveryApis;
+            }
+            set
+            {
+                SetProperty(ref this.supportsObaDiscoveryApis, value);
             }
         }
 

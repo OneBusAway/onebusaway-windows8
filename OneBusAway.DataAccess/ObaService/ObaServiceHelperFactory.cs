@@ -52,27 +52,32 @@ namespace OneBusAway.DataAccess.ObaService
             regionsLookupTask = Task.Run(async () =>
                 {
                     XDocument doc = null;
+                    bool existingFileHasExpired = false;
+
                     try
                     {
                         // Try and load the regions xml file locally:
                         try
                         {
-                            // Expire the regions xml file after 7 days:
+                            // Expire the regions xml file after 7 days:                            
                             var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(REGIONS_XML_FILE);
-                            if ((DateTime.Now - existingFile.DateCreated).TotalDays <= 7)
+                            
+                            using (var stream = await existingFile.OpenStreamForReadAsync())
                             {
-                                using (var stream = await existingFile.OpenStreamForReadAsync())
-                                {
-                                    doc = XDocument.Load(stream);
-                                }
+                                doc = XDocument.Load(stream);
                             }
+
+                            existingFileHasExpired = (DateTime.Now - existingFile.DateCreated).TotalDays <= 7;
                         }
                         catch
                         {
                             // OK, couldn't load.
                         }
 
-                        if (doc == null)
+                        // If we either don't have a file, or the existing one is too old, try
+                        // and get the newest version. If this fails, we can default to using 
+                        // the old document until the server is back!
+                        if (doc == null || existingFileHasExpired)
                         {
                             var webRequest = WebRequest.CreateHttp(REGIONS_SERVICE_URI);
 
@@ -102,7 +107,7 @@ namespace OneBusAway.DataAccess.ObaService
 
                         return (from regionElement in doc.Descendants("region")
                                 let region = new Region(regionElement)
-                                where region.IsActive && region.SupportsObaRealtimeApis
+                                where region.IsActive && region.SupportsObaRealtimeApis && region.SupportsObaDiscoveryApis
                                 select region).ToArray();
                     }
                     catch
