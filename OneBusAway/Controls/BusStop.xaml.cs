@@ -24,7 +24,6 @@ namespace OneBusAway.Controls
 {
     public sealed partial class BusStop : UserControl
     {
-        private static NavigationControllerProxy proxy = new NavigationControllerProxy();
         private static MapViewToVisibilityConverter mapViewToVisibilityConverter = new MapViewToVisibilityConverter();
         private static StringEqualsToVisibilityConverter stringEqualsToVisibilityConverter = new StringEqualsToVisibilityConverter();
 
@@ -33,10 +32,13 @@ namespace OneBusAway.Controls
 
         private BusStopHeaderControl headerControl;
         private BusStopControlViewModel viewModel;
+        private NavigationControllerProxy proxy;
 
         public BusStop()
         {
             this.InitializeComponent();
+
+            this.proxy = new NavigationControllerProxy();
 
             // For perf reasons, we do as much of this in code as we can as it is faster than relying on the xaml
             // decompiler. This constructor is a hot path so we need to be smart about how we create it:
@@ -46,7 +48,7 @@ namespace OneBusAway.Controls
             {
                 Path = new PropertyPath("MapView"),
                 Converter = mapViewToVisibilityConverter,
-                Source = proxy
+                Source = this.proxy
             };
 
             this.canvas.SetBinding(UIElement.VisibilityProperty, visibilityBinding);
@@ -59,6 +61,8 @@ namespace OneBusAway.Controls
             busImage.Margin = new Thickness(-14, -14, 0, 0);
             busImage.PointerPressed += OnPointerPressed;
             this.canvas.Children.Add(busImage);
+
+            this.Unloaded += OnUnloaded;
         }
 
         /// <summary>
@@ -119,9 +123,23 @@ namespace OneBusAway.Controls
                 }
 
                 // Store the view model and wire up the property changed handler:
-                this.viewModel = value;
+                this.viewModel = value;                
                 this.viewModel.PropertyChanged += OnViewModelPropertyChanged;
                 this.SetIsSelected(this.viewModel.IsSelected);
+            }
+        }
+
+        /// <summary>
+        /// Clears the view model when we're unloaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (this.viewModel != null)
+            {
+                this.viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                this.viewModel = null;
             }
         }
 
