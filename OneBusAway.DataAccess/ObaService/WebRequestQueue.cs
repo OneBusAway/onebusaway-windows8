@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -24,29 +25,18 @@ namespace OneBusAway.DataAccess
         private static WebRequestQueue instance = new WebRequestQueue();
 
         /// <summary>
-        /// A queue of tasks that will execute the web requests asynchronously.
+        /// This is the current task that we use as a queueing mechanism to make sure the
+        /// web requests are executed serially.
         /// </summary>
-        private Queue<Func<Task>> taskQueue;
-
-        /// <summary>
-        /// The queue of web requests that we are throttling.
-        /// </summary>
-        private Queue<HttpWebRequest> requestQueue;
-
-        /// <summary>
-        /// A queue of task completion sources that callers can await on.
-        /// </summary>
-        private Queue<TaskCompletionSource<XDocument>> responseQueue;
+        private Task<XDocument> currentTask;
 
         /// <summary>
         /// Singleton ctor.
         /// </summary>
         private WebRequestQueue()
         {
-            this.requestQueue = new Queue<HttpWebRequest>();
-            this.responseQueue = new Queue<TaskCompletionSource<XDocument>>();
-            this.taskQueue = new Queue<Func<Task>>();
-        }
+            this.currentTask = Task.FromResult<XDocument>(null);
+        }        
 
         /// <summary>
         /// Queues a web request into our queue and returns an awaitable task.
@@ -55,58 +45,25 @@ namespace OneBusAway.DataAccess
         {
             lock (instance)
             {
-                instance.requestQueue.Enqueue(request);
+                instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
+                    {
+                        var response = await request.GetResponseAsync();
+                        var responseStream = response.GetResponseStream();
 
-                var source = new TaskCompletionSource<XDocument>();
-                instance.responseQueue.Enqueue(source);
+                        XDocument doc = null;
+                        using (var streamReader = new StreamReader(responseStream))
+                        {
+                            string xml = await streamReader.ReadToEndAsync();
+                            doc = XDocument.Parse(xml);
+                        }
 
-                instance.taskQueue.Enqueue(ExecuteWebRequestAsync);
+                        // Wait a bit to throttle the requests:
+                        await Task.Delay(50);
+                        return doc;
 
-                if (instance.taskQueue.Count == 1)
-                {
-                    Task.Run(instance.taskQueue.Dequeue());
-                }
+                    }).Unwrap();
 
-                return source.Task;
-            }
-        }
-
-        /// <summary>
-        /// Executes a web request asynchronously and dequeues the next task if it exists.
-        /// </summary>
-        private static async Task ExecuteWebRequestAsync()
-        {
-            HttpWebRequest request = null;
-            TaskCompletionSource<XDocument> completionSource = null;
-
-            lock (instance)
-            {
-                request = instance.requestQueue.Dequeue();
-                completionSource = instance.responseQueue.Dequeue();
-            }
-
-            var response = await request.GetResponseAsync();
-            var responseStream = response.GetResponseStream();
-
-            XDocument doc = null;
-            using (var streamReader = new StreamReader(responseStream))
-            {
-                string xml = await streamReader.ReadToEndAsync();
-                doc = XDocument.Parse(xml);
-            }
-
-            completionSource.SetResult(doc);
-
-            // Wait 20ms before we kick off the next request:
-            await Task.Delay(20);
-
-            // If we have another task in the queue, let it loose now:
-            lock (instance)
-            {
-                if (instance.taskQueue.Count > 0)
-                {
-                    var ignored = Task.Run(instance.taskQueue.Dequeue());
-                }
+                return instance.currentTask;
             }
         }
     }
