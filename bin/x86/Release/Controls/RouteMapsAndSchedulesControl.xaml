@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="OneBusAway.Controls.RouteMapsAndSchedulesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:OneBusAway"
+             xmlns:ctrls="using:OneBusAway.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="using:OneBusAway.Converters"
+             xmlns:oba="using:OneBusAway"
+             xmlns:trig="using:OneBusAway.Triggers"
+             mc:Ignorable="d"
+             d:DesignHeight="200"
+             d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/StandardStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
+            <local:NavigationControllerProxy x:Key="navigationProxy" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <trig:TriggerManager.Triggers>
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="True"
+                      VisualState="IsSnapped" />
+        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
+                      Value="False"
+                      VisualState="Default" />
+    </trig:TriggerManager.Triggers>
+
+    <Grid x:Name="grid">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock FontWeight="Bold"
+                   FontSize="14"
+                   Foreground="Black"
+                   Margin="0,15,0,0"
+                   Text="ROUTE MAPS &amp; SCHEDULES"
+                   Visibility="{Binding Converter={StaticResource arrayToVisibilityConverter}}" />
+
+        <ItemsControl Grid.Column="0"
+                      Grid.Row="1"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      VerticalContentAlignment="Top"
+                      HorizontalContentAlignment="Stretch"
+                      ItemsSource="{Binding}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapGrid ItemHeight="60"
+                              ItemWidth="60"
+                              FlowDirection="LeftToRight"
+                              Orientation="Horizontal"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              HorizontalChildrenAlignment="Left"
+                              VerticalChildrenAlignment="Top" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="40"
+                            Height="40"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            BorderBrush="{StaticResource obaGreen}"
+                            BorderThickness="1">
+
+                        <ctrls:ScalableTextBlock Text="{Binding RouteName}"
+                                                 Command="{Binding GoToTimeTablePageCommand, Source={StaticResource navigationProxy}}"
+                                                 CommandParameter="{Binding}"
+                                                 Foreground="Black"
+                                                 NormalFontSize="14"
+                                                 SnappedFontSize="14"
+                                                 FontWeight="Bold"
+                                                 HorizontalTextAlignment="Center"
+                                                 VerticalTextAlignment="Center" />
+
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default" />
+                <VisualState x:Name="IsSnapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="10,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </Grid>
+</UserControl>
+
