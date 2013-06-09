@@ -49,7 +49,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task SearchAsync(string queryText)
         {            
-            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.UserLocation);
+            await this.SearchResultsControlViewModel.SearchAsync(queryText, MapControlViewModel.MapView.MapCenter);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task<IEnumerable<string>> GetSuggestionsAsync(string queryText)
         {
-            return await this.SearchResultsControlViewModel.GetSuggestionsAsync(queryText, MapControlViewModel.UserLocation);
+            return await this.SearchResultsControlViewModel.GetSuggestionsAsync(queryText, MapControlViewModel.MapView.MapCenter);
         }
 
         /// <summary>
