@@ -175,11 +175,18 @@ namespace OneBusAway.ViewModels
             this.routeId = routeId;
 
             // First we need to find the day of the week to use:
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now;            
 
             if (this.dayOfTheWeek != (int)date.DayOfWeek)
             {
                 int daysFromNow = this.dayOfTheWeek - (int)date.DayOfWeek;
+
+                // If we're talking about a day in the past, roll it forward to next week:
+                if (daysFromNow < 0)
+                {
+                    daysFromNow += 7;
+                }
+
                 date = date.AddDays(daysFromNow);
             }
 
