@@ -1,4 +1,5 @@
 ﻿using OneBusAway.Model;
+using OneBusAway.PageControls;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -38,9 +39,16 @@ namespace OneBusAway
             {
                 return NavigationController.Instance.MapView;
             }
-            set
+        }
+
+        /// <summary>
+        /// Returns the current page control.
+        /// </summary>
+        public IPageControl CurrentPageControl
+        {
+            get
             {
-                NavigationController.Instance.MapView = value;
+                return NavigationController.Instance.CurrentPageControl;
             }
         }
 
@@ -107,6 +115,17 @@ namespace OneBusAway
             get
             {
                 return new ObservableCommandProxy(NavigationController.Instance.GoToUsersLocationCommand);
+            }
+        }
+
+        /// <summary>
+        /// Returns the pin stop to start page command.
+        /// </summary>
+        public ICommand PinStopToStartPageCommand
+        {
+            get
+            {
+                return new ObservableCommandProxy(NavigationController.Instance.PinStopToStartPageCommand);
             }
         }
 

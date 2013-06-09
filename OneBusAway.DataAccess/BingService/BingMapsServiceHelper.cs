@@ -1,11 +1,15 @@
 ﻿using OneBusAway.Model.BingService;
-//using OneBusAway.Model.BingService;
 using OneBusAway.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace OneBusAway.DataAccess.BingService
 {
@@ -14,6 +18,37 @@ namespace OneBusAway.DataAccess.BingService
     /// </summary>
     public class BingMapsServiceHelper
     {
+        /// <summary>
+        /// Returns a static image from Bing for a specific lat / long and with a specific height.
+        /// </summary>
+        /// <param name="latitude">The latitude</param>
+        /// <param name="longitude">The longitude</param>
+        /// <param name="imageWidth">The image width</param>
+        /// <param name="imageHeight">The image height</param>
+        /// <returns></returns>
+        public async Task<MemoryStream> GetStaticImageBytesAsync(double latitude, double longitude, int imageWidth, int imageHeight)
+        {
+            // Get the image from Bing and save to disk.
+            string url = string.Format("http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/{0},{1}/16?mapSize={2},{3}&pushpin={0},{1};39&format=png&key={4}",
+                latitude,
+                longitude,
+                imageWidth,
+                imageHeight,
+                UtilitiesConstants.BingsMapsServiceApiKey);
+
+            WebRequest request = HttpWebRequest.Create(url);
+            request.Method = "GET";
+            var response = await request.GetResponseAsync();
+
+            MemoryStream memoryStream = new MemoryStream();
+            using (var stream = response.GetResponseStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+            }
+
+            return memoryStream;
+        }
+
         /// <summary>
         /// Queries the Bing Maps Service with a given search query, confidence and userLocation and returns a list of locations that match the query
         /// </summary>

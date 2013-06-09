@@ -241,6 +241,33 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
+        /// Returns the details for a particular stop.
+        /// </summary>
+        public async Task<Stop> GetStopDetailsAsync(string stopId)
+        {
+            try
+            {
+                ObaMethod method = ObaMethod.stop;
+                var helper = await this.Factory.CreateHelperAsync(method);
+                helper.SetId(stopId);
+
+                var doc = await helper.SendAndRecieveAsync();
+
+                // Find all of the stops in the payload that have this route id:
+                if (doc != null)
+                {
+                    var entryElement = doc.Descendants("entry").First();
+                    return new Stop(entryElement);
+                }
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Returns the schedule for a particular stop / route combination.
         /// </summary>
         public async Task<StopRouteSchedule[]> GetScheduleForStopAndRouteAsync(string stopId, string routeId, DateTime date)

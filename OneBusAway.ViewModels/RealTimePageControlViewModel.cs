@@ -23,7 +23,6 @@ namespace OneBusAway.ViewModels
         {
             this.HeaderViewModel.SubText = "REAL TIME";
             this.RoutesAndStopsViewModel = new RoutesAndStopsControlViewModel();
-
             this.MapControlViewModel.StopSelected += OnMapControlViewModelStopSelectedAsync;
         }
 
@@ -64,8 +63,6 @@ namespace OneBusAway.ViewModels
         /// </summary>
         public async Task NavigateDirectlyToStop(double latitude, double longitude, string selectedStopId, string stopName, string direction)
         {
-            var center = new Model.Point(latitude, longitude);
-
             await this.MapControlViewModel.RefreshStopsForLocationAsync(MapView.Current);
             this.MapControlViewModel.SelectStop(selectedStopId);
 
@@ -73,6 +70,20 @@ namespace OneBusAway.ViewModels
                 stopName,
                 selectedStopId,
                 direction);
+        }
+
+        /// <summary>
+        /// Navigates directly to a particular stop.
+        /// </summary>
+        public async Task NavigateDirectlyToStop(double latitude, double longitude, string selectedStopId)
+        {
+            var center = new Model.Point(latitude, longitude);
+            this.MapControlViewModel.MapView = new MapView(center, ViewModelConstants.ZoomedInMapZoom, false);
+
+            await this.MapControlViewModel.RefreshStopsForLocationAsync(MapView.Current);
+            this.MapControlViewModel.SelectStop(selectedStopId);
+
+            await this.RoutesAndStopsViewModel.PopulateStopAsync(selectedStopId);
         }
 
         #endregion

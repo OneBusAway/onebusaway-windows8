@@ -21,6 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
             <local:NavigationControllerProxy x:Key="navigationProxy" />
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+            <conv:PageControlToPinnableVisibilityConverter x:Key="pageControlToPinnableVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -183,6 +184,11 @@
                 <Button Style="{StaticResource AppBarButtonStyle}"
                         Command="{Binding GoToUsersLocationCommand, Source={StaticResource navigationProxy}}"
                         Content="&#xE139;" />
+                <Button Style="{StaticResource AppBarButtonStyle}"
+                        Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
+                        CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
+                        Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}"
+                        Content="&#xE141;" />                
             </StackPanel>
         </AppBar>
     </Page.BottomAppBar>

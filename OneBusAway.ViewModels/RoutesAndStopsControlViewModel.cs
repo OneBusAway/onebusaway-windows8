@@ -93,7 +93,7 @@ namespace OneBusAway.ViewModels
             {
                 SetProperty(ref this.showNoItemsMessage, value);
             }
-        }
+        }        
 
         public string StopOrDestinationText
         {
@@ -238,6 +238,16 @@ namespace OneBusAway.ViewModels
             {                
                 this.ShowNoItemsMessage = trackingData.Count == 0;
             }
+        }
+
+        /// <summary>
+        /// Populates a stop solely on the stop ID, which we will look up from OBA.
+        /// </summary>
+        public async Task PopulateStopAsync(string stopId)
+        {
+            var dataAccess = ObaDataAccess.Create();
+            Stop stop = await dataAccess.GetStopDetailsAsync(stopId);
+            await this.PopulateStopAsync(stop.Name, stopId, stop.Direction);
         }
 
         /// <summary>

@@ -117,5 +117,13 @@ namespace OneBusAway.PageControls
             var mapCenter = mapViewModel.MapView;
             mapViewModel.MapView = new MapView(new Model.Point(e.Latitude, e.Longitude), mapCenter.ZoomLevel, true);
         }
+
+        /// <summary>
+        /// Pages should be represent themselves as a string of parameters.
+        /// </summary>
+        public PageInitializationParameters GetParameters()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

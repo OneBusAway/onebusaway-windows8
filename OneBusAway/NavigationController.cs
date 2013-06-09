@@ -1,23 +1,19 @@
-﻿using Bing.Maps;
-using OneBusAway.Model;
+﻿using OneBusAway.Model;
 using OneBusAway.PageControls;
 using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Search;
-using Windows.UI.ApplicationSettings;
 using Windows.UI.Popups;
+using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace OneBusAway
 {
@@ -31,7 +27,7 @@ namespace OneBusAway
         /// The one & only instance.
         /// </summary>
         private static NavigationController instance = new NavigationController();
-
+        
         /// <summary>
         /// This is a list of proxy objects that are registered with us.
         /// </summary>
@@ -96,6 +92,11 @@ namespace OneBusAway
         /// Command used to go to the stop and routes page.
         /// </summary>
         private ObservableCommand goToStopAndRoutesPageCommand;
+
+        /// <summary>
+        /// Command used to pin a stop to the start screen.
+        /// </summary>
+        private ObservableCommand pinStopToStartPageCommand;
 
         /// <summary>
         /// A list of all the commands.
@@ -192,6 +193,10 @@ namespace OneBusAway
             this.GoToUsersLocationCommand.Executed += OnGoToUsersLocationCommandExecuted;
             this.allCommands.Add(this.GoToUsersLocationCommand);
 
+            this.PinStopToStartPageCommand = new ObservableCommand();
+            this.PinStopToStartPageCommand.Executed += OnPinStopToStartPageCommandExecuted;
+            this.allCommands.Add(this.PinStopToStartPageCommand);
+
             this.pageControls = new Stack<IPageControl>();
         }        
 
@@ -245,6 +250,21 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.isPortrait, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets / sets the current page control.
+        /// </summary>
+        public IPageControl CurrentPageControl
+        {
+            get
+            {
+                return this.currentPageControl;
+            }
+            set
+            {
+                SetProperty(ref this.currentPageControl, value);
             }
         }
 
@@ -394,6 +414,21 @@ namespace OneBusAway
             }
         }
 
+        /// <summary>
+        /// Returns the pinStopToStartPageCommand.
+        /// </summary>
+        public ObservableCommand PinStopToStartPageCommand
+        {
+            get
+            {
+                return this.pinStopToStartPageCommand;
+            }
+            set
+            {
+                SetProperty(ref this.pinStopToStartPageCommand, value);
+            }
+        }
+
         public ObservableCommand AddToFavoritesCommand
         {
             get
@@ -450,27 +485,34 @@ namespace OneBusAway
             where T : IPageControl, new()
         {
             T newPageControl = Activator.CreateInstance<T>();
+            await NavigateToPageControlAsync(newPageControl, parameter);
+            return newPageControl;
+        }
 
-            if (this.currentPageControl != null)
+        /// <summary>
+        /// This overload takes a specific page control. Used in cases where we are activated via a URL.
+        /// </summary>
+        public async Task NavigateToPageControlAsync(IPageControl newPageControl, object parameter)
+        {
+            if (this.CurrentPageControl != null)
             {
-                newPageControl.ViewModel.MapControlViewModel.CopyFrom(this.currentPageControl.ViewModel.MapControlViewModel);
+                newPageControl.ViewModel.MapControlViewModel.CopyFrom(this.CurrentPageControl.ViewModel.MapControlViewModel);
             }
                         
-            NavigationController.MainPage.SetPageView(newPageControl);            
+            NavigationController.MainPage.SetPageView(newPageControl);
 
-            if (this.currentPageControl != null)
+            if (this.CurrentPageControl != null)
             {
-                this.pageControls.Push(currentPageControl);
+                this.pageControls.Push(this.CurrentPageControl);
             }
 
-            this.currentPageControl = newPageControl;
+            this.CurrentPageControl = newPageControl;
             this.FirePropertyChanged("CanGoBack");
 
             await newPageControl.InitializeAsync(parameter);
             await this.RestartRefreshLoopAsync();            
-            return newPageControl;
-        }
-
+        }       
+        
         /// <summary>
         /// Overrides the FirePropertyChanged method to fire the weakly held proxy events.
         /// </summary>
@@ -522,9 +564,9 @@ namespace OneBusAway
                     this.refreshLoopCancelationToken.Token.ThrowIfCancellationRequested();
 
                     // Call refresh asyn directly here to make sure we don't have a loop:
-                    if (this.currentPageControl != null)
+                    if (this.CurrentPageControl != null)
                     {
-                        await this.currentPageControl.RefreshAsync();
+                        await this.CurrentPageControl.RefreshAsync();
                     }
                 }
             }
@@ -559,7 +601,7 @@ namespace OneBusAway
             this.FirePropertyChanged("CanGoBack");
             await previousPageControl.RestoreAsync();
 
-            this.currentPageControl = previousPageControl;
+            this.CurrentPageControl = previousPageControl;
             MainPage.SetPageView(previousPageControl);            
         }
 
@@ -637,10 +679,10 @@ namespace OneBusAway
         /// </summary>
         private async Task OnRefreshCommandExecuted(object arg1, object arg2)
         {
-            if (this.currentPageControl != null)
+            if (this.CurrentPageControl != null)
             {
-                await this.RestartRefreshLoopAsync(); 
-                await this.currentPageControl.RefreshAsync();
+                await this.RestartRefreshLoopAsync();
+                await this.CurrentPageControl.RefreshAsync();
             }
         }
 
@@ -649,9 +691,9 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToUsersLocationCommandExecuted(object arg1, object arg2)
         {
-            if (this.currentPageControl != null)
+            if (this.CurrentPageControl != null)
             {
-                if (!await this.currentPageControl.ViewModel.MapControlViewModel.TryFindUserLocationAsync())
+                if (!await this.CurrentPageControl.ViewModel.MapControlViewModel.TryFindUserLocationAsync())
                 {
                     var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
                     messageDialog.DefaultCommandIndex = 0;
@@ -659,6 +701,52 @@ namespace OneBusAway
                 }
             }
         }        
+
+        /// <summary>
+        /// Called when the pin stop to start page command is executed.
+        /// </summary>
+        private async Task OnPinStopToStartPageCommandExecuted(object arg1, object arg2)
+        {
+            IPinablePageControl pinnablePageControl = arg2 as IPinablePageControl;
+
+            if (pinnablePageControl != null)
+            {
+                Uri logoUri = new Uri("ms-appx:///Assets/Logo.scale-100.png");
+                Uri smallLogo = new Uri("ms-appx:///Assets/SmallLogo.scale-100.png");
+                Uri wideLogoUri = new Uri("ms-appx:///Assets/WideLogo.scale-100.png");
+
+                SecondaryTile secondaryTile = new SecondaryTile()
+                {
+                    TileId = pinnablePageControl.TileId,
+                    ShortName = pinnablePageControl.TileName,
+                    DisplayName = pinnablePageControl.TileName,
+                    TileOptions = TileOptions.ShowNameOnLogo,
+                    Arguments = pinnablePageControl.GetParameters().ToQueryString(),
+                    Logo = logoUri,
+                    WideLogo = wideLogoUri,
+                    SmallLogo = smallLogo,
+                    ForegroundText = ForegroundText.Light,
+                };
+
+                if (await secondaryTile.RequestCreateAsync())
+                {
+                    bool failed = false;
+                    try
+                    {
+                        await pinnablePageControl.UpdateTileAsync();
+                    }
+                    catch
+                    {
+                        failed = true;
+                    }
+
+                    if (failed)
+                    {
+                        await secondaryTile.RequestDeleteAsync();
+                    }
+                }
+            }
+        }
 
         private async Task OnAddToFavoritesCommandExecuted(object arg1, object arg2)
         {

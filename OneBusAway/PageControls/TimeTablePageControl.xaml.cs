@@ -99,5 +99,13 @@ namespace OneBusAway.PageControls
         {
             return Task.FromResult<object>(null);
         }
+
+        /// <summary>
+        /// Pages should be represent themselves as a string of parameters.
+        /// </summary>
+        public PageInitializationParameters GetParameters()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

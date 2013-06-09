@@ -86,5 +86,13 @@ namespace OneBusAway.PageControls
         {
             NavigationController.Instance.GoToRealTimePageCommand.Execute(e);
         }
+
+        /// <summary>
+        /// Pages should be represent themselves as a string of parameters.
+        /// </summary>
+        public PageInitializationParameters GetParameters()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -34,10 +34,10 @@ namespace OneBusAway.Pages
     {
         public MainPage()
         {
-            this.InitializeComponent();      
-      
+            this.InitializeComponent();
+
             // Add settings options:
-            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;            
+            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
         }
 
         /// <summary>
@@ -70,15 +70,51 @@ namespace OneBusAway.Pages
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // We should only get a parameter if we've been invoked from the start screen to search.
-            // In that case, don't navigate to the favorites page control.
-            if (e.NavigationMode == NavigationMode.New && string.IsNullOrEmpty(e.Parameter as string))
+            NavigateToPageControlByArguments(e.Parameter as string);
+            base.OnNavigatedTo(e);
+        }
+
+        /// <summary>
+        /// Navigates to a page control by parsing an argument string. If the argument string is null or empty,
+        /// then we default to the favorites page. If the string begins with "?" then we try and parse it as a 
+        /// deep link. If the string is anything else then we assume it's a search.
+        /// </summary>
+        public void NavigateToPageControlByArguments(string arguments)
+        {
+            IPageControl pageControl = null;
+            object parameter = arguments;
+
+            if (string.IsNullOrEmpty(arguments))
             {
-                // Important: to make sure we don't time out opening OBA on ARM devices, load the page control when we idle.
-                var ignored = this.Dispatcher.RunIdleAsync(async cb => await NavigationController.Instance.NavigateToPageControlAsync<FavoritesPageControl>(null));
+                pageControl = new FavoritesPageControl();
+            }
+            else
+            {
+                PageInitializationParameters parameters;
+                if (PageInitializationParameters.TryCreate(arguments, out parameters))
+                {
+                    string pageControlName = parameters.GetParameter<string>("pageControl");
+                    if (!string.IsNullOrEmpty(pageControlName))
+                    {
+                        // Make sure the type is a valid page control:
+                        Type pageControlType = Type.GetType(pageControlName, false);
+                        if (pageControlType != null)
+                        {
+                            pageControl = Activator.CreateInstance(pageControlType) as IPageControl;
+                            parameter = parameters;
+                        }
+                    }
+                }
+
+                // We have a query string, but it's not structured in a way we expect, so let's assume it's a search query:
+                if (pageControl == null)
+                {
+                    pageControl = new SearchResultsPageControl();
+                }
             }
 
-            base.OnNavigatedTo(e);
+            // Important: to make sure we don't time out opening OBA on ARM devices, load the page control when we idle.
+            var ignored = this.Dispatcher.RunIdleAsync(async cb => await NavigationController.Instance.NavigateToPageControlAsync(pageControl, parameter));
         }
 
         /// <summary>

@@ -27,6 +27,11 @@ namespace OneBusAway.PageControls
         Task InitializeAsync(object parameter);
 
         /// <summary>
+        /// Pages should be represent themselves as a string of parameters.
+        /// </summary>
+        PageInitializationParameters GetParameters();
+        
+        /// <summary>
         /// Pages should be able to restore themselves.
         /// </summary>
         Task RestoreAsync();
