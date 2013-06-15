@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway", "OneBusAway\OneBusAway.csproj", "{0C5F2939-61DC-452E-914F-DA55798327D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC} = {35672B4C-7575-4D5C-956B-3674D4CB5AEC}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.DataAccess", "OneBusAway.DataAccess\OneBusAway.DataAccess.csproj", "{B612D55D-895B-4C25-A696-5C7DFEB6BDE4}"
 EndProject
@@ -13,11 +16,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Utilities", "One
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Web", "OneBusAway.Web\OneBusAway.Web.csproj", "{F754B1D3-BE0F-47B1-B5C0-F47111A020AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Backgrounding", "OneBusAway.Backgrounding\OneBusAway.Backgrounding.csproj", "{35672B4C-7575-4D5C-956B-3674D4CB5AEC}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mbraude.tfspreview.com/defaultcollection
+		SccTeamFoundationServer = https://mbraude.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = OneBusAway\\OneBusAway.csproj
 		SccProjectName1 = OneBusAway
@@ -37,6 +42,9 @@ Global
 		SccProjectUniqueName6 = OneBusAway.Web\\OneBusAway.Web.csproj
 		SccProjectName6 = OneBusAway.Web
 		SccLocalPath6 = OneBusAway.Web
+		SccProjectUniqueName7 = OneBusAway.Backgrounding\\OneBusAway.Backgrounding.csproj
+		SccProjectName7 = OneBusAway.Backgrounding
+		SccLocalPath7 = OneBusAway.Backgrounding
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +183,26 @@ Global
 		{F754B1D3-BE0F-47B1-B5C0-F47111A020AC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F754B1D3-BE0F-47B1-B5C0-F47111A020AC}.Release|x64.ActiveCfg = Release|Any CPU
 		{F754B1D3-BE0F-47B1-B5C0-F47111A020AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|ARM.Build.0 = Debug|ARM
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|x64.ActiveCfg = Debug|x64
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|x64.Build.0 = Debug|x64
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|x86.ActiveCfg = Debug|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Debug|x86.Build.0 = Debug|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|ARM.ActiveCfg = Release|ARM
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|ARM.Build.0 = Release|ARM
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|Mixed Platforms.Build.0 = Release|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|x64.ActiveCfg = Release|x64
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|x64.Build.0 = Release|x64
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|x86.ActiveCfg = Release|x86
+		{35672B4C-7575-4D5C-956B-3674D4CB5AEC}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

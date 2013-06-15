@@ -1,4 +1,5 @@
 ﻿using Bing.Maps;
+using OneBusAway.Backgrounding;
 using OneBusAway.Controls;
 using OneBusAway.DataAccess;
 using OneBusAway.Model;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -114,7 +116,11 @@ namespace OneBusAway.Pages
             }
 
             // Important: to make sure we don't time out opening OBA on ARM devices, load the page control when we idle.
-            var ignored = this.Dispatcher.RunIdleAsync(async cb => await NavigationController.Instance.NavigateToPageControlAsync(pageControl, parameter));
+            var ignored = this.Dispatcher.RunIdleAsync(async cb =>
+                {
+                    await NavigationController.Instance.NavigateToPageControlAsync(pageControl, parameter);
+                    await this.TryRegisterBackgroundTask();
+                });
         }
 
         /// <summary>
@@ -143,6 +149,39 @@ namespace OneBusAway.Pages
         {
             NavigationController.Instance.IsSnapped = (ApplicationView.Value == ApplicationViewState.Snapped);
             NavigationController.Instance.IsPortrait = (ApplicationView.Value == ApplicationViewState.FullScreenPortrait);
+        }
+
+        /// <summary>
+        /// Attempts to register a background task.
+        /// </summary>
+        private async Task<bool> TryRegisterBackgroundTask()
+        {
+            try
+            {
+                var backgroundAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
+                if (backgroundAccessStatus == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
+                    backgroundAccessStatus == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
+                {
+                    bool alreadyRegistered = BackgroundTaskRegistration.AllTasks.Any(kvp => kvp.Value.Name == typeof(TileUpdaterService).Name);
+
+                    if (!alreadyRegistered)
+                    {
+                        BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder();
+                        taskBuilder.Name = typeof(TileUpdaterService).Name;
+                        taskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
+                        taskBuilder.SetTrigger(new TimeTrigger(15, false));
+                        taskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                        taskBuilder.AddCondition(new SystemCondition(SystemConditionType.SessionConnected));
+                        var registration = taskBuilder.Register();
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return false;
         }
     }
 }

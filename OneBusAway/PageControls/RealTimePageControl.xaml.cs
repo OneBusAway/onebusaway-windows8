@@ -143,44 +143,11 @@ namespace OneBusAway.PageControls
         {
             var busStop = this.viewModel.MapControlViewModel.SelectedBusStop;
 
-            // Get the image from Bing and save to disk.
-            string tileImagePath = Path.Combine("Tiles", this.TileId);
-            tileImagePath = Path.ChangeExtension(tileImagePath, ".png");
-                        
-            BingMapsServiceHelper bingMapsHelper = new BingMapsServiceHelper();
-            using (var memoryStream = await bingMapsHelper.GetStaticImageBytesAsync(
+            TileXMLBuilder builder = new TileXMLBuilder(this.TileId);
+            await builder.AppendTileWithLargePictureAndTextAsync(this.TileId,
                 busStop.Latitude,
                 busStop.Longitude,
-                300,
-                160))
-            {
-                IStorageFile storageFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(tileImagePath, CreationCollisionOption.ReplaceExisting);
-                using (var stream = await storageFile.OpenStreamForWriteAsync())
-                {
-                    memoryStream.WriteTo(stream);
-                }
-            }
-
-            // Now we can update the tile:
-            TileUpdater updateManager = TileUpdateManager.CreateTileUpdaterForSecondaryTile(this.TileId);
-            var template = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWideImageAndText01);
-            //<tile>
-            //  <visual>
-            //    <binding template="TileWideImageAndText01">
-            //      <image id="1" src="image1.png" alt="alt text"/>
-            //      <text id="1">Text Field 1</text>
-            //    </binding>  
-            //  </visual>
-            //</tile>
-
-            XmlElement imageElement = (XmlElement)template.GetElementsByTagName("image")[0];
-            imageElement.SetAttribute("src", string.Format(@"ms-appdata:///local/Tiles/{0}.png", this.TileId));
-
-            XmlElement textElement = (XmlElement)template.GetElementsByTagName("text")[0];
-            textElement.InnerText = this.TileName;
-
-            TileNotification notification = new TileNotification(template);
-            updateManager.Update(notification);
+                this.TileName);
         }
     }
 }

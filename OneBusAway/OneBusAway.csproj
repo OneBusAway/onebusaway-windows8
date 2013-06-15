@@ -188,7 +188,6 @@
       <DependentUpon>FavoritesPageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PageControls\IPinablePageControl.cs" />
-    <Compile Include="PageControls\PageInitializationParameters.cs" />
     <Compile Include="PageControls\RealTimePageControl.xaml.cs">
       <DependentUpon>RealTimePageControl.xaml</DependentUpon>
     </Compile>
@@ -335,6 +334,10 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OneBusAway.Backgrounding\OneBusAway.Backgrounding.csproj">
+      <Project>{35672b4c-7575-4d5c-956b-3674d4cb5aec}</Project>
+      <Name>OneBusAway.Backgrounding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OneBusAway.DataAccess\OneBusAway.DataAccess.csproj">
       <Project>{b612d55d-895b-4c25-a696-5c7dfeb6bde4}</Project>
       <Name>OneBusAway.DataAccess</Name>

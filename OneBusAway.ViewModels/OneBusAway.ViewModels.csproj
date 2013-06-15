@@ -132,6 +132,7 @@
     <Compile Include="IUIHelper.cs" />
     <Compile Include="LocationSelectedEventArgs.cs" />
     <Compile Include="ObservableCommandProxy.cs" />
+    <Compile Include="PageInitializationParameters.cs" />
     <Compile Include="RouteMapsAndSchedulesControlViewModel.cs" />
     <Compile Include="SearchLocationResultViewModel.cs" />
     <Compile Include="RouteSelectedEventArgs.cs" />

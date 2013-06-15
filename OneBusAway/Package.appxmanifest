@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="43039MJBSoftware.OneBusAway" Publisher="CN=ACBBFA9F-E0ED-4D10-87F8-1AFBA7940876" Version="1.0.0.32" />
+  <Identity Name="43039MJBSoftware.OneBusAway" Publisher="CN=ACBBFA9F-E0ED-4D10-87F8-1AFBA7940876" Version="1.0.0.33" />
   <Properties>
     <DisplayName>OneBusAway</DisplayName>
     <PublisherDisplayName>MJB Software</PublisherDisplayName>
@@ -15,12 +15,18 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="OneBusAway.App">
-      <VisualElements DisplayName="OneBusAway" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="OneBusAway is a tool that helps you find real-time information for buses in the Seattle metro area." ForegroundText="light" BackgroundColor="#78AA36">
+      <VisualElements DisplayName="OneBusAway" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="OneBusAway is a tool that helps you find real-time information for buses in regions supported by OneBusAway.org." ForegroundText="light" BackgroundColor="#78AA36">
+        <LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\BadgeLogo.png" />
         <DefaultTile ShowName="allLogos" ShortName="OneBusAway" WideLogo="Assets\WideLogo.png" />
         <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#78AA36" />
       </VisualElements>
       <Extensions>
         <Extension Category="windows.search" />
+        <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.TileUpdaterService">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>
