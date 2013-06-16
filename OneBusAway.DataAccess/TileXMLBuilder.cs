@@ -22,6 +22,11 @@ namespace OneBusAway.DataAccess
         private TileUpdater tileUpdater;
 
         /// <summary>
+        /// The id of the tile updater.
+        /// </summary>
+        private string tileId;
+
+        /// <summary>
         /// Creates a tile xml builder for the default tile.
         /// </summary>
         public TileXMLBuilder()
@@ -35,11 +40,31 @@ namespace OneBusAway.DataAccess
         public TileXMLBuilder(string tileId)
         {
             // Now we can update the tile:
-            this.tileUpdater = (string.IsNullOrEmpty(tileId))
+            this.tileId = tileId;
+            this.tileUpdater = (string.IsNullOrEmpty(this.tileId))
                 ? TileUpdateManager.CreateTileUpdaterForApplication()
-                : TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
+                : TileUpdateManager.CreateTileUpdaterForSecondaryTile(this.tileId);
 
-            this.tileUpdater.Clear();            
+            this.tileUpdater.Clear();
+        }
+
+        /// <summary>
+        /// Returns true if the is tile updater is for the main application or not.
+        /// </summary>
+        public bool IsMainTileUpdater
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.tileId);
+            }
+        }
+
+        /// <summary>
+        /// Clears the notification queue.
+        /// </summary>
+        public void ClearNotificationQueue()
+        {
+            this.tileUpdater.Clear();
         }
 
         /// <summary>
@@ -165,7 +190,7 @@ namespace OneBusAway.DataAccess
             }
 
             TileNotification notification = new TileNotification(document);
-            notification.ExpirationTime = DateTime.Now.AddHours(1);
+            notification.ExpirationTime = DateTime.Now.AddMinutes(1);
             this.tileUpdater.Update(notification);
         }
 

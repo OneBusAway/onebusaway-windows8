@@ -45,6 +45,7 @@ namespace OneBusAway.Backgrounding
             this.deferral = taskInstance.GetDeferral();
             taskInstance.Canceled += OnTaskInstanceCanceled;
 
+            var listOfBuildersAndTrackingData = new List<Tuple<TileXMLBuilder, TrackingData[]>>();
             try
             {
                 // First update the favorites and send the notification to the main tile:
@@ -53,7 +54,7 @@ namespace OneBusAway.Backgrounding
 
                 // Order the favorites by their scheduled arrival time:
                 TileXMLBuilder mainTileBuilder = new TileXMLBuilder();
-                this.AppendTrackingDataToTile(mainTileBuilder, routesAndStopsViewModel.RealTimeData, 5);
+                listOfBuildersAndTrackingData.Add(new Tuple<TileXMLBuilder,TrackingData[]>(mainTileBuilder, routesAndStopsViewModel.RealTimeData));
 
                 // Now do pinned stops:
                 var obaDataAccess = ObaDataAccess.Create();
@@ -62,7 +63,6 @@ namespace OneBusAway.Backgrounding
                 {
                     if (this.isRunning)
                     {
-                        TileXMLBuilder secondaryTileBuilder = new TileXMLBuilder(pinnedStopTile.TileId);
                         PageInitializationParameters parameters = null;
 
                         // Be safe and try this first...should never happen. Note - we can't delete here
@@ -75,34 +75,56 @@ namespace OneBusAway.Backgrounding
 
                             if (!string.IsNullOrEmpty(stopId) && lat != 0 && lon != 0)
                             {
-                                // Append the first tile which is the map:
-                                await secondaryTileBuilder.AppendTileWithLargePictureAndTextAsync(stopId, lat, lon, pinnedStopTile.DisplayName);
                                 TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
-                                this.AppendTrackingDataToTile(secondaryTileBuilder, trackingData, 4);
+
+                                // Append the first tile which is the map:
+                                TileXMLBuilder secondaryTileBuilder = new TileXMLBuilder(pinnedStopTile.TileId);
+                                await secondaryTileBuilder.AppendTileWithLargePictureAndTextAsync(stopId, lat, lon, pinnedStopTile.DisplayName);                                
+                                listOfBuildersAndTrackingData.Add(new Tuple<TileXMLBuilder,TrackingData[]>(secondaryTileBuilder, trackingData));
                             }
                         }
                     }
                 }
+
+                // Kick off the update loop:
+                var ignored = this.UpdateTilesLoopAsync(listOfBuildersAndTrackingData);
             }
             catch
             {
                 // to do...how do we process this?!?!?
             }
-            finally
+        }
+
+        /// <summary>
+        /// A task that refreshes every minute to update the tile data.
+        /// </summary>
+        private async Task UpdateTilesLoopAsync(List<Tuple<TileXMLBuilder, TrackingData[]>> listOfBuildersAndTrackingData)
+        {
+            while (this.isRunning)
             {
-                deferral.Complete();
+                foreach (var tuple in listOfBuildersAndTrackingData)
+                {
+                    var builder = tuple.Item1;
+                    var trackingData = tuple.Item2;
+                    this.AppendTrackingDataToTile(builder, trackingData);
+                }
+
+                // Wait one minute:
+                await Task.Delay(TimeSpan.FromMinutes(1));
             }
+
+            this.deferral.Complete();
         }
 
         /// <summary>
         /// Appends count number of tiles to the tile builder.
         /// </summary>
-        private void AppendTrackingDataToTile(TileXMLBuilder tileBuilder, TrackingData[] unorderedTrackingData, int count)
+        private void AppendTrackingDataToTile(TileXMLBuilder tileBuilder, TrackingData[] unorderedTrackingData)
         {
             var orderedTrackingData = (from rtd in unorderedTrackingData
-                                       where !rtd.IsNoData
+                                       where !rtd.IsNoData && rtd.PredictedArrivalTime > DateTime.Now
                                        orderby rtd.PredictedArrivalInMinutes
-                                       select rtd).Take(count).ToList();
+                                       select rtd).Take(tileBuilder.IsMainTileUpdater ? 5 : 4).ToList();
 
             if (orderedTrackingData.Count > 1)
             {
@@ -111,7 +133,7 @@ namespace OneBusAway.Backgrounding
 
             foreach (TrackingData trackingData in orderedTrackingData)
             {
-                tileBuilder.AppendWideTileWithBlockTextAndLines(trackingData.PredictedArrivalInMinutes.ToString(),
+                tileBuilder.AppendWideTileWithBlockTextAndLines((trackingData.PredictedArrivalTime - DateTime.Now).Minutes.ToString(),
                     trackingData.Status,
                     string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
                     trackingData.TripHeadsign.ToUpper(),
