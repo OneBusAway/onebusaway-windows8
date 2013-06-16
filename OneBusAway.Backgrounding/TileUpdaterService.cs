@@ -197,7 +197,7 @@ namespace OneBusAway.Backgrounding
 
             foreach (TrackingData trackingData in orderedTrackingData)
             {
-                tileBuilder.AppendWideTileWithBlockTextAndLines((trackingData.PredictedArrivalTime - DateTime.Now).Minutes.ToString(),
+                tileBuilder.AppendTileWithBlockTextAndLines((trackingData.PredictedArrivalTime - DateTime.Now).Minutes.ToString(),
                     trackingData.Status,
                     string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
                     trackingData.TripHeadsign.ToUpper(),

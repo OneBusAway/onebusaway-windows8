@@ -111,7 +111,7 @@ namespace OneBusAway.DataAccess
             string smallTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 160, 160, false);
             
             XmlElement smallBindingElement = document.CreateElement("binding");
-            smallBindingElement.SetAttribute("template", "TileSquarePeekImageAndText04");
+            smallBindingElement.SetAttribute("template", "TileSquareImage");
             visualElement.AppendChild(smallBindingElement);
 
             XmlElement smallImageElement = document.CreateElement("image");
@@ -120,11 +120,6 @@ namespace OneBusAway.DataAccess
             smallImageElement.SetAttribute("alt", text);
             smallBindingElement.AppendChild(smallImageElement);
 
-            XmlElement smallTextElement = document.CreateElement("text");
-            smallTextElement.SetAttribute("id", "1");
-            smallTextElement.InnerText = text;
-            smallBindingElement.AppendChild(smallTextElement);
-
             TileNotification notification = new TileNotification(document);
             this.tileUpdater.Update(notification);
         }
@@ -132,7 +127,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Appends a wide tile with a big block of text. Used to display up-coming buses.
         /// </summary>
-        public void AppendWideTileWithBlockTextAndLines(string blockText, string subBlockText, string text1 = null, string text2 = null, string text3 = null, string text4 = null)
+        public void AppendTileWithBlockTextAndLines(string blockText, string subBlockText, string text1 = null, string text2 = null, string text3 = null, string text4 = null)
         {
             //<tile>
             //  <visual>
@@ -153,11 +148,11 @@ namespace OneBusAway.DataAccess
             XmlElement visualElement = document.CreateElement("visual");
             rootElement.AppendChild(visualElement);
 
-            XmlElement bindingElement = document.CreateElement("binding");
-            bindingElement.SetAttribute("template", "TileWideBlockAndText01");
-            visualElement.AppendChild(bindingElement);
+            XmlElement wideBindingElement = document.CreateElement("binding");
+            wideBindingElement.SetAttribute("template", "TileWideBlockAndText01");
+            visualElement.AppendChild(wideBindingElement);
 
-            string[] texts = new string[]
+            string[] wideTexts = new string[]
             {
                 text1,
                 text2,
@@ -167,17 +162,40 @@ namespace OneBusAway.DataAccess
                 subBlockText,
             };
 
-            for (int i = 0; i < texts.Length; i++)
+            for (int i = 0; i < wideTexts.Length; i++)
             {
-                string text = texts[i];
+                string text = wideTexts[i];
                 if (!string.IsNullOrEmpty(text))
                 {
                     XmlElement textElement = document.CreateElement("text");
                     textElement.SetAttribute("id", (i + 1).ToString());
                     textElement.InnerText = text;
-                    bindingElement.AppendChild(textElement);
+                    wideBindingElement.AppendChild(textElement);
                 }
             }
+
+            // Unfortunately, there is only one small tile template that supports block text.
+            //<tile>
+            //  <visual>
+            //    <binding template="TileSquareBlock">
+            //      <text id="1">Text Field 1</text>
+            //      <text id="2">Text Field 2</text>
+            //    </binding>  
+            //  </visual>
+            //</tile>
+            XmlElement smallBindingElement = document.CreateElement("binding");
+            smallBindingElement.SetAttribute("template", "TileSquareBlock");
+            visualElement.AppendChild(smallBindingElement);
+
+            XmlElement smallBlockTextElement = document.CreateElement("text");
+            smallBlockTextElement.SetAttribute("id", "1");
+            smallBlockTextElement.InnerText = blockText;
+            smallBindingElement.AppendChild(smallBlockTextElement);
+
+            XmlElement smallSubTextElement = document.CreateElement("text");
+            smallSubTextElement.SetAttribute("id", "2");
+            smallSubTextElement.InnerText = text1;
+            smallBindingElement.AppendChild(smallSubTextElement);
 
             TileNotification notification = new TileNotification(document);
             notification.ExpirationTime = DateTime.Now.AddMinutes(1);
