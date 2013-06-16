@@ -25,6 +25,7 @@
         <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.TileUpdaterService">
           <BackgroundTasks>
             <Task Type="timer" />
+            <Task Type="systemEvent" />
           </BackgroundTasks>
         </Extension>
       </Extensions>

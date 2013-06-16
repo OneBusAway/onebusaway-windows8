@@ -166,13 +166,19 @@ namespace OneBusAway.Pages
 
                     if (!alreadyRegistered)
                     {
-                        BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder();
-                        taskBuilder.Name = typeof(TileUpdaterService).Name;
-                        taskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
-                        taskBuilder.SetTrigger(new TimeTrigger(15, false));
-                        taskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                        taskBuilder.AddCondition(new SystemCondition(SystemConditionType.SessionConnected));
-                        var registration = taskBuilder.Register();
+                        BackgroundTaskBuilder sessionStartedTaskBuilder = new BackgroundTaskBuilder();
+                        sessionStartedTaskBuilder.Name = typeof(TileUpdaterService).Name;
+                        sessionStartedTaskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
+                        sessionStartedTaskBuilder.SetTrigger(new SystemTrigger(SystemTriggerType.SessionConnected, false));
+                        sessionStartedTaskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                        var sessionRegistration = sessionStartedTaskBuilder.Register();
+                        
+                        BackgroundTaskBuilder timerTaskBuilder = new BackgroundTaskBuilder();
+                        timerTaskBuilder.Name = typeof(TileUpdaterService).Name;
+                        timerTaskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
+                        timerTaskBuilder.SetTrigger(new TimeTrigger(15, false));
+                        timerTaskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                        var timerRegistration = timerTaskBuilder.Register();
                         return true;
                     }
                 }
