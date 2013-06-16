@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddedToLockScreenBackgroundTask.cs" />
+    <Compile Include="BackgroundTaskRegistrar.cs" />
     <Compile Include="NetworkConnectionDroppedBackgroundTask.cs" />
     <Compile Include="NetworkConnectionEstablishedBackgroundTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

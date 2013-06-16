@@ -188,7 +188,7 @@ namespace OneBusAway.Backgrounding
             var orderedTrackingData = (from rtd in unorderedTrackingData
                                        where !rtd.IsNoData && rtd.PredictedArrivalTime > DateTime.Now
                                        orderby rtd.PredictedArrivalInMinutes
-                                       select rtd).Take(4).ToList();
+                                       select rtd).Take(tileBuilder.IsMainTileUpdater ? 5 : 4).ToList();
 
             if (orderedTrackingData.Count > 1)
             {

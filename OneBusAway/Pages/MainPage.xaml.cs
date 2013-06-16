@@ -158,36 +158,21 @@ namespace OneBusAway.Pages
         {
             try
             {
-                var backgroundAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
-                if (backgroundAccessStatus == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
-                    backgroundAccessStatus == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
+                // We should always register these
+                BackgroundTaskRegistrar.RegisterBackgroundTask(
+                    typeof(AddedToLockScreenBackgroundTask),
+                    new SystemTrigger(SystemTriggerType.LockScreenApplicationAdded, false));
+
+                BackgroundTaskRegistrar.RegisterBackgroundTask(
+                    typeof(RemovedFromLockScreenBackgroundTask),
+                    new SystemTrigger(SystemTriggerType.LockScreenApplicationRemoved, false));
+
+                // Try and register the rest of our background tasks. The user could say no!
+                var access = await BackgroundExecutionManager.RequestAccessAsync();
+                if (access == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
+                    access == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
                 {
-                    this.RegisterBackgroundTask<StartupBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.SessionConnected, true),
-                        new SystemCondition(SystemConditionType.InternetAvailable));
-
-                    this.RegisterBackgroundTask<UserPresentBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.UserPresent, false),
-                        new SystemCondition(SystemConditionType.InternetAvailable));
-
-                    this.RegisterBackgroundTask<AddedToLockScreenBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.LockScreenApplicationAdded, false),
-                        new SystemCondition(SystemConditionType.InternetAvailable));
-
-                    this.RegisterBackgroundTask<RemovedFromLockScreenBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.LockScreenApplicationRemoved, false),
-                        new SystemCondition(SystemConditionType.InternetAvailable));
-
-                    this.RegisterBackgroundTask<NetworkConnectionDroppedBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.NetworkStateChange, false),
-                        new SystemCondition(SystemConditionType.InternetNotAvailable));
-
-                    this.RegisterBackgroundTask<NetworkConnectionEstablishedBackgroundTask>(
-                        new SystemTrigger(SystemTriggerType.InternetAvailable, false));
-
-                    this.RegisterBackgroundTask<TimerBackgroundTask>(
-                        new TimeTrigger(15, false),
-                        new SystemCondition(SystemConditionType.InternetAvailable));
+                    BackgroundTaskRegistrar.TryRegisterAllBackgroundTasks();
                 }
             }
             catch
@@ -195,29 +180,6 @@ namespace OneBusAway.Pages
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Registers a background task if it doesn't already exist.
-        /// </summary>
-        private void RegisterBackgroundTask<T>(IBackgroundTrigger trigger, params IBackgroundCondition[] conditions)
-            where T : IBackgroundTask
-        {
-            bool alreadyRegistered = BackgroundTaskRegistration.AllTasks.Any(kvp => kvp.Value.Name == typeof(T).Name);
-            if (!alreadyRegistered)
-            {
-                BackgroundTaskBuilder sessionStartedTaskBuilder = new BackgroundTaskBuilder();
-                sessionStartedTaskBuilder.Name = typeof(T).Name;
-                sessionStartedTaskBuilder.TaskEntryPoint = typeof(T).FullName;
-                sessionStartedTaskBuilder.SetTrigger(trigger);
-
-                foreach (IBackgroundCondition condition in conditions)
-                {
-                    sessionStartedTaskBuilder.AddCondition(condition);
-                }
-                
-                var sessionRegistration = sessionStartedTaskBuilder.Register();
-            }
         }
     }
 }
