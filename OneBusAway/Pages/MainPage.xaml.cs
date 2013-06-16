@@ -162,25 +162,32 @@ namespace OneBusAway.Pages
                 if (backgroundAccessStatus == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
                     backgroundAccessStatus == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
                 {
-                    bool alreadyRegistered = BackgroundTaskRegistration.AllTasks.Any(kvp => kvp.Value.Name == typeof(TileUpdaterService).Name);
+                    this.RegisterBackgroundTask<StartupBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.SessionConnected, true),
+                        new SystemCondition(SystemConditionType.InternetAvailable));
 
-                    if (!alreadyRegistered)
-                    {
-                        BackgroundTaskBuilder sessionStartedTaskBuilder = new BackgroundTaskBuilder();
-                        sessionStartedTaskBuilder.Name = typeof(TileUpdaterService).Name;
-                        sessionStartedTaskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
-                        sessionStartedTaskBuilder.SetTrigger(new SystemTrigger(SystemTriggerType.SessionConnected, false));
-                        sessionStartedTaskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                        var sessionRegistration = sessionStartedTaskBuilder.Register();
-                        
-                        BackgroundTaskBuilder timerTaskBuilder = new BackgroundTaskBuilder();
-                        timerTaskBuilder.Name = typeof(TileUpdaterService).Name;
-                        timerTaskBuilder.TaskEntryPoint = typeof(TileUpdaterService).FullName;
-                        timerTaskBuilder.SetTrigger(new TimeTrigger(15, false));
-                        timerTaskBuilder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                        var timerRegistration = timerTaskBuilder.Register();
-                        return true;
-                    }
+                    this.RegisterBackgroundTask<UserPresentBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.UserPresent, false),
+                        new SystemCondition(SystemConditionType.InternetAvailable));
+
+                    this.RegisterBackgroundTask<AddedToLockScreenBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.LockScreenApplicationAdded, false),
+                        new SystemCondition(SystemConditionType.InternetAvailable));
+
+                    this.RegisterBackgroundTask<RemovedFromLockScreenBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.LockScreenApplicationRemoved, false),
+                        new SystemCondition(SystemConditionType.InternetAvailable));
+
+                    this.RegisterBackgroundTask<NetworkConnectionDroppedBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.NetworkStateChange, false),
+                        new SystemCondition(SystemConditionType.InternetNotAvailable));
+
+                    this.RegisterBackgroundTask<NetworkConnectionEstablishedBackgroundTask>(
+                        new SystemTrigger(SystemTriggerType.InternetAvailable, false));
+
+                    this.RegisterBackgroundTask<TimerBackgroundTask>(
+                        new TimeTrigger(15, false),
+                        new SystemCondition(SystemConditionType.InternetAvailable));
                 }
             }
             catch
@@ -188,6 +195,29 @@ namespace OneBusAway.Pages
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Registers a background task if it doesn't already exist.
+        /// </summary>
+        private void RegisterBackgroundTask<T>(IBackgroundTrigger trigger, params IBackgroundCondition[] conditions)
+            where T : IBackgroundTask
+        {
+            bool alreadyRegistered = BackgroundTaskRegistration.AllTasks.Any(kvp => kvp.Value.Name == typeof(T).Name);
+            if (!alreadyRegistered)
+            {
+                BackgroundTaskBuilder sessionStartedTaskBuilder = new BackgroundTaskBuilder();
+                sessionStartedTaskBuilder.Name = typeof(T).Name;
+                sessionStartedTaskBuilder.TaskEntryPoint = typeof(T).FullName;
+                sessionStartedTaskBuilder.SetTrigger(trigger);
+
+                foreach (IBackgroundCondition condition in conditions)
+                {
+                    sessionStartedTaskBuilder.AddCondition(condition);
+                }
+                
+                var sessionRegistration = sessionStartedTaskBuilder.Register();
+            }
         }
     }
 }

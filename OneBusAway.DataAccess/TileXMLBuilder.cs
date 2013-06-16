@@ -44,8 +44,6 @@ namespace OneBusAway.DataAccess
             this.tileUpdater = (string.IsNullOrEmpty(this.tileId))
                 ? TileUpdateManager.CreateTileUpdaterForApplication()
                 : TileUpdateManager.CreateTileUpdaterForSecondaryTile(this.tileId);
-
-            this.tileUpdater.Clear();
         }
 
         /// <summary>
@@ -57,14 +55,6 @@ namespace OneBusAway.DataAccess
             {
                 return string.IsNullOrEmpty(this.tileId);
             }
-        }
-
-        /// <summary>
-        /// Clears the notification queue.
-        /// </summary>
-        public void ClearNotificationQueue()
-        {
-            this.tileUpdater.Clear();
         }
 
         /// <summary>
