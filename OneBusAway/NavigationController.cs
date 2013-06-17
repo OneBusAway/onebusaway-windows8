@@ -3,6 +3,7 @@ using OneBusAway.PageControls;
 using OneBusAway.Pages;
 using OneBusAway.ViewModels;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -99,6 +100,11 @@ namespace OneBusAway
         private ObservableCommand pinStopToStartPageCommand;
 
         /// <summary>
+        /// Command used to unpin a stop from the start screen.
+        /// </summary>
+        private ObservableCommand unpinStopToStartPageCommand;
+
+        /// <summary>
         /// A list of all the commands.
         /// </summary>
         private List<ObservableCommand> allCommands;
@@ -129,6 +135,11 @@ namespace OneBusAway
         /// True when the app is in portrait mode.
         /// </summary>
         private bool isPortrait;
+
+        /// <summary>
+        /// True when the current page control is pinned.
+        /// </summary>
+        private bool isCurrentControlPinned;
 
         /// <summary>
         /// This cancellation token source is used to cancel an existing refresh loop so that we can start a new one.
@@ -197,6 +208,10 @@ namespace OneBusAway
             this.PinStopToStartPageCommand.Executed += OnPinStopToStartPageCommandExecuted;
             this.allCommands.Add(this.PinStopToStartPageCommand);
 
+            this.UnPinStopToStartPageCommand = new ObservableCommand();
+            this.UnPinStopToStartPageCommand.Executed += OnUnPinStopToStartPageCommandExecuted;
+            this.allCommands.Add(this.UnPinStopToStartPageCommand);
+
             this.pageControls = new Stack<IPageControl>();
         }        
 
@@ -250,6 +265,21 @@ namespace OneBusAway
             set
             {
                 SetProperty(ref this.isPortrait, value);
+            }
+        }
+
+        /// <summary>
+        /// True when the current control is pinned to start.
+        /// </summary>
+        public bool IsCurrentControlPinned
+        {
+            get
+            {
+                return this.isCurrentControlPinned;
+            }
+            set
+            {
+                SetProperty(ref this.isCurrentControlPinned, value);
             }
         }
 
@@ -429,6 +459,21 @@ namespace OneBusAway
             }
         }
 
+        /// <summary>
+        /// Returns the unpinStopToStartPageCommand.
+        /// </summary>
+        public ObservableCommand UnPinStopToStartPageCommand
+        {
+            get
+            {
+                return this.unpinStopToStartPageCommand;
+            }
+            set
+            {
+                SetProperty(ref this.unpinStopToStartPageCommand, value);
+            }
+        }
+
         public ObservableCommand AddToFavoritesCommand
         {
             get
@@ -510,9 +555,32 @@ namespace OneBusAway
             this.FirePropertyChanged("CanGoBack");
 
             await newPageControl.InitializeAsync(parameter);
+            await this.UpdateIsPinnableAsync(newPageControl);
             await this.RestartRefreshLoopAsync();            
-        }       
-        
+        }
+
+        /// <summary>
+        /// Checks to see whether the new page control is pinned to start or not.
+        /// </summary>
+        public async Task UpdateIsPinnableAsync(IPageControl pageControl)
+        {
+            // If this is a pinnable page control, see if we're pinned or not:
+            IPinablePageControl pinnablePageControl = pageControl as IPinablePageControl;
+            if (pinnablePageControl != null)
+            {
+                // See if we're pinned to start:
+                var query = from tile in await SecondaryTile.FindAllAsync()
+                            where string.Equals(pinnablePageControl.TileId, tile.TileId, StringComparison.OrdinalIgnoreCase)
+                            select tile;
+
+                this.IsCurrentControlPinned = query.Count() > 0;
+            }
+            else
+            {
+                this.IsCurrentControlPinned = false;
+            }
+        }   
+
         /// <summary>
         /// Overrides the FirePropertyChanged method to fire the weakly held proxy events.
         /// </summary>
@@ -602,7 +670,8 @@ namespace OneBusAway
             await previousPageControl.RestoreAsync();
 
             this.CurrentPageControl = previousPageControl;
-            MainPage.SetPageView(previousPageControl);            
+            MainPage.SetPageView(previousPageControl);
+            await this.UpdateIsPinnableAsync(this.CurrentPageControl);
         }
 
         /// <summary>
@@ -730,19 +799,30 @@ namespace OneBusAway
 
                 if (await secondaryTile.RequestCreateAsync())
                 {
-                    bool failed = false;
-                    try
-                    {
-                        await pinnablePageControl.UpdateTileAsync();
-                    }
-                    catch
-                    {
-                        failed = true;
-                    }
+                    await pinnablePageControl.UpdateTileAsync(true);
+                    this.IsCurrentControlPinned = true;
+                }
+            }
+        }
 
-                    if (failed)
+        /// <summary>
+        /// Unpins a secondary tile from the start screen.
+        /// </summary>
+        private async Task OnUnPinStopToStartPageCommandExecuted(object arg1, object arg2)
+        {
+            IPinablePageControl pinnablePageControl = arg2 as IPinablePageControl;
+            if (pinnablePageControl != null)
+            {
+                var secondaryTile = (from tile in await SecondaryTile.FindAllAsync()
+                                     where string.Equals(pinnablePageControl.TileId, tile.TileId, StringComparison.OrdinalIgnoreCase)
+                                     select tile).FirstOrDefault();
+
+                if (secondaryTile != null)
+                {
+                    if (await secondaryTile.RequestDeleteAsync())
                     {
-                        await secondaryTile.RequestDeleteAsync();
+                        await pinnablePageControl.UpdateTileAsync(false);
+                        this.IsCurrentControlPinned = false;
                     }
                 }
             }
@@ -820,6 +900,6 @@ namespace OneBusAway
             }
 
             return Task.FromResult<object>(null);
-        }
+        }            
     }
 }

@@ -86,6 +86,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns true if the current control is pinned.
+        /// </summary>
+        public bool IsCurrentControlPinned
+        {
+            get
+            {
+                return NavigationController.Instance.IsCurrentControlPinned;
+            }
+        }
+
+        /// <summary>
         /// Return the go back command.
         /// </summary>
         public ICommand GoBackCommand
@@ -126,6 +137,17 @@ namespace OneBusAway
             get
             {
                 return new ObservableCommandProxy(NavigationController.Instance.PinStopToStartPageCommand);
+            }
+        }
+
+        /// <summary>
+        /// Returns the pin stop to start page command.
+        /// </summary>
+        public ICommand UnPinStopToStartPageCommand
+        {
+            get
+            {
+                return new ObservableCommandProxy(NavigationController.Instance.UnPinStopToStartPageCommand);
             }
         }
 

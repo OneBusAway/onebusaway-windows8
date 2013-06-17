@@ -184,11 +184,19 @@
                 <Button Style="{StaticResource AppBarButtonStyle}"
                         Command="{Binding GoToUsersLocationCommand, Source={StaticResource navigationProxy}}"
                         Content="&#xE139;" />
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
-                        CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
-                        Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}"
-                        Content="&#xE141;" />                
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}">
+                    <Button Style="{StaticResource AppBarButtonStyle}"
+                            Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
+                            CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
+                            Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=true}"
+                            Content="&#xE141;" />
+                    <Button Style="{StaticResource AppBarButtonStyle}"
+                            Command="{Binding UnPinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
+                            CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
+                            Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
+                            Content="&#xE196;" />
+                </StackPanel>                
             </StackPanel>
         </AppBar>
     </Page.BottomAppBar>

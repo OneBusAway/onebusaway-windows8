@@ -21,6 +21,6 @@ namespace OneBusAway.PageControls
             get;
         }
 
-        Task UpdateTileAsync();
+        Task UpdateTileAsync(bool added);
     }
 }

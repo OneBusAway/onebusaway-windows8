@@ -94,7 +94,7 @@ namespace OneBusAway.ViewModels
         /// </summary>
         protected async void OnMapControlViewModelStopSelectedAsync(object sender, StopSelectedEventArgs e)
         {
-            await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);            
+            await this.routesAndStopsViewModel.PopulateStopAsync(e.StopName, e.SelectedStopId, e.Direction);
         }
 
         #endregion        

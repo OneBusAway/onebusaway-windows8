@@ -12,6 +12,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,6 +40,7 @@ namespace OneBusAway.PageControls
         {
             this.InitializeComponent();
             this.viewModel = new RealTimePageControlViewModel();
+            this.viewModel.MapControlViewModel.StopSelected += OnStopSelected;
         }
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public PageViewModelBase ViewModel
         {
-            get 
+            get
             {
                 return this.viewModel;
             }
@@ -139,15 +141,26 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// Updates a secondary tile.
         /// </summary>
-        public async Task UpdateTileAsync()
+        public async Task UpdateTileAsync(bool added)
         {
-            var busStop = this.viewModel.MapControlViewModel.SelectedBusStop;
+            if (added)
+            {
+                var busStop = this.viewModel.MapControlViewModel.SelectedBusStop;
 
-            TileXMLBuilder builder = new TileXMLBuilder(this.TileId);
-            await builder.AppendTileWithLargePictureAndTextAsync(this.TileId,
-                busStop.Latitude,
-                busStop.Longitude,
-                this.TileName);
+                TileXMLBuilder builder = new TileXMLBuilder(this.TileId);
+                await builder.AppendTileWithLargePictureAndTextAsync(this.TileId,
+                    busStop.Latitude,
+                    busStop.Longitude,
+                    this.TileName);                
+            }
+        }
+
+        /// <summary>
+        /// Called when the user selects a new stop. Update the IsCurrentControlPinned property.
+        /// </summary>
+        private async void OnStopSelected(object sender, StopSelectedEventArgs e)
+        {
+            await NavigationController.Instance.UpdateIsPinnableAsync(this);
         }
     }
 }
