@@ -67,7 +67,7 @@ namespace OneBusAway.DataAccess.ObaService
                                 doc = XDocument.Load(stream);
                             }
 
-                            existingFileHasExpired = (DateTime.Now - existingFile.DateCreated).TotalDays <= 7;
+                            existingFileHasExpired = (DateTime.Now - existingFile.DateCreated).TotalDays >= 7;
                         }
                         catch
                         {
