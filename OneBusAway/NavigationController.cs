@@ -764,9 +764,17 @@ namespace OneBusAway
             {
                 if (!await this.CurrentPageControl.ViewModel.MapControlViewModel.TryFindUserLocationAsync())
                 {
-                    var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
-                    messageDialog.DefaultCommandIndex = 0;
-                    await messageDialog.ShowAsync().AsTask();
+                    try
+                    {
+                        var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
+                        messageDialog.DefaultCommandIndex = 0;
+                        await messageDialog.ShowAsync().AsTask();
+                    }
+                    catch
+                    {
+                        // In some cases ShowAsync throws an exception. Not sure why, can't repro it. But there's
+                        // no reason to fail the app.
+                    }
                 }
             }
         }        
