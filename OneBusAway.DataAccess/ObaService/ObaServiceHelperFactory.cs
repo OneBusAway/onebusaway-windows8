@@ -11,6 +11,7 @@ using OneBusAway.Model;
 using OneBusAway.Utilities;
 using Windows.Storage;
 using System.Threading;
+using System.Reflection;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -61,7 +62,7 @@ namespace OneBusAway.DataAccess.ObaService
                         {
                             // Expire the regions xml file after 7 days:                            
                             var existingFile = await ApplicationData.Current.LocalFolder.GetFileAsync(REGIONS_XML_FILE);
-                            
+
                             using (var stream = await existingFile.OpenStreamForReadAsync())
                             {
                                 doc = XDocument.Load(stream);
@@ -104,17 +105,26 @@ namespace OneBusAway.DataAccess.ObaService
                                 // Who knows why. We have a document so let's not fail here
                             }
                         }
-
-                        return (from regionElement in doc.Descendants("region")
-                                let region = new Region(regionElement)
-                                where region.IsActive && region.SupportsObaRealtimeApis && region.SupportsObaDiscoveryApis
-                                select region).ToArray();
                     }
                     catch
                     {
-                        // Better than crashing I guess...
-                        return new Region[] { };
                     }
+
+                    // If we make it here, use the backup regions.xml file:
+                    if (doc == null)
+                    {
+                        Assembly assembly = typeof(ObaServiceHelperFactory).GetTypeInfo().Assembly;
+                        using (var streamReader = new StreamReader(assembly.GetManifestResourceStream("OneBusAway.DataAccess.Regions.xml")))
+                        {
+                            string xml = await streamReader.ReadToEndAsync();
+                            doc = XDocument.Parse(xml);
+                        }
+                    }
+
+                    return (from regionElement in doc.Descendants("region")
+                            let region = new Region(regionElement)
+                            where region.IsActive && region.SupportsObaRealtimeApis && region.SupportsObaDiscoveryApis
+                            select region).ToArray();
                 });
         }
 
