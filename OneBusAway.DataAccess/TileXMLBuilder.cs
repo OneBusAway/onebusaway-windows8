@@ -58,7 +58,7 @@ namespace OneBusAway.DataAccess
         }
 
         /// <summary>
-        /// Only enable the notification queue if we have more than 1 update to show.
+        /// Enables the notification queue.
         /// </summary>
         public void EnableNotificationQueue()
         {
@@ -121,6 +121,7 @@ namespace OneBusAway.DataAccess
             smallBindingElement.AppendChild(smallImageElement);
 
             TileNotification notification = new TileNotification(document);
+            notification.Tag = tileId.GetHashCode().ToString("X");
             this.tileUpdater.Update(notification);
         }
 
@@ -199,6 +200,7 @@ namespace OneBusAway.DataAccess
 
             TileNotification notification = new TileNotification(document);
             notification.ExpirationTime = DateTime.Now.AddMinutes(1);
+            notification.Tag = (text1 + text2 + text3).GetHashCode().ToString("X");
             this.tileUpdater.Update(notification);
         }
 

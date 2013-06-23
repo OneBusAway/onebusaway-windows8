@@ -15,13 +15,13 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// Runs the tile updater service.
         /// </summary>
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public void Run(IBackgroundTaskInstance taskInstance)
         {
             // Try and register the rest of our background tasks:
             BackgroundTaskRegistrar.TryRegisterAllBackgroundTasks();
 
             taskInstance.Canceled += OnTaskInstanceCanceled;
-            await TileUpdaterService.Instance.CreateIfNeccessary(taskInstance.GetDeferral());
+            TileUpdaterService.Instance.CreateIfNeccessary(taskInstance.GetDeferral());
         }
 
         /// <summary>

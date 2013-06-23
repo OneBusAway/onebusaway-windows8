@@ -18,7 +18,7 @@ namespace OneBusAway.Backgrounding
         /// </summary>
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            BackgroundTaskRegistrar.UnregisterAllBackgroundTasks(false);
+            BackgroundTaskRegistrar.UnregisterAllBackgroundTasks(true);
             TileUpdaterService.Instance.Abort();
         }
     }
