@@ -164,8 +164,6 @@ namespace OneBusAway.Backgrounding
                         }
                     }
                 }
-
-                await Task.Delay(TimeSpan.FromMinutes(1), this.cancellationToken.Token);
             }
             catch
             {

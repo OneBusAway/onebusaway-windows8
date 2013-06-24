@@ -199,7 +199,7 @@ namespace OneBusAway.DataAccess
             smallBindingElement.AppendChild(smallSubTextElement);
 
             TileNotification notification = new TileNotification(document);
-            notification.ExpirationTime = DateTime.Now.AddMinutes(1);
+            notification.ExpirationTime = DateTime.Now.AddSeconds(55);
             notification.Tag = (text1 + text2 + text3).GetHashCode().ToString("X");
             this.tileUpdater.Update(notification);
         }
