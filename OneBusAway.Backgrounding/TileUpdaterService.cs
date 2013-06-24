@@ -114,8 +114,7 @@ namespace OneBusAway.Backgrounding
         {
             try
             {
-                // First update the favorites:
-                var obaDataAccess = ObaDataAccess.Create();
+                // First update the favorites:                
                 var favorites = await this.cache.GetOrAddAsync<List<StopAndRoutePair>>(
                     "favorites",
                     () => Model.Favorites.GetAsync());
@@ -127,6 +126,7 @@ namespace OneBusAway.Backgrounding
                     this.cancellationToken.Token.ThrowIfCancellationRequested();
 
                     // Get tracking data for this stop:
+                    var obaDataAccess = ObaDataAccess.Create();
                     TrackingData[] trackingData = await this.cache.GetOrAddAsync<TrackingData[]>(
                         favorite.Stop,
                         () => obaDataAccess.GetTrackingDataForStopAsync(favorite.Stop));
@@ -158,6 +158,7 @@ namespace OneBusAway.Backgrounding
                         if (!string.IsNullOrEmpty(stopId) && lat != 0 && lon != 0)
                         {
                             // Get the tracking data:
+                            var obaDataAccess = ObaDataAccess.Create(lat, lon);
                             TrackingData[] trackingData = await this.cache.GetOrAddAsync<TrackingData[]>(
                                 stopId,
                                 () => obaDataAccess.GetTrackingDataForStopAsync(stopId));

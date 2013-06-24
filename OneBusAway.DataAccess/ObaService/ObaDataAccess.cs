@@ -29,7 +29,15 @@ namespace OneBusAway.DataAccess
         /// <returns>A new ObaDataAccess object</returns>
         public static ObaDataAccess Create()
         {
-            return new ObaDataAccess(MapView.Current.MapCenter.Latitude, MapView.Current.MapCenter.Longitude);
+            return Create(MapView.Current.MapCenter.Latitude, MapView.Current.MapCenter.Longitude);
+        }
+
+        /// <summary>
+        /// Returns an oba data access with a specific location.
+        /// </summary>
+        public static ObaDataAccess Create(double lat, double lon)
+        {
+            return new ObaDataAccess(lat, lon);
         }
 
         /// <summary>
