@@ -122,7 +122,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddedToLockScreenBackgroundTask.cs" />
+    <Compile Include="AddedToLockScreenWithInternetBackgroundTask.cs" />
+    <Compile Include="AddedToLockScreenWithoutInternetBackgroundTask.cs" />
     <Compile Include="BackgroundTaskRegistrar.cs" />
     <Compile Include="NetworkConnectionDroppedBackgroundTask.cs" />
     <Compile Include="NetworkConnectionEstablishedBackgroundTask.cs" />

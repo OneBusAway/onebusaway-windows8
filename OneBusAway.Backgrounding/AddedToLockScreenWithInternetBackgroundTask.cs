@@ -10,7 +10,7 @@ namespace OneBusAway.Backgrounding
     /// <summary>
     /// This task is fired when the app is added to the lock screen.
     /// </summary>
-    public sealed class AddedToLockScreenBackgroundTask : IBackgroundTask
+    public sealed class AddedToLockScreenWithInternetBackgroundTask : IBackgroundTask
     {
         /// <summary>
         /// Runs the tile updater service.

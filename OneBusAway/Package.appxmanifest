@@ -37,7 +37,7 @@
             <Task Type="systemEvent" />
           </BackgroundTasks>
         </Extension>
-        <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.AddedToLockScreenBackgroundTask">
+        <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.AddedToLockScreenWithInternetBackgroundTask">
           <BackgroundTasks>
             <Task Type="systemEvent" />
           </BackgroundTasks>
@@ -53,6 +53,11 @@
           </BackgroundTasks>
         </Extension>
         <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.NetworkConnectionEstablishedBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="systemEvent" />
+          </BackgroundTasks>
+        </Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.AddedToLockScreenWithoutInternetBackgroundTask">
           <BackgroundTasks>
             <Task Type="systemEvent" />
           </BackgroundTasks>

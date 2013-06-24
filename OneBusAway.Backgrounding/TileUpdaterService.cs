@@ -68,17 +68,27 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// If the update loop isn't already running, this will start it.
         /// </summary>
-        public void CreateIfNeccessary(BackgroundTaskDeferral deferral)
+        public bool CreateIfNeccessary(BackgroundTaskDeferral deferral)
         {
             if (this.timer == null)
             {
-                this.deferral = deferral;
-                this.cancellationToken = new CancellationTokenSource();                
-                this.timer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimerElapsed), TimeSpan.FromMinutes(1));
+                lock (instance)
+                {
+                    if (this.timer == null)
+                    {
+                        this.deferral = deferral;
+                        this.cancellationToken = new CancellationTokenSource();
+                        this.timer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimerElapsed), TimeSpan.FromMinutes(1));
 
-                // Fire off an immediate update so that the user sees the tiles update right away!
-                var ignored = Task.Run(() => OnTimerElapsed(null));
+                        // Fire off an immediate update so that the user sees the tiles update right away!
+                        var ignored = Task.Run(() => OnTimerElapsed(null));
+                        return true;
+                    }
+                }
             }
+
+            deferral.Complete();
+            return false;
         }
 
         /// <summary>
