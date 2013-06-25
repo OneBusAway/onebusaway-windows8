@@ -37,9 +37,9 @@ namespace OneBusAway.Backgrounding
         private CancellationTokenSource cancellationToken;
 
         /// <summary>
-        /// This deferral is completed once the service exits.
+        /// This TCS is set when the service is aborted.
         /// </summary>
-        private BackgroundTaskDeferral deferral;
+        private TaskCompletionSource<object> serviceAborted;
 
         /// <summary>
         /// This cache allows us to hold onto data before it expires.
@@ -66,9 +66,20 @@ namespace OneBusAway.Backgrounding
         }
 
         /// <summary>
+        /// Returns the task that can be awaited.
+        /// </summary>
+        public Task ServiceAborted
+        {
+            get
+            {
+                return this.serviceAborted.Task;
+            }
+        }
+
+        /// <summary>
         /// If the update loop isn't already running, this will start it.
         /// </summary>
-        public bool CreateIfNeccessary(BackgroundTaskDeferral deferral)
+        public bool CreateIfNeccessary()
         {
             if (this.timer == null)
             {
@@ -76,8 +87,8 @@ namespace OneBusAway.Backgrounding
                 {
                     if (this.timer == null)
                     {
-                        this.deferral = deferral;
                         this.cancellationToken = new CancellationTokenSource();
+                        this.serviceAborted = new TaskCompletionSource<object>();
                         this.timer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimerElapsed), TimeSpan.FromMinutes(1));
 
                         // Fire off an immediate update so that the user sees the tiles update right away!
@@ -87,7 +98,6 @@ namespace OneBusAway.Backgrounding
                 }
             }
 
-            deferral.Complete();
             return false;
         }
 
@@ -100,10 +110,10 @@ namespace OneBusAway.Backgrounding
 
             if (this.timer != null)
             {
-                this.deferral.Complete();
                 this.cancellationToken.Cancel();
-                this.timer.Cancel();
+                this.timer.Cancel();                
                 this.timer = null;
+                this.serviceAborted.SetResult(null);
             }
         }
 
@@ -204,7 +214,7 @@ namespace OneBusAway.Backgrounding
                     string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
                     trackingData.TripHeadsign.ToUpper(),
                     trackingData.StopName.ToUpper(),
-                    string.Format("{0} / {1}", trackingData.PredictedArrivalTime.ToString("h:mm"), trackingData.ScheduledArrivalTime.ToString("h:mm")));
+                    string.Format("{0} / {1}", trackingData.ScheduledArrivalTime.ToString("h:mm"), trackingData.PredictedArrivalTime.ToString("h:mm")));
             }
         }
     }

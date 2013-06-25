@@ -16,11 +16,15 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// Runs the tile updater service.
         /// </summary>
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            // Do nothing. We kick off the background process when the user logs in, internet becomes 
-            // available, ect. The timer task is here to appease Windows 8. We don't do anything because 
-            // timer tasks tend to be cancelled frequently, which can cause the process to stop running updates.
+            if (TileUpdaterService.Instance.CreateIfNeccessary())
+            {
+                taskInstance.Canceled += (sender, reason) => TileUpdaterService.Instance.Abort();
+                var deferral = taskInstance.GetDeferral();
+                await TileUpdaterService.Instance.ServiceAborted;
+                deferral.Complete();
+            }
         }
     }
 }
