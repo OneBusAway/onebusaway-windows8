@@ -68,8 +68,14 @@ namespace OneBusAway.Backgrounding
                             var obaDataAccess = ObaDataAccess.Create(lat, lon);
                             TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
 
-                            // Update the tile:
                             TileXMLBuilder secondaryTileBuilder = new TileXMLBuilder(pinnedStopTile.TileId);
+
+                            await secondaryTileBuilder.AppendTileWithLargePictureAndTextAsync(
+                                    pinnedStopTile.TileId,
+                                    lat,
+                                    lon,
+                                    pinnedStopTile.DisplayName);
+                            
                             AppendTrackingDataToTile(secondaryTileBuilder, trackingData);
                         }
                     }
@@ -96,7 +102,7 @@ namespace OneBusAway.Backgrounding
                                            where !rtd.IsNoData && rtd.PredictedArrivalTime > time
                                            orderby rtd.PredictedArrivalInMinutes ascending
                                            select rtd).Take(5).ToList();
-
+                
                 foreach (TrackingData trackingData in orderedTrackingData)
                 {
                     tileBuilder.AppendTileWithBlockTextAndLines(
