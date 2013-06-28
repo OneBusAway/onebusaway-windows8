@@ -10,7 +10,7 @@ namespace OneBusAway.Backgrounding
     /// <summary>
     /// This task is fired when the app is added to the lock screen.
     /// </summary>
-    public sealed class AddedToLockScreenWithInternetBackgroundTask : IBackgroundTask
+    public sealed class AddedToLockScreenBackgroundTask : IBackgroundTask
     {
         /// <summary>
         /// Runs the tile updater service.
@@ -20,11 +20,13 @@ namespace OneBusAway.Backgrounding
             // Try and register the rest of our background tasks:
             BackgroundTaskRegistrar.TryRegisterAllBackgroundTasks();
 
-            if (TileUpdaterService.Instance.CreateIfNeccessary())
+            var deferral = taskInstance.GetDeferral();
+            try
             {
-                taskInstance.Canceled += (sender, reason) => TileUpdaterService.Instance.Abort();
-                var deferral = taskInstance.GetDeferral();
-                await TileUpdaterService.Instance.ServiceAborted;
+                await TileUpdaterService.UpdateTilesAsync();
+            }
+            finally
+            {
                 deferral.Complete();
             }
         }

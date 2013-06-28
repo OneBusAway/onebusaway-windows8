@@ -15,7 +15,6 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// Try and register all of our background tasks that require lock screen access.
         /// </summary>
-        /// <returns></returns>
         public static bool TryRegisterAllBackgroundTasks()
         {
             var backgroundAccessStatus = BackgroundExecutionManager.GetAccessStatus();
@@ -31,15 +30,6 @@ namespace OneBusAway.Backgrounding
                     typeof(UserPresentBackgroundTask),
                     new SystemTrigger(SystemTriggerType.UserPresent, false),
                     new SystemCondition(SystemConditionType.InternetAvailable));
-
-                RegisterBackgroundTask(
-                    typeof(NetworkConnectionDroppedBackgroundTask),
-                    new SystemTrigger(SystemTriggerType.NetworkStateChange, false),
-                    new SystemCondition(SystemConditionType.InternetNotAvailable));
-
-                RegisterBackgroundTask(
-                    typeof(NetworkConnectionEstablishedBackgroundTask),
-                    new SystemTrigger(SystemTriggerType.InternetAvailable, false));
 
                 RegisterBackgroundTask(
                     typeof(TimerBackgroundTask),
@@ -59,8 +49,6 @@ namespace OneBusAway.Backgrounding
         {
             UnregisterBackgroundTask(typeof(StartupBackgroundTask), cancel);
             UnregisterBackgroundTask(typeof(UserPresentBackgroundTask), cancel);
-            UnregisterBackgroundTask(typeof(NetworkConnectionDroppedBackgroundTask), cancel);
-            UnregisterBackgroundTask(typeof(NetworkConnectionEstablishedBackgroundTask), cancel);
             UnregisterBackgroundTask(typeof(TimerBackgroundTask), cancel);
         }
 
