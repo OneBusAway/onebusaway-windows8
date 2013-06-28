@@ -160,14 +160,9 @@ namespace OneBusAway.Pages
             {
                 // We should always register these
                 BackgroundTaskRegistrar.RegisterBackgroundTask(
-                    typeof(AddedToLockScreenWithInternetBackgroundTask),
+                    typeof(AddedToLockScreenBackgroundTask),
                     new SystemTrigger(SystemTriggerType.LockScreenApplicationAdded, false),
                     new SystemCondition(SystemConditionType.InternetAvailable));
-
-                BackgroundTaskRegistrar.RegisterBackgroundTask(
-                    typeof(AddedToLockScreenWithoutInternetBackgroundTask),
-                    new SystemTrigger(SystemTriggerType.LockScreenApplicationAdded, false),
-                    new SystemCondition(SystemConditionType.InternetNotAvailable));
 
                 BackgroundTaskRegistrar.RegisterBackgroundTask(
                     typeof(RemovedFromLockScreenBackgroundTask),

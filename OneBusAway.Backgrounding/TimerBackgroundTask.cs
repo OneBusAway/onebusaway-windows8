@@ -18,11 +18,13 @@ namespace OneBusAway.Backgrounding
         /// </summary>
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            if (TileUpdaterService.Instance.CreateIfNeccessary())
+            var deferral = taskInstance.GetDeferral();
+            try
             {
-                taskInstance.Canceled += (sender, reason) => TileUpdaterService.Instance.Abort();
-                var deferral = taskInstance.GetDeferral();
-                await TileUpdaterService.Instance.ServiceAborted;
+                await TileUpdaterService.UpdateTilesAsync();
+            }
+            finally
+            {
                 deferral.Complete();
             }
         }

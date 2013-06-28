@@ -128,7 +128,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Appends a wide tile with a big block of text. Used to display up-coming buses.
         /// </summary>
-        public void AppendTileWithBlockTextAndLines(string blockText, string subBlockText, string text1 = null, string text2 = null, string text3 = null, string text4 = null)
+        public void AppendTileWithBlockTextAndLines(DateTimeOffset scheduledTime, string blockText, string subBlockText, string text1 = null, string text2 = null, string text3 = null, string text4 = null)
         {
             //<tile>
             //  <visual>
@@ -198,10 +198,20 @@ namespace OneBusAway.DataAccess
             smallSubTextElement.InnerText = text1;
             smallBindingElement.AppendChild(smallSubTextElement);
 
-            TileNotification notification = new TileNotification(document);
-            notification.ExpirationTime = DateTime.Now.AddSeconds(55);
-            notification.Tag = (text1 + text2 + text3).GetHashCode().ToString("X");
-            this.tileUpdater.Update(notification);
+            if ((scheduledTime - DateTime.Now).TotalMinutes < 1)
+            {
+                var notification = new TileNotification(document);
+                notification.ExpirationTime = scheduledTime.AddMinutes(1);
+                notification.Tag = (text1 + text2 + text3 + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
+                this.tileUpdater.Update(notification);
+            }
+            else
+            {
+                var notification = new ScheduledTileNotification(document, scheduledTime);
+                notification.ExpirationTime = scheduledTime.AddMinutes(1);
+                notification.Tag = (text1 + text2 + text3 + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
+                this.tileUpdater.AddToSchedule(notification);
+            }
         }
 
         /// <summary>

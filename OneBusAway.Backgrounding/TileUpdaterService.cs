@@ -22,124 +22,22 @@ namespace OneBusAway.Backgrounding
     internal class TileUpdaterService
     {
         /// <summary>
-        /// The one and only instance of the service.
-        /// </summary>
-        private static TileUpdaterService instance = new TileUpdaterService();
-        
-        /// <summary>
-        /// Thred pool timer fires every minute.
-        /// </summary>
-        private ThreadPoolTimer timer;
-
-        /// <summary>
-        /// This is used to cancel the service.
-        /// </summary>
-        private CancellationTokenSource cancellationToken;
-
-        /// <summary>
-        /// This TCS is set when the service is aborted.
-        /// </summary>
-        private TaskCompletionSource<object> serviceAborted;
-
-        /// <summary>
-        /// This cache allows us to hold onto data before it expires.
-        /// </summary>
-        private TimedCache cache;
-
-        /// <summary>
-        /// Creates the tile updater service.
-        /// </summary>
-        private TileUpdaterService()
-        {
-            this.cache = new TimedCache();
-        }
-
-        /// <summary>
-        /// Returns the one and only instance.
-        /// </summary>
-        public static TileUpdaterService Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
-
-        /// <summary>
-        /// Returns the task that can be awaited.
-        /// </summary>
-        public Task ServiceAborted
-        {
-            get
-            {
-                return this.serviceAborted.Task;
-            }
-        }
-
-        /// <summary>
-        /// If the update loop isn't already running, this will start it.
-        /// </summary>
-        public bool CreateIfNeccessary()
-        {
-            if (this.timer == null)
-            {
-                lock (instance)
-                {
-                    if (this.timer == null)
-                    {
-                        this.cancellationToken = new CancellationTokenSource();
-                        this.serviceAborted = new TaskCompletionSource<object>();
-                        this.timer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimerElapsed), TimeSpan.FromMinutes(1));
-
-                        // Fire off an immediate update so that the user sees the tiles update right away!
-                        var ignored = Task.Run(() => OnTimerElapsed(null));
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Cancels the in-progress task.
-        /// </summary>
-        public void Abort()
-        {
-            this.cache.Clear();
-
-            if (this.timer != null)
-            {
-                this.cancellationToken.Cancel();
-                this.timer.Cancel();                
-                this.timer = null;
-                this.serviceAborted.SetResult(null);
-            }
-        }
-
-        /// <summary>
         /// Runs the tile updating service.
         /// </summary>
-        private async void OnTimerElapsed(ThreadPoolTimer timer)
+        public static async Task UpdateTilesAsync()
         {
             try
             {
                 // First update the favorites:                
-                var favorites = await this.cache.GetOrAddAsync<List<StopAndRoutePair>>(
-                    "favorites",
-                    () => Model.Favorites.GetAsync());
+                var favorites = await Model.Favorites.GetAsync();
 
                 // Get the tracking data for favorites & filter it out by the routes:
                 List<TrackingData> favoritesRealTimeData = new List<TrackingData>();
                 foreach (StopAndRoutePair favorite in favorites)
                 {
-                    this.cancellationToken.Token.ThrowIfCancellationRequested();
-
                     // Get tracking data for this stop:
                     var obaDataAccess = ObaDataAccess.Create();
-                    TrackingData[] trackingData = await this.cache.GetOrAddAsync<TrackingData[]>(
-                        favorite.Stop,
-                        () => obaDataAccess.GetTrackingDataForStopAsync(favorite.Stop));
+                    TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(favorite.Stop);
 
                     // Adds the tracking data to the list:
                     favoritesRealTimeData.AddRange(from data in trackingData
@@ -149,13 +47,12 @@ namespace OneBusAway.Backgrounding
 
                 // Now it's time to update the main tile with data:
                 TileXMLBuilder mainTileBuilder = new TileXMLBuilder();
-                this.AppendTrackingDataToTile(mainTileBuilder, favoritesRealTimeData);
+                AppendTrackingDataToTile(mainTileBuilder, favoritesRealTimeData);
 
                 // And now we can update the secondary tiles!
                 var pinnedStopTiles = await SecondaryTile.FindAllAsync();
                 foreach (var pinnedStopTile in pinnedStopTiles)
                 {
-                    this.cancellationToken.Token.ThrowIfCancellationRequested();
                     PageInitializationParameters parameters = null;
 
                     // Be safe and try this first...should never happen.
@@ -169,19 +66,17 @@ namespace OneBusAway.Backgrounding
                         {
                             // Get the tracking data:
                             var obaDataAccess = ObaDataAccess.Create(lat, lon);
-                            TrackingData[] trackingData = await this.cache.GetOrAddAsync<TrackingData[]>(
-                                stopId,
-                                () => obaDataAccess.GetTrackingDataForStopAsync(stopId));
+                            TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
 
-                            // Update the tile:
                             TileXMLBuilder secondaryTileBuilder = new TileXMLBuilder(pinnedStopTile.TileId);
-                            await secondaryTileBuilder.AppendTileWithLargePictureAndTextAsync(
-                                pinnedStopTile.TileId,
-                                lat,
-                                lon,
-                                pinnedStopTile.DisplayName);
 
-                            this.AppendTrackingDataToTile(secondaryTileBuilder, trackingData);
+                            await secondaryTileBuilder.AppendTileWithLargePictureAndTextAsync(
+                                    pinnedStopTile.TileId,
+                                    lat,
+                                    lon,
+                                    pinnedStopTile.DisplayName);
+                            
+                            AppendTrackingDataToTile(secondaryTileBuilder, trackingData);
                         }
                     }
                 }
@@ -195,26 +90,32 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// Appends count number of tiles to the tile builder.
         /// </summary>
-        private void AppendTrackingDataToTile(TileXMLBuilder tileBuilder, IEnumerable<TrackingData> unorderedTrackingData)
+        private static void AppendTrackingDataToTile(TileXMLBuilder tileBuilder, IEnumerable<TrackingData> unorderedTrackingData)
         {
-            var orderedTrackingData = (from rtd in unorderedTrackingData
-                                       where !rtd.IsNoData && rtd.PredictedArrivalTime > DateTime.Now
-                                       orderby rtd.PredictedArrivalInMinutes
-                                       select rtd).Take(tileBuilder.IsMainTileUpdater ? 5 : 4).ToList();
+            // Append 15 minutes worth of scheduled tile notifications:
+            DateTime time = DateTime.Now;
+            tileBuilder.EnableNotificationQueue();
 
-            if (orderedTrackingData.Count > 1)
+            for (int i = 0; i < 15; i++)
             {
-                tileBuilder.EnableNotificationQueue();
-            }
+                var orderedTrackingData = (from rtd in unorderedTrackingData
+                                           where !rtd.IsNoData && rtd.PredictedArrivalTime > time
+                                           orderby rtd.PredictedArrivalInMinutes ascending
+                                           select rtd).Take(5).ToList();
+                
+                foreach (TrackingData trackingData in orderedTrackingData)
+                {
+                    tileBuilder.AppendTileWithBlockTextAndLines(
+                        time,
+                        (trackingData.PredictedArrivalTime - time).Minutes.ToString(),
+                        trackingData.Status,
+                        string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
+                        trackingData.TripHeadsign.ToUpper(),
+                        trackingData.StopName.ToUpper(),
+                        string.Format("{0} / {1}", trackingData.ScheduledArrivalTime.ToString("h:mm"), trackingData.PredictedArrivalTime.ToString("h:mm")));
+                }
 
-            foreach (TrackingData trackingData in orderedTrackingData)
-            {
-                tileBuilder.AppendTileWithBlockTextAndLines((trackingData.PredictedArrivalTime - DateTime.Now).Minutes.ToString(),
-                    trackingData.Status,
-                    string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
-                    trackingData.TripHeadsign.ToUpper(),
-                    trackingData.StopName.ToUpper(),
-                    string.Format("{0} / {1}", trackingData.ScheduledArrivalTime.ToString("h:mm"), trackingData.PredictedArrivalTime.ToString("h:mm")));
+                time = time.AddMinutes(1);
             }
         }
     }
