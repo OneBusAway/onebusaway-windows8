@@ -67,7 +67,7 @@ namespace OneBusAway.Controls
                 var tripStop = viewModel.SelectedStop;
                 if (tripStop != null)
                 {
-                    var contentPresenter = this.itemsControl.ItemContainerGenerator.ContainerFromItem(tripStop) as ContentPresenter;
+                    var contentPresenter = this.itemsControl.ContainerFromItem(tripStop) as ContentPresenter;
                     if (contentPresenter != null)
                     {
                         ScrollViewer scrollViewer = ControlUtilities.GetParent<ScrollViewer>(this.Parent);
@@ -78,7 +78,7 @@ namespace OneBusAway.Controls
                             var point = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
 
                             double newVerticalOffset = point.Y + scrollViewer.VerticalOffset;
-                            scrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+                            scrollViewer.ChangeView(0, newVerticalOffset, null);
                         }
                     }
                 }

@@ -704,16 +704,13 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            if (!this.IsSnapped || ApplicationView.TryUnsnap())
-            {
-                // Make sure we're idiling before we try this. TryUnsnap may cause the UI to refresh
-                // before we can try this:
-                var helper = new DefaultUIHelper(NavigationController.MainPage.Dispatcher);
-                await helper.WaitForIdleAsync();
+            // Make sure we're idiling before we try this. TryUnsnap may cause the UI to refresh
+            // before we can try this:
+            var helper = new DefaultUIHelper(NavigationController.MainPage.Dispatcher);
+            await helper.WaitForIdleAsync();
 
-                var pane = SearchPane.GetForCurrentView();
-                pane.Show();
-            }
+            var pane = SearchPane.GetForCurrentView();
+            pane.Show();
         }
 
         /// <summary>
@@ -795,15 +792,17 @@ namespace OneBusAway
                 SecondaryTile secondaryTile = new SecondaryTile()
                 {
                     TileId = pinnablePageControl.TileId,
-                    ShortName = pinnablePageControl.TileName,
                     DisplayName = pinnablePageControl.TileName,
-                    TileOptions = TileOptions.ShowNameOnLogo,
                     Arguments = pinnablePageControl.GetParameters().ToQueryString(),
-                    Logo = logoUri,
-                    WideLogo = wideLogoUri,
-                    SmallLogo = smallLogo,
-                    ForegroundText = ForegroundText.Light,
                 };
+
+                secondaryTile.PhoneticName = pinnablePageControl.TileName;
+                secondaryTile.VisualElements.Square150x150Logo = logoUri;
+                secondaryTile.VisualElements.Wide310x150Logo = wideLogoUri;
+                secondaryTile.VisualElements.Square30x30Logo = smallLogo;
+                secondaryTile.VisualElements.ForegroundText = ForegroundText.Light;                
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = false;
+                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = false;
 
                 if (await secondaryTile.RequestCreateAsync())
                 {
