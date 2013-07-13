@@ -482,8 +482,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\LayoutAwarePage.cs" />
-    <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Controls\BusStop.xaml.cs">
       <DependentUpon>BusStop.xaml</DependentUpon>
     </Compile>
