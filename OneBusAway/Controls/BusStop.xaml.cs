@@ -241,13 +241,16 @@ namespace OneBusAway.Controls
     {
         private static MapViewToVisibilityConverter mapViewToVisibilityConverter = new MapViewToVisibilityConverter();
         private static StringEqualsToVisibilityConverter stringEqualsToVisibilityConverter = new StringEqualsToVisibilityConverter();
+        private static BoolToVisibilityConverter boolToVisibilityConverter = new BoolToVisibilityConverter();
 
         private static BitmapImage busBitmapImage = new BitmapImage(new Uri("ms-appx:///Assets/bus.png"));
         private static SolidColorBrush crimsonBrush = new SolidColorBrush(Colors.Crimson);
+        private static SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
 
         private BusStopHeaderControl headerControl;
         private BusStopControlViewModel viewModel;
         private NavigationControllerProxy proxy;
+        private Ellipse closestEllipse;
 
         public BusStop()
         {
@@ -259,14 +262,25 @@ namespace OneBusAway.Controls
             // decompiler. This constructor is a hot path so we need to be smart about how we create it:
 
             // This binding hides / shows the control depending on how far the user has zoomed:
-            Binding visibilityBinding = new Binding()
+            Binding canvasVisibilityBinding = new Binding()
             {
                 Path = new PropertyPath("MapView"),
                 Converter = mapViewToVisibilityConverter,
                 Source = this.proxy
             };
 
-            this.canvas.SetBinding(UIElement.VisibilityProperty, visibilityBinding);
+            this.canvas.SetBinding(UIElement.VisibilityProperty, canvasVisibilityBinding);
+
+            // Add the closest ellipse. When the view model is set we will
+            // bind the visibility to it.
+            this.closestEllipse = new Ellipse();
+            this.closestEllipse.Width = 40;
+            this.closestEllipse.Height = 40;
+            this.closestEllipse.Opacity = .5;
+            this.closestEllipse.Margin = new Thickness(-20, -20, 0, 0);
+            this.closestEllipse.Fill = redBrush;
+            this.closestEllipse.Visibility = Visibility.Collapsed;
+            this.canvas.Children.Add(this.closestEllipse);
 
             // Add the image:
             Image busImage = new Image();
@@ -341,6 +355,15 @@ namespace OneBusAway.Controls
                 this.viewModel = value;                
                 this.viewModel.PropertyChanged += OnViewModelPropertyChanged;
                 this.SetIsSelected(this.viewModel.IsSelected);
+
+                Binding closestEllipseVisibilityBinding = new Binding()
+                {
+                    Path = new PropertyPath("IsClosestStop"),
+                    Converter = boolToVisibilityConverter,
+                    Source = this.viewModel,
+                };
+
+                this.closestEllipse.SetBinding(UIElement.VisibilityProperty, closestEllipseVisibilityBinding);
             }
         }
 

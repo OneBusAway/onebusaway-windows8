@@ -584,6 +584,7 @@
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\Bus.gif" />
     <Content Include="Assets\bus.png" />
+    <Content Include="Assets\closestbus.png" />
     <Content Include="Assets\Help-Find.png" />
     <Content Include="Assets\Help-RouteMaps.png" />
     <Content Include="Assets\Help-Search.png" />
@@ -687,7 +688,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Bing.Maps.Xaml, Version=1.0">
+    <SDKReference Include="Bing.Maps.Xaml, Version=1.113.0601.1">
       <Name>Bing Maps for C#, C++, or Visual Basic</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=11.0">

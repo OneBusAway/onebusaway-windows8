@@ -223,6 +223,17 @@ namespace OneBusAway.PageControls
             try
             {
                 await this.viewModel.TripTimelineControlViewModel.GetTripDetailsAsync();
+
+                // Find the closest stop in the trip timeline:
+                var closestStop = (from tripStop in this.viewModel.TripTimelineControlViewModel.TripDetails.TripStops
+                                   where tripStop.IsClosestStop
+                                   select tripStop).FirstOrDefault();
+
+                // OBA doesn't always know where the bus is:
+                foreach (var busStop in this.viewModel.MapControlViewModel.BusStops)
+                {
+                    busStop.IsClosestStop = (closestStop != null && string.Equals(closestStop.StopId, busStop.StopId, StringComparison.OrdinalIgnoreCase));
+                }
             }
             catch (ObaException)
             {

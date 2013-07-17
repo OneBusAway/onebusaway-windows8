@@ -139,11 +139,24 @@ namespace OneBusAway.Controls
         private void OnItemsControlTemplateLoaded(object sender, RoutedEventArgs e)
         {
             Grid grid = (Grid)sender;
-            TripStop tripStop = grid.DataContext as TripStop;
+            TripTimelineControlViewModel viewModel = (TripTimelineControlViewModel)this.DataContext;
 
-            if (tripStop != null && tripStop.IsSelectedStop)
+            // Scroll to where the bus is, if we can. Otherwise, scroll to the selected stop:
+            var closestStop = (from tripStop in viewModel.TripDetails.TripStops
+                               where tripStop.IsClosestStop
+                               select tripStop).FirstOrDefault();
+
+            if (closestStop != null)
             {
-                this.ScrollToSelectedTripStop();
+                this.ScrollToTripStop(closestStop);
+            }
+            else
+            {
+                TripStop tripStop = grid.DataContext as TripStop;
+                if (tripStop != null && tripStop.IsSelectedStop)
+                {
+                    this.ScrollToTripStop(tripStop);
+                }
             }
         }
 
@@ -156,21 +169,29 @@ namespace OneBusAway.Controls
             if (viewModel != null)
             {
                 var tripStop = viewModel.SelectedStop;
-                if (tripStop != null)
-                {
-                    var contentPresenter = this.itemsControl.ItemContainerGenerator.ContainerFromItem(tripStop) as ContentPresenter;
-                    if (contentPresenter != null)
-                    {
-                        ScrollViewer scrollViewer = ControlUtilities.GetParent<ScrollViewer>(this.Parent);
-                        if (scrollViewer != null)
-                        {
-                            // So now we need to find where this stop is in the control:
-                            var transform = contentPresenter.TransformToVisual(scrollViewer);
-                            var point = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+                ScrollToTripStop(tripStop);
+            }
+        }
 
-                            double newVerticalOffset = point.Y + scrollViewer.VerticalOffset;
-                            scrollViewer.ScrollToVerticalOffset(newVerticalOffset);
-                        }
+        /// <summary>
+        /// Scrolls to a specific trip stop.
+        /// </summary>
+        private void ScrollToTripStop(TripStop tripStop)
+        {
+            if (tripStop != null)
+            {
+                var contentPresenter = this.itemsControl.ItemContainerGenerator.ContainerFromItem(tripStop) as ContentPresenter;
+                if (contentPresenter != null)
+                {
+                    ScrollViewer scrollViewer = ControlUtilities.GetParent<ScrollViewer>(this.Parent);
+                    if (scrollViewer != null)
+                    {
+                        // So now we need to find where this stop is in the control:
+                        var transform = contentPresenter.TransformToVisual(scrollViewer);
+                        var point = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+
+                        double newVerticalOffset = point.Y + scrollViewer.VerticalOffset;
+                        scrollViewer.ScrollToVerticalOffset(newVerticalOffset);
                     }
                 }
             }

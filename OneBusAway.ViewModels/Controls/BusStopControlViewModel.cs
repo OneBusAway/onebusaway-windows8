@@ -122,6 +122,7 @@ namespace OneBusAway.ViewModels
 ﻿using OneBusAway.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -133,7 +134,9 @@ namespace OneBusAway.ViewModels.Controls
     /// </summary>
     public class BusStopControlViewModel : ViewModelBase
     {
-        bool isSelected;
+        private Stop stop;
+        private bool isSelected;
+        private bool isClosestStop;        
         private string stopId;
         private string direction;
         private string stopName;
@@ -151,6 +154,10 @@ namespace OneBusAway.ViewModels.Controls
             this.Latitude = stop.Latitude;
             this.Longitude = stop.Longitude;
             this.Direction = stop.Direction;
+            this.IsClosestStop = stop.IsClosestStop;
+
+            this.stop = stop;
+            this.stop.PropertyChanged += OnStopPropertyChanged;
         }
 
         public double Latitude
@@ -201,6 +208,18 @@ namespace OneBusAway.ViewModels.Controls
             }
         }
 
+        public bool IsClosestStop
+        {
+            get
+            {
+                return this.isClosestStop;
+            }
+            set
+            {
+                SetProperty(ref this.isClosestStop, value);
+            }
+        }
+
         public string StopId
         {
             get
@@ -234,6 +253,18 @@ namespace OneBusAway.ViewModels.Controls
             set
             {
                 SetProperty(ref this.stopName, value);
+            }
+        }
+
+        /// <summary>
+        /// Called when the stop's property changed hander is invoked. If the IsClosestStop 
+        /// value changes, we need to update our value as well.
+        /// </summary>
+        private void OnStopPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (string.Equals("IsClosestStop", e.PropertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                this.IsClosestStop = this.stop.IsClosestStop;
             }
         }
     }
