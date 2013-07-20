@@ -209,10 +209,10 @@ namespace OneBusAway.PageControls
         /// <summary>
         /// Restores the page.
         /// </summary>
-        public Task RestoreAsync()
+        public async Task RestoreAsync()
         {
             this.viewModel.MapControlViewModel.MapView.AnimateChange = true;
-            return Task.FromResult<object>(null);
+            await this.RefreshAsync();
         }
 
         /// <summary>
@@ -229,10 +229,13 @@ namespace OneBusAway.PageControls
                                    where tripStop.IsClosestStop
                                    select tripStop).FirstOrDefault();
 
-                // OBA doesn't always know where the bus is:
-                foreach (var busStop in this.viewModel.MapControlViewModel.BusStops)
+                if (closestStop != null)
                 {
-                    busStop.IsClosestStop = (closestStop != null && string.Equals(closestStop.StopId, busStop.StopId, StringComparison.OrdinalIgnoreCase));
+                    this.viewModel.MapControlViewModel.SelectClosestStop(closestStop.StopId);
+                }
+                else
+                {
+                    this.viewModel.MapControlViewModel.UnselectClosestStop();
                 }
             }
             catch (ObaException)
@@ -248,6 +251,14 @@ namespace OneBusAway.PageControls
         {
             this.viewModel.TripTimelineControlViewModel.SelectStop(e.SelectedStopId);
             this.tripTimelineControl.ScrollToSelectedTripStop();
+        }
+
+        /// <summary>
+        /// Called when the control is removed from the layout. Try and unselect the closest stop.
+        /// </summary>
+        private void OnControlUnloaded(object sender, RoutedEventArgs e)
+        {
+            this.viewModel.MapControlViewModel.UnselectClosestStop();            
         }
 
         /// <summary>
@@ -268,7 +279,7 @@ namespace OneBusAway.PageControls
         public PageInitializationParameters GetParameters()
         {
             throw new NotImplementedException();
-        }
+        }        
     }
 }
 >>>>>>> 5fa5eaa... Re-arranging the view models by moving page controls & user control view models into sudifferent namepsaces / folders.

@@ -363,7 +363,7 @@ namespace OneBusAway.ViewModels.Controls
     {
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
-        private BusStopList busStops;
+        private BusStopList busStops;        
         private List<Shape> shapes;
         private bool refreshBusStopsOnMapViewChanged;
         private BusStopControlViewModel selectedBusStop;
@@ -529,6 +529,41 @@ namespace OneBusAway.ViewModels.Controls
                 // geolocator failed for some other reason.
                 // [Ghulam] Apparently on server 2102 GetGeopositionAsync throws FileNotFoundException.
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Finds the closest stop in the bus stop list.
+        /// </summary>
+        public Stop TryFindClosestStop()
+        {
+            return (from stop in this.busStops
+                    where stop.IsClosestStop
+                    select stop).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Unselects the closest stop.
+        /// </summary>
+        public void UnselectClosestStop()
+        {
+            this.SelectClosestStop(null);
+        }
+
+        /// <summary>
+        /// Selects the closest stop.
+        /// </summary>
+        public void SelectClosestStop(string closestStopId)
+        {
+            var closestStop = this.TryFindClosestStop();
+            if (closestStop != null)
+            {
+                closestStop.IsClosestStop = false;
+            }
+
+            foreach (var busStop in this.BusStops)
+            {
+                busStop.IsClosestStop = !string.IsNullOrEmpty(closestStopId) && string.Equals(closestStopId, busStop.StopId, StringComparison.OrdinalIgnoreCase);
             }
         }
         
