@@ -389,7 +389,7 @@
     <SccProvider>SAK</SccProvider>
     <PackageCertificateThumbprint>009DA47CA65FAC6D259CF1103D80464F742CE290</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>D:\Projects\tfs\Windows8\OneBusAway\ReleaseAppPackages</AppxPackageDir>
+    <AppxPackageDir>D:\github\OneBusAway-windows8\ReleaseAppPackages\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
