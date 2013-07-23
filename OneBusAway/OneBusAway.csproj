@@ -584,7 +584,6 @@
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\Bus.gif" />
     <Content Include="Assets\bus.png" />
-    <Content Include="Assets\closestbus.png" />
     <Content Include="Assets\Help-Find.png" />
     <Content Include="Assets\Help-RouteMaps.png" />
     <Content Include="Assets\Help-Search.png" />
