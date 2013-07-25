@@ -131,10 +131,7 @@
     <Compile Include="TileXMLBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
+    <None Include="OneBusAway.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Regions.xml" />
