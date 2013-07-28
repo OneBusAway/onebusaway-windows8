@@ -1,5 +1,5 @@
 extensions: .cs designer.cs generated.cs
-/* Copyright 2013 Microsoft
+/* Copyright 2013 Michael Braude and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ extensions: .cs designer.cs generated.cs
  */
 extensions:  .xml .config .xsd .xaml
 <!--
- Copyright 2013 Microsoft
+ Copyright 2013 Michael Braude and individual contributors.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
