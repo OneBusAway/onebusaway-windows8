@@ -39,8 +39,11 @@
         <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
                       Value="True"
                       VisualState="IsSnapped" />
-        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
-                      Value="False"
+        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationProxy}}"
+                      Value="True"
+                      VisualState="Default" />
+        <trig:Trigger Binding="{Binding IsFullScreen, Source={StaticResource navigationProxy}}"
+                      Value="True"
                       VisualState="Default" />
     </trig:TriggerManager.Triggers>
 

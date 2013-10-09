@@ -164,7 +164,7 @@ namespace OneBusAway.ViewModels.Controls
                     Geolocator geolocator = new Geolocator();
                     var position = await geolocator.GetGeopositionAsync();
 
-                    this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
+                    this.UserLocation = new Point(position.Coordinate.Point.Position.Latitude, position.Coordinate.Point.Position.Longitude); ;
                     this.MapView = new MapView(this.UserLocation, ViewModelConstants.ZoomedInMapZoom);
                 }
                 catch
@@ -185,7 +185,7 @@ namespace OneBusAway.ViewModels.Controls
                 Geolocator geolocator = new Geolocator();
                 var position = await geolocator.GetGeopositionAsync();
 
-                this.UserLocation = new Point(position.Coordinate.Latitude, position.Coordinate.Longitude); ;
+                this.UserLocation = new Point(position.Coordinate.Point.Position.Latitude, position.Coordinate.Point.Position.Longitude); ;
                 this.MapView = new MapView(this.UserLocation, this.MapView.ZoomLevel, true);
                 return true;
             }

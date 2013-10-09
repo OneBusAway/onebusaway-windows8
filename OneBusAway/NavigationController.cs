@@ -142,6 +142,11 @@ namespace OneBusAway
         private MapView mapView;
 
         /// <summary>
+        /// True when the app is full screen.
+        /// </summary>
+        private bool isFullScreen;
+
+        /// <summary>
         /// True when the app is in a snapped state.
         /// </summary>
         private bool isSnapped;
@@ -250,6 +255,18 @@ namespace OneBusAway
             get
             {
                 return instance;
+            }
+        }
+
+        public bool IsFullScreen
+        {
+            get
+            {
+                return this.isFullScreen;
+            }
+            set
+            {
+                SetProperty(ref this.isFullScreen, value);
             }
         }
 
@@ -717,18 +734,15 @@ namespace OneBusAway
         /// <summary>
         /// Called when the go to search page command is executed.
         /// </summary>
-        private async Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
+        private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            if (!this.IsSnapped || ApplicationView.TryUnsnap())
+            var pane = SearchPane.GetForCurrentView();
+            if (pane != null)
             {
-                // Make sure we're idiling before we try this. TryUnsnap may cause the UI to refresh
-                // before we can try this:
-                var helper = new DefaultUIHelper(NavigationController.MainPage.Dispatcher);
-                await helper.WaitForIdleAsync();
-
-                var pane = SearchPane.GetForCurrentView();
                 pane.Show();
             }
+
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -807,18 +821,17 @@ namespace OneBusAway
                 Uri smallLogo = new Uri("ms-appx:///Assets/SmallLogo.scale-100.png");
                 Uri wideLogoUri = new Uri("ms-appx:///Assets/WideLogo.scale-100.png");
 
-                SecondaryTile secondaryTile = new SecondaryTile()
-                {
-                    TileId = pinnablePageControl.TileId,
-                    ShortName = pinnablePageControl.TileName,
-                    DisplayName = pinnablePageControl.TileName,
-                    TileOptions = TileOptions.ShowNameOnLogo,
-                    Arguments = pinnablePageControl.GetParameters().ToQueryString(),
-                    Logo = logoUri,
-                    WideLogo = wideLogoUri,
-                    SmallLogo = smallLogo,
-                    ForegroundText = ForegroundText.Light,
-                };
+                SecondaryTile secondaryTile = new SecondaryTile();
+                secondaryTile.TileId = pinnablePageControl.TileId;
+                secondaryTile.DisplayName = pinnablePageControl.TileName;
+                secondaryTile.Arguments = pinnablePageControl.GetParameters().ToQueryString();
+
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
+                secondaryTile.VisualElements.Square30x30Logo = smallLogo;
+                secondaryTile.VisualElements.Square150x150Logo = logoUri;
+                secondaryTile.VisualElements.Wide310x150Logo = wideLogoUri;
+                secondaryTile.VisualElements.ForegroundText = ForegroundText.Light;
 
                 if (await secondaryTile.RequestCreateAsync())
                 {

@@ -74,15 +74,12 @@
         <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationControllerProxy}}"
                       Value="True"
                       VisualState="IsSnapped" />
-        <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationControllerProxy}}"
-                      Value="False"
+        <trig:Trigger Binding="{Binding IsFullScreen, Source={StaticResource navigationControllerProxy}}"
+                      Value="True"
                       VisualState="Default" />
         <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationControllerProxy}}"
                       Value="True"
                       VisualState="IsPortrait" />
-        <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationControllerProxy}}"
-                      Value="False"
-                      VisualState="Default" />
     </trig:TriggerManager.Triggers>
 
     <!-- Header where the OBA logo & some links appear -->

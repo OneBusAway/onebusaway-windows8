@@ -89,6 +89,17 @@ namespace OneBusAway
         }
 
         /// <summary>
+        /// Returns true when the app is in full screen sate.
+        /// </summary>
+        public bool IsFullScreen
+        {
+            get
+            {
+                return NavigationController.Instance.IsFullScreen;
+            }
+        }
+
+        /// <summary>
         /// Returns true when the app is in portrait mode.
         /// </summary>
         public bool IsPortrait
