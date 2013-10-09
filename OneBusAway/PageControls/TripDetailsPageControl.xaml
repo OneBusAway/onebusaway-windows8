@@ -43,7 +43,7 @@
                       VisualState="IsSnapped" />
         <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationProxy}}"
                       Value="True"
-                      VisualState="Default" />
+                      VisualState="IsPortrait" />
         <trig:Trigger Binding="{Binding IsFullScreen, Source={StaticResource navigationProxy}}"
                       Value="True"
                       VisualState="Default" />
@@ -56,6 +56,15 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Default" />
+                <VisualState x:Name="IsPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
                 <VisualState x:Name="IsSnapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
