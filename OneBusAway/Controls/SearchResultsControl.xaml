@@ -234,17 +234,17 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsItemControl"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="20,0,0,0" />
+                                                    Value="20,0,20,0" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchResultsGrid"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="20,0,0,0" />
+                                                    Value="20,0,20,0" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsGrid"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="20,0,00,0" />
+                                                    Value="20,20,20,0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -263,7 +263,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsGrid"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="10,0,10,0" />
+                                                    Value="10,10,10,0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

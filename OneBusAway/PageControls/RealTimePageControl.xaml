@@ -64,7 +64,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="20,0,0,0" />
+                                                    Value="20,0,20,30" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

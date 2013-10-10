@@ -49,7 +49,7 @@
     </trig:TriggerManager.Triggers>
 
     <StackPanel x:Name="stackPanel" 
-                Margin="90,10,20,0">
+                Margin="90,10,20,30">
 
         <ctrls:RoutesAndStopsControl DataContext="{Binding RoutesAndStopsViewModel}" />
 
@@ -61,7 +61,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="20,0,0,0" />
+                                                    Value="20,0,20,30" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
