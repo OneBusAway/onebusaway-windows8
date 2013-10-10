@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
@@ -52,8 +53,29 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
 
+            this.ShowAppBarCommand = new ObservableCommand();
+            this.ShowAppBarCommand.Executed += OnShowAppBarCommandExecuted;
+
             // Add settings options:
             SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
+        }
+
+        /// <summary>
+        /// Shows the appbar.
+        /// </summary>
+        public ObservableCommand ShowAppBarCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Called when the user clicks the app bar hint...
+        /// </summary>
+        private Task OnShowAppBarCommandExecuted(object arg1, object arg2)
+        {
+            this.appBar.IsOpen = true;
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@
     <trig:TriggerManager.Triggers>
         <trig:Trigger Binding="{Binding IsSnapped, Source={StaticResource navigationProxy}}"
                       Value="True"
-                      VisualState="IsSnapped" />        
+                      VisualState="IsSnapped" />
         <trig:Trigger Binding="{Binding IsPortrait, Source={StaticResource navigationProxy}}"
                       Value="True"
                       VisualState="IsPortrait" />
@@ -65,6 +65,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" x:Name="snappedOrPortraitRow" />
             <RowDefinition Height="*" x:Name="defaultRow" />
+            <RowDefinition Height="16" x:Name="appBarLauncherRow" />
         </Grid.RowDefinitions>
 
         <!-- Header control -->
@@ -90,6 +91,29 @@
                           BusStops="{Binding BusStops, Mode=TwoWay}"
                           Shapes="{Binding Shapes}"
                           SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
+
+        <Grid Grid.Column="0"
+              Grid.Row="3"
+              Grid.ColumnSpan="2"
+              Background="{StaticResource obaGreen}"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ctrls:ScalableTextBlock Grid.Column="1"
+                                     Grid.Row="0" 
+                                     ToolTipService.ToolTip="Show more commands (Win + Z or right-click anywhere)"
+                                     Command="{Binding ShowAppBarCommand, ElementName=root}"
+                                     NormalFontSize="14"
+                                     SnappedFontSize="14"
+                                     Margin="0,-3,60,0"
+                                     HorizontalTextAlignment="Center"
+                                     VerticalTextAlignment="Center"
+                                     FontFamily="Segoe UI Symbol"
+                                     Text="&#xE0C2;" />
+        </Grid>
+
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -208,7 +232,7 @@
                             CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
                             Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
                             Content="&#xE196;" />
-                </StackPanel>                
+                </StackPanel>
             </StackPanel>
         </AppBar>
     </Page.BottomAppBar>
