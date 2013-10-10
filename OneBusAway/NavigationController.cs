@@ -727,7 +727,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
-            NavigationController.MainPage.ShowHelpFlyout();
+            NavigationController.MainPage.ShowHelpFlyout(Convert.ToBoolean(arg2));
             return Task.FromResult<object>(null);
         }
 

@@ -126,7 +126,7 @@ namespace OneBusAway.Controls
         public object CommandParameter
         {
             get { return (object)GetValue(CommandParameterProperty); }
-            set { SetValue(CommandProperty, value); }
+            set { SetValue(CommandParameterProperty, value); }
         }
 
         public VerticalAlignment VerticalTextAlignment

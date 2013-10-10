@@ -100,7 +100,7 @@ namespace OneBusAway.Pages
         /// </summary>
         private void OnHelpCommandExecuted(IUICommand command)
         {
-            NavigationController.Instance.GoToHelpPageCommand.Execute(null);
+            NavigationController.Instance.GoToHelpPageCommand.Execute(true);
         }
 
         /// <summary>
@@ -172,10 +172,17 @@ namespace OneBusAway.Pages
         /// <summary>
         /// Displays the help flyout.
         /// </summary>
-        public void ShowHelpFlyout()
+        public void ShowHelpFlyout(bool calledFromSettings)
         {
-            var helpFlyoutControl = new HelpFlyoutControl();
-            helpFlyoutControl.Show();
+            var helpFlyout = new HelpFlyout();
+            if (calledFromSettings)
+            {
+                helpFlyout.Show();
+            }
+            else
+            {
+                helpFlyout.ShowIndependent();
+            }
         }
 
         /// <summary>
