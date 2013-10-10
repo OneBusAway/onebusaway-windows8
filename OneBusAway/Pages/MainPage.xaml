@@ -197,7 +197,7 @@
 
     <Page.BottomAppBar>
         <!-- App bar is only enabled in snapped mode -->
-        <AppBar Background="{StaticResource obaGreen}">
+        <AppBar x:Name="appBar" Background="{StaticResource obaGreen}">
             <StackPanel HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
