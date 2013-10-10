@@ -92,12 +92,14 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0"
-              Grid.Row="0">
+        <Grid x:Name="mainGrid" 
+              Grid.Column="0"
+              Grid.Row="0"
+              Margin="80,0,0,0">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="backButtonColumn"
-                                  Width="80" />
+                                  Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -193,23 +195,50 @@
                 </Style>
             </Grid.Resources>
 
-            <Button x:Name="favoritesButton" 
+            <Grid x:Name="favoritesButtonPanel" 
                     Grid.Column="0"
-                    Grid.Row="0"
-                    Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
-                    Margin="40,0,40,0">FAVORITES</Button>
+                    Grid.Row="0">
+                <Button Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
+                        Visibility="{Binding IsFullScreen, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                        Margin="40,0,40,0">FAVORITES</Button>
+                <ctrls:ScalableTextBlock Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationControllerProxy}}"
+                                         Visibility="{Binding IsPortrait, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         NormalFontSize="22"
+                                         FontFamily="Segoe UI Symbol"
+                                         Text="&#xE113;" />
+            </Grid>
 
-            <Button x:Name="helpButton"
+            <Grid x:Name="helpButtonPanel" 
                     Grid.Column="1"
-                    Grid.Row="0"
-                    Command="{Binding GoToHelpPageCommand, Source={StaticResource navigationControllerProxy}}"
-                    Margin="0,0,40,0">HELP</Button>
+                    Grid.Row="0">
+                <Button Command="{Binding GoToHelpPageCommand, Source={StaticResource navigationControllerProxy}}"
+                        Visibility="{Binding IsFullScreen, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                        Margin="0,0,40,0">HELP</Button>
+                <ctrls:ScalableTextBlock Command="{Binding GoToHelpPageCommand, Source={StaticResource navigationControllerProxy}}"
+                                         Visibility="{Binding IsPortrait, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         NormalFontSize="22"
+                                         FontFamily="Segoe UI Symbol"
+                                         Text="&#x2753;" />
+            </Grid>
 
-            <Button x:Name="searchButton"
+            <Grid x:Name="searchButtonPanel" 
                     Grid.Column="2"
-                    Grid.Row="0"
-                    Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationControllerProxy}}"
-                    Margin="0,0,40,0">SEARCH</Button>
+                    Grid.Row="0">
+                <Button Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationControllerProxy}}"
+                        Visibility="{Binding IsFullScreen, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                        Margin="0,0,40,0">SEARCH</Button>
+                <ctrls:ScalableTextBlock Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationControllerProxy}}"
+                                         Visibility="{Binding IsPortrait, Converter={StaticResource boolToVisibilityConverter}, Source={StaticResource navigationControllerProxy}}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         NormalFontSize="22"
+                                         FontFamily="Segoe UI Symbol" 
+                                         Text="&#xE11A;" />
+            </Grid>
 
         </Grid>
 
@@ -238,24 +267,34 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="11,0,0,-6" />
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainGrid"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="IsPortrait">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="favoritesButton"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="favoritesButtonPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="20,0,20,0" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="helpButton"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="helpButtonPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="20,0,20,0" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchButton"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchButtonPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="20,0,20,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainGrid"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="20,0,0,0" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
