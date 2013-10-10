@@ -118,6 +118,7 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilityExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OneBusAway.licenseheader" />

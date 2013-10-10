@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using OneBusAway.Utilities;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -33,6 +34,11 @@ namespace OneBusAway.DataAccess.ObaService
     /// </summary>
     public class WebRequestQueue
     {
+        /// <summary>
+        /// The amount of time before we time out a web request.
+        /// </summary>
+        private const int TIMEOUT_LENGTH = 5000;
+
         /// <summary>
         /// Create the singleton instance.
         /// </summary>
@@ -61,20 +67,26 @@ namespace OneBusAway.DataAccess.ObaService
             {
                 instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
                     {
-                        var response = await request.GetResponseAsync();
-                        var responseStream = response.GetResponseStream();
-
-                        XDocument doc = null;
-                        using (var streamReader = new StreamReader(responseStream))
+                        try
                         {
-                            string xml = await streamReader.ReadToEndAsync();
-                            doc = XDocument.Parse(xml);
+                            var response = await request.GetResponseAsync().CancelAfter(TIMEOUT_LENGTH);
+                            var responseStream = response.GetResponseStream();
+
+                            XDocument doc = null;
+                            using (var streamReader = new StreamReader(responseStream))
+                            {
+                                string xml = await streamReader.ReadToEndAsync().CancelAfter(TIMEOUT_LENGTH);
+                                doc = XDocument.Parse(xml);
+                            }
+
+                            // Wait a bit to throttle the requests:
+                            await Task.Delay(50);
+                            return doc;
                         }
-
-                        // Wait a bit to throttle the requests:
-                        await Task.Delay(50);
-                        return doc;
-
+                        catch (TaskCanceledException)
+                        {
+                            throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
+                        }
                     }).Unwrap();
 
                 return instance.currentTask;
