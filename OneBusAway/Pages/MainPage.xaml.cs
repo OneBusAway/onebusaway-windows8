@@ -171,8 +171,8 @@ namespace OneBusAway.Pages
         {
             double width = e.NewSize.Width;
             NavigationController.Instance.IsSnapped = (width <= 520);
-            NavigationController.Instance.IsPortrait  = (520 < width && width < 1376);
-            NavigationController.Instance.IsFullScreen  = (1376 <= width);
+            NavigationController.Instance.IsPortrait  = (520 < width && width < 1024);
+            NavigationController.Instance.IsFullScreen = (1024 <= width);
         }
 
         /// <summary>
