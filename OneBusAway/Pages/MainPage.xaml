@@ -26,7 +26,7 @@
       xmlns:conv="using:OneBusAway.Converters"
       xmlns:bingmaps="using:Bing.Maps"
       xmlns:trig="using:OneBusAway.Triggers"
-      SizeChanged="OnSizeChanged"
+      SizeChanged="OnSizeChanged"      
       mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -95,16 +95,16 @@
         <Grid Grid.Column="0"
               Grid.Row="3"
               Grid.ColumnSpan="2"
+              PointerPressed="OnAppBarPointerPressed"
               Background="{StaticResource obaGreen}"
+              ToolTipService.ToolTip="Show more commands (Win + Z or right-click anywhere)"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ctrls:ScalableTextBlock Grid.Column="1"
-                                     Grid.Row="0" 
-                                     ToolTipService.ToolTip="Show more commands (Win + Z or right-click anywhere)"
-                                     Command="{Binding ShowAppBarCommand, ElementName=root}"
+                                     Grid.Row="0"                                      
                                      NormalFontSize="14"
                                      SnappedFontSize="14"
                                      Margin="0,-3,60,0"
@@ -220,19 +220,21 @@
                 <Button Style="{StaticResource AppBarButtonStyle}"
                         Command="{Binding GoToUsersLocationCommand, Source={StaticResource navigationProxy}}"
                         Content="&#xE139;" />
-                <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}">
-                    <Button Style="{StaticResource AppBarButtonStyle}"
-                            Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
-                            CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
-                            Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=true}"
-                            Content="&#xE141;" />
-                    <Button Style="{StaticResource AppBarButtonStyle}"
-                            Command="{Binding UnPinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
-                            CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
-                            Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                            Content="&#xE196;" />
-                </StackPanel>
+                <Grid Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+                    <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}">                    
+                        <Button Style="{StaticResource AppBarButtonStyle}"
+                                Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
+                                CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
+                                Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=true}"
+                                Content="&#xE141;" />
+                        <Button Style="{StaticResource AppBarButtonStyle}"
+                                Command="{Binding UnPinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
+                                CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
+                                Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
+                                Content="&#xE196;" />
+                    </StackPanel>
+                </Grid>
             </StackPanel>
         </AppBar>
     </Page.BottomAppBar>

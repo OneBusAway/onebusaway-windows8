@@ -53,29 +53,8 @@ namespace OneBusAway.Pages
         {
             this.InitializeComponent();
 
-            this.ShowAppBarCommand = new ObservableCommand();
-            this.ShowAppBarCommand.Executed += OnShowAppBarCommandExecuted;
-
             // Add settings options:
             SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
-        }
-
-        /// <summary>
-        /// Shows the appbar.
-        /// </summary>
-        public ObservableCommand ShowAppBarCommand
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Called when the user clicks the app bar hint...
-        /// </summary>
-        private Task OnShowAppBarCommandExecuted(object arg1, object arg2)
-        {
-            this.appBar.IsOpen = true;
-            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -226,6 +205,14 @@ namespace OneBusAway.Pages
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Called when the semi-transparent appbar is pressed.
+        /// </summary>
+        private void OnAppBarPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            this.appBar.IsOpen = true;
         }
     }
 }
