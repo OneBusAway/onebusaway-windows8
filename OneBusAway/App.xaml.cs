@@ -79,17 +79,12 @@ namespace OneBusAway
 
             // Ensure the current window is active
             Window.Current.Activate();
-        }
-
-        protected override void OnWindowCreated(WindowCreatedEventArgs args)
-        {
-            base.OnWindowCreated(args);
 
             var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
             pane.ShowOnKeyboardInput = true;
             pane.QuerySubmitted += OnAppQuerySubmitted;
             pane.ResultSuggestionChosen += OnSearchPaneResultSuggestionChosen;
-            pane.SuggestionsRequested += OnSearchPaneSuggestionsRequested;            
+            pane.SuggestionsRequested += OnSearchPaneSuggestionsRequested;   
         }
 
         private async void OnSearchPaneSuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
