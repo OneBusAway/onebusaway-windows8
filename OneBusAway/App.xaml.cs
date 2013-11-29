@@ -79,61 +79,7 @@ namespace OneBusAway
 
             // Ensure the current window is active
             Window.Current.Activate();
-
-            //var pane = Windows.ApplicationModel.Search.SearchPane.GetForCurrentView();
-            //pane.ShowOnKeyboardInput = true;
-            //pane.QuerySubmitted += OnAppQuerySubmitted;
-            //pane.ResultSuggestionChosen += OnSearchPaneResultSuggestionChosen;
-            //pane.SuggestionsRequested += OnSearchPaneSuggestionsRequested;
-        }
-
-        private async void OnSearchPaneSuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
-        {
-            var frame = Window.Current.Content as Frame;
-            if (frame != null)
-            {
-                var searchResultsPage = frame.Content as MainPage;
-                if (searchResultsPage != null)
-                {
-                    var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
-                    if (viewModel != null)
-                    {
-                        args.Request.SearchSuggestionCollection.AppendQuerySuggestions(await viewModel.GetSuggestionsAsync(args.QueryText));
-                    }
-                }
-            }
-        }
-
-        private async void OnSearchPaneResultSuggestionChosen(SearchPane sender, SearchPaneResultSuggestionChosenEventArgs args)
-        {
-            await HandleSearchQuery(args.Tag);
-        }
-
-        private async void OnAppQuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
-        {
-            await HandleSearchQuery(args.QueryText);
-        }
-
-        private async Task HandleSearchQuery(string queryText)
-        {
-            var frame = Window.Current.Content as Frame;
-            if (frame != null)
-            {
-                var searchResultsPage = frame.Content as MainPage;
-                if (searchResultsPage != null)
-                {
-                    var viewModel = searchResultsPage.DataContext as SearchResultsPageControlViewModel;
-                    if (viewModel != null)
-                    {
-                        await viewModel.SearchAsync(queryText);
-                    }
-                    else
-                    {
-                        await NavigationController.Instance.NavigateToPageControlAsync<SearchResultsPageControl>(queryText);
-                    }
-                }
-            }
-        }
+        }        
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved

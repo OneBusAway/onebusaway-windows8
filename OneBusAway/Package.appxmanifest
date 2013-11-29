@@ -16,6 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="OneBusAway.App">
       <Extensions>
+        <Extension Category="windows.search" />
         <Extension Category="windows.backgroundTasks" EntryPoint="OneBusAway.Backgrounding.StartupBackgroundTask">
           <BackgroundTasks>
             <Task Type="systemEvent" />

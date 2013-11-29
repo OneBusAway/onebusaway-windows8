@@ -142,6 +142,11 @@ namespace OneBusAway
         private MapView mapView;
 
         /// <summary>
+        /// The search controller is used to handle search queries.
+        /// </summary>
+        private SearchController searchController;
+
+        /// <summary>
         /// True when the app is full screen.
         /// </summary>
         private bool isFullScreen;
@@ -736,12 +741,12 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            var pane = SearchPane.GetForCurrentView();
-            if (pane != null)
+            if (this.searchController == null)
             {
-                pane.Show();
+                this.searchController = new SearchController();
             }
 
+            this.searchController.ShowSearchPane();
             return Task.FromResult<object>(null);
         }
 
