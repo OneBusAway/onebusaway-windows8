@@ -818,8 +818,9 @@ namespace OneBusAway
             if (pinnablePageControl != null)
             {
                 Uri logoUri = new Uri("ms-appx:///Assets/Logo.scale-100.png");
-                Uri smallLogo = new Uri("ms-appx:///Assets/SmallLogo.scale-100.png");
+                Uri smallLogoUri = new Uri("ms-appx:///Assets/SmallLogo.scale-100.png");
                 Uri wideLogoUri = new Uri("ms-appx:///Assets/WideLogo.scale-100.png");
+                Uri largeLogoUri = new Uri("ms-appx:///Assets/Square310x310Logo.scale-100.png");
 
                 SecondaryTile secondaryTile = new SecondaryTile();
                 secondaryTile.TileId = pinnablePageControl.TileId;
@@ -828,10 +829,12 @@ namespace OneBusAway
 
                 secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
                 secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
-                secondaryTile.VisualElements.Square30x30Logo = smallLogo;
+                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
+                secondaryTile.VisualElements.Square30x30Logo = smallLogoUri;
                 secondaryTile.VisualElements.Square150x150Logo = logoUri;
                 secondaryTile.VisualElements.Wide310x150Logo = wideLogoUri;
-                secondaryTile.VisualElements.ForegroundText = ForegroundText.Light;
+                secondaryTile.VisualElements.Square310x310Logo = largeLogoUri;
+                secondaryTile.VisualElements.ForegroundText = ForegroundText.Light;                
 
                 if (await secondaryTile.RequestCreateAsync())
                 {

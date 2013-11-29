@@ -127,7 +127,8 @@ namespace OneBusAway.Backgrounding
                         string.Format("BUS {0}", trackingData.Route.ShortName.ToUpper()),
                         trackingData.TripHeadsign.ToUpper(),
                         trackingData.StopName.ToUpper(),
-                        string.Format("{0} / {1}", trackingData.ScheduledArrivalTime.ToString("h:mm"), trackingData.PredictedArrivalTime.ToString("h:mm")));
+                        trackingData.ScheduledArrivalTime.ToString("h:mm"),
+                        trackingData.PredictedArrivalTime.ToString("h:mm"));
                 }
 
                 time = time.AddMinutes(1);

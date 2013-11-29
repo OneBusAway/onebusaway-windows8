@@ -44,10 +44,11 @@
         </Extension>
       </Extensions>
       <m2:VisualElements DisplayName="OneBusAway" Description="OneBusAway is a tool that helps you find real-time information for buses in regions supported by OneBusAway.org." BackgroundColor="#78AA36" ForegroundText="light" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png">
-        <m2:DefaultTile ShortName="OneBusAway" Wide310x150Logo="Assets\WideLogo.png">
+        <m2:DefaultTile ShortName="OneBusAway" Wide310x150Logo="Assets\WideLogo.png" DefaultSize="wide310x150Logo" Square310x310Logo="Assets\Square310x310Logo.png">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
             <m2:ShowOn Tile="wide310x150Logo" />
+            <m2:ShowOn Tile="square310x310Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
         <m2:LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\BadgeLogo.png" />

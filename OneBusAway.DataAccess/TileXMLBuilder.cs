@@ -84,7 +84,7 @@ namespace OneBusAway.DataAccess
         /// </summary>
         public async Task AppendTileWithLargePictureAndTextAsync(string tileId, double latitude, double longitude, string text)
         {
-            string wideTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 310, 160, true);
+            string largeTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 310, 310, TileSize.large);
 
             //<visual>
             //  <binding template="TileWideImageAndText01">
@@ -97,10 +97,29 @@ namespace OneBusAway.DataAccess
             document.AppendChild(rootElement);
 
             XmlElement visualElement = document.CreateElement("visual");
+            visualElement.SetAttribute("version", "2");
             rootElement.AppendChild(visualElement);
 
+            XmlElement largeBindingElement = document.CreateElement("binding");
+            largeBindingElement.SetAttribute("template", "TileSquare310x310ImageAndText01");
+            visualElement.AppendChild(largeBindingElement);
+
+            XmlElement largeImageElement = document.CreateElement("image");
+            largeImageElement.SetAttribute("id", "1");
+            largeImageElement.SetAttribute("src", string.Format(@"ms-appdata:///local/Tiles/{0}", largeTileImageFile));
+            largeImageElement.SetAttribute("alt", text);
+            largeBindingElement.AppendChild(largeImageElement);
+
+            XmlElement largeTextElement = document.CreateElement("text");
+            largeTextElement.SetAttribute("id", "1");
+            largeTextElement.InnerText = text;
+            largeBindingElement.AppendChild(largeTextElement);
+
+            string wideTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 310, 160, TileSize.wide);
+            
             XmlElement wideBindingElement = document.CreateElement("binding");
-            wideBindingElement.SetAttribute("template", "TileWideImageAndText01");
+            wideBindingElement.SetAttribute("template", "TileWide310x150ImageAndText01");
+            wideBindingElement.SetAttribute("fallback", "TileWideImageAndText01");
             visualElement.AppendChild(wideBindingElement);
 
             XmlElement wideImageElement = document.CreateElement("image");
@@ -122,10 +141,11 @@ namespace OneBusAway.DataAccess
             //    </binding>  
             //  </visual>
             //</tile>
-            string smallTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 160, 160, false);
+            string smallTileImageFile = await CreateTileMapImageAsync(tileId, latitude, longitude, 160, 160, TileSize.small);
             
             XmlElement smallBindingElement = document.CreateElement("binding");
-            smallBindingElement.SetAttribute("template", "TileSquareImage");
+            smallBindingElement.SetAttribute("template", "TileSquare150x150Image");
+            smallBindingElement.SetAttribute("fallback", "TileSquareImage");
             visualElement.AppendChild(smallBindingElement);
 
             XmlElement smallImageElement = document.CreateElement("image");
@@ -142,7 +162,7 @@ namespace OneBusAway.DataAccess
         /// <summary>
         /// Appends a wide tile with a big block of text. Used to display up-coming buses.
         /// </summary>
-        public void AppendTileWithBlockTextAndLines(DateTimeOffset scheduledTime, string blockText, string subBlockText, string text1 = null, string text2 = null, string text3 = null, string text4 = null)
+        public void AppendTileWithBlockTextAndLines(DateTimeOffset scheduledTime, string blockText, string statusText, string busName, string tripHeadsign, string stopName, string scheduledArrivalTime, string predictedArrivalTime)
         {
             //<tile>
             //  <visual>
@@ -161,33 +181,56 @@ namespace OneBusAway.DataAccess
             document.AppendChild(rootElement);
 
             XmlElement visualElement = document.CreateElement("visual");
+            visualElement.SetAttribute("version", "2");
             rootElement.AppendChild(visualElement);
 
-            XmlElement wideBindingElement = document.CreateElement("binding");
-            wideBindingElement.SetAttribute("template", "TileWideBlockAndText01");
+            // Support large tiles for Win 8.1 and higher:
+            //<visual version="2">
+            //  <binding template="TileSquare310x310BlockAndText01">
+            //    <text id="1">Text Field 1 (large text)</text>
+            //    <text id="2">Text Field 2</text>
+            //    <text id="3">Text Field 3</text>
+            //    <text id="4">Text Field 4</text>
+            //    <text id="5">Text Field 5</text>
+            //    <text id="6">Text Field 6</text>
+            //    <text id="7">Text Field 7</text>
+            //    <text id="8">Text Field 8 (block text)</text>
+            //    <text id="9">Text Field 9</text>
+            //  </binding>  
+            //</visual>
+            XmlElement largeBindingElement = document.CreateElement("binding");
+            largeBindingElement.SetAttribute("template", "TileSquare310x310BlockAndText01");
+
+            AddSubTextElements(largeBindingElement, new string[]
+            {
+                busName,
+                tripHeadsign,
+                stopName,
+                "SCHED / ETA",
+                string.Format("{0} / {1}", scheduledArrivalTime, predictedArrivalTime),
+                string.Empty,
+                string.Empty,
+                blockText,
+                statusText,
+            });
+
+            visualElement.AppendChild(largeBindingElement);
+
+
+            XmlElement wideBindingElement = document.CreateElement("binding");            
+            wideBindingElement.SetAttribute("template", "TileWide310x150BlockAndText01");
+            wideBindingElement.SetAttribute("fallback", "TileWideBlockAndText01");
             visualElement.AppendChild(wideBindingElement);
 
-            string[] wideTexts = new string[]
+            AddSubTextElements(wideBindingElement, new string[]
             {
-                text1,
-                text2,
-                text3,
-                text4,
+                busName,
+                tripHeadsign,
+                stopName,
+                string.Format("{0} / {1}", scheduledArrivalTime, predictedArrivalTime),
                 blockText,
-                subBlockText,
-            };
-
-            for (int i = 0; i < wideTexts.Length; i++)
-            {
-                string text = wideTexts[i];
-                if (!string.IsNullOrEmpty(text))
-                {
-                    XmlElement textElement = document.CreateElement("text");
-                    textElement.SetAttribute("id", (i + 1).ToString());
-                    textElement.InnerText = text;
-                    wideBindingElement.AppendChild(textElement);
-                }
-            }
+                statusText,
+            });
 
             // Unfortunately, there is only one small tile template that supports block text.
             //<tile>
@@ -199,7 +242,8 @@ namespace OneBusAway.DataAccess
             //  </visual>
             //</tile>
             XmlElement smallBindingElement = document.CreateElement("binding");
-            smallBindingElement.SetAttribute("template", "TileSquareBlock");
+            smallBindingElement.SetAttribute("template", "TileSquare150x150Block");
+            smallBindingElement.SetAttribute("fallback", "TileSquareBlock");
             visualElement.AppendChild(smallBindingElement);
 
             XmlElement smallBlockTextElement = document.CreateElement("text");
@@ -209,32 +253,57 @@ namespace OneBusAway.DataAccess
 
             XmlElement smallSubTextElement = document.CreateElement("text");
             smallSubTextElement.SetAttribute("id", "2");
-            smallSubTextElement.InnerText = text1;
+            smallSubTextElement.InnerText = busName;
             smallBindingElement.AppendChild(smallSubTextElement);
 
             if ((scheduledTime - DateTime.Now).TotalMinutes < 1)
             {
                 var notification = new TileNotification(document);
                 notification.ExpirationTime = scheduledTime.AddMinutes(1);
-                notification.Tag = (text1 + text2 + text3 + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
+                notification.Tag = (busName + tripHeadsign + stopName + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
                 this.tileUpdater.Update(notification);
             }
             else
             {
                 var notification = new ScheduledTileNotification(document, scheduledTime);
                 notification.ExpirationTime = scheduledTime.AddMinutes(1);
-                notification.Tag = (text1 + text2 + text3 + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
+                notification.Tag = (busName + tripHeadsign + stopName + scheduledTime.ToString("hh:mm")).GetHashCode().ToString("X");
                 this.tileUpdater.AddToSchedule(notification);
             }
         }
 
         /// <summary>
+        /// Private utility method that adds text elements to a binding element.
+        /// </summary>
+        private static void AddSubTextElements(XmlElement bindingElement, string[] texts)
+        {
+            for (int i = 0; i < texts.Length; i++)
+            {
+                string text = texts[i];
+                if (!string.IsNullOrEmpty(text))
+                {
+                    XmlElement textElement = bindingElement.OwnerDocument.CreateElement("text");
+                    textElement.SetAttribute("id", (i + 1).ToString());
+                    textElement.InnerText = text;
+                    bindingElement.AppendChild(textElement);
+                }
+            }
+        }
+
+        private enum TileSize 
+        { 
+            large,
+            wide,
+            small
+        }
+
+        /// <summary>
         /// Creates a map image for a tile.
         /// </summary>
-        private static async Task<string> CreateTileMapImageAsync(string tileId, double latitude, double longitude, int width, int height, bool isWide)
+        private static async Task<string> CreateTileMapImageAsync(string tileId, double latitude, double longitude, int width, int height, TileSize tileSize)
         {
             // Get the image from Bing and save to disk.
-            string tileImageFile = string.Format("{0}-{1}.png", tileId, isWide ? "wide" : "small");
+            string tileImageFile = string.Format("{0}-{1}.png", tileId, tileSize.ToString());
             string tileImagePath = Path.Combine("Tiles", tileImageFile);
 
             bool fileExists = false;
