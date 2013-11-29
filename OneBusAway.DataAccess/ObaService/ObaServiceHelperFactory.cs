@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -26,6 +25,7 @@ using OneBusAway.Utilities;
 using Windows.Storage;
 using System.Threading;
 using System.Reflection;
+using System.Net.Http;
 
 namespace OneBusAway.DataAccess.ObaService.ObaService
 {
@@ -94,14 +94,9 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         // the old document until the server is back!
                         if (doc == null || existingFileHasExpired)
                         {
-                            var webRequest = WebRequest.CreateHttp(REGIONS_SERVICE_URI);
-
-                            var response = await webRequest.GetResponseAsync();
-                            var responseStream = response.GetResponseStream();
-
-                            using (var streamReader = new StreamReader(responseStream))
+                            using (var webClient = new HttpClient())
                             {
-                                string xml = await streamReader.ReadToEndAsync();
+                                var xml = await webClient.GetStringAsync(REGIONS_SERVICE_URI);
                                 doc = XDocument.Parse(xml);
                             }
 
@@ -154,11 +149,11 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
         /// <summary>
         /// Factory method creates a service helper.
         /// </summary>
-        public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod, HttpMethod httpMethod = HttpMethod.GET)
+        public virtual async Task<IObaServiceHelper> CreateHelperAsync(ObaMethod obaMethod)
         {
             // Find the closest region to the user's location:
             var usersRegion = await this.FindClosestRegionAsync();
-            return new ObaServiceHelper(usersRegion, obaMethod, httpMethod);
+            return new ObaServiceHelper(usersRegion, obaMethod);
         }
 
         /// <summary>
@@ -183,17 +178,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             /// This Uri builder is used to create the URI of the OBA REST service.
             /// </summary>
             private UriBuilder uriBuilder;
-
-            /// <summary>
-            /// Creates the web request.
-            /// </summary>
-            private HttpWebRequest request;
-
-            /// <summary>
-            /// The http method.
-            /// </summary>
-            private HttpMethod httpMethod;
-
+            
             /// <summary>
             /// The oba method.
             /// </summary>
@@ -222,10 +207,9 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             /// <summary>
             /// Creates the service helper.
             /// </summary>
-            public ObaServiceHelper(Region region, ObaMethod obaMethod, HttpMethod httpMethod)
+            public ObaServiceHelper(Region region, ObaMethod obaMethod)
             {
                 this.obaMethod = obaMethod;
-                this.httpMethod = httpMethod;
                 this.region = region;
                 this.serviceUrl = this.region.RegionUrl;
                 this.id = null;
@@ -315,10 +299,11 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         try
                         {
                             this.uriBuilder.Query = this.CreateQueryString();
-                            this.request = WebRequest.CreateHttp(this.uriBuilder.Uri);
-                            this.request.Method = this.httpMethod.ToString();
 
-                            doc = await WebRequestQueue.SendAsync(request);
+                            using (var client = new HttpClient())
+                            {
+                                doc = await WebRequestQueue.SendAsync(client, this.uriBuilder.ToString());
+                            }
 
                             // Verify that OBA sent us a valid document and that it's status code is 200:                
                             int returnCode = doc.Root.GetFirstElementValue<int>("code");

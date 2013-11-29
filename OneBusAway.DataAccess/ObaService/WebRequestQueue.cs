@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using OneBusAway.Utilities;
+using System.Net.Http;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -61,31 +62,27 @@ namespace OneBusAway.DataAccess.ObaService
         /// <summary>
         /// Queues a web request into our queue and returns an awaitable task.
         /// </summary>
-        public static Task<XDocument> SendAsync(HttpWebRequest request)
+        public static Task<XDocument> SendAsync(HttpClient client, string uri)
         {
             lock (instance)
             {
                 instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
                     {
-                        try
+                        using(CancellationTokenSource source = new CancellationTokenSource(TIMEOUT_LENGTH))
                         {
-                            var response = await request.GetResponseAsync().CancelAfter(TIMEOUT_LENGTH);
-                            var responseStream = response.GetResponseStream();
-
-                            XDocument doc = null;
-                            using (var streamReader = new StreamReader(responseStream))
+                            try
                             {
-                                string xml = await streamReader.ReadToEndAsync().CancelAfter(TIMEOUT_LENGTH);
-                                doc = XDocument.Parse(xml);
-                            }
+                                var response = await client.GetAsync(uri, source.Token);
+                                XDocument doc = XDocument.Parse(await response.Content.ReadAsStringAsync());
 
-                            // Wait a bit to throttle the requests:
-                            await Task.Delay(50);
-                            return doc;
-                        }
-                        catch (TaskCanceledException)
-                        {
-                            throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
+                                // Wait a bit to throttle the requests:
+                                await Task.Delay(50);
+                                return doc;
+                            }
+                            catch (TaskCanceledException)
+                            {
+                                throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
+                            }
                         }
                     }).Unwrap();
 
