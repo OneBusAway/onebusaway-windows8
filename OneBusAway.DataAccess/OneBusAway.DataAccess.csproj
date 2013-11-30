@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BingService\BingMapsServiceHelper.cs" />
+    <Compile Include="DataAccessConstants.cs" />
     <Compile Include="ObaService\IObaServiceHelper.cs" />
     <Compile Include="ObaService\ObaDataAccess.cs" />
     <Compile Include="ObaService\Region.cs" />

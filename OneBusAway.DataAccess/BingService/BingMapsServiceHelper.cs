@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
@@ -50,17 +52,14 @@ namespace OneBusAway.DataAccess.BingService
                 imageHeight,
                 UtilitiesConstants.BingsMapsServiceApiKey);
 
-            WebRequest request = HttpWebRequest.Create(url);
-            request.Method = "GET";
-            var response = await request.GetResponseAsync();
-
-            MemoryStream memoryStream = new MemoryStream();
-            using (var stream = response.GetResponseStream())
+            using (CancellationTokenSource source = new CancellationTokenSource(DataAccessConstants.TIMEOUT_LENGTH))
             {
-                await stream.CopyToAsync(memoryStream);
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return new MemoryStream(await message.Content.ReadAsByteArrayAsync());
+                }
             }
-
-            return memoryStream;
         }
 
         /// <summary>

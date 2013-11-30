@@ -843,8 +843,15 @@ namespace OneBusAway
 
                 if (await secondaryTile.RequestCreateAsync())
                 {
-                    await pinnablePageControl.UpdateTileAsync(true);
-                    this.IsCurrentControlPinned = true;
+                    try
+                    {
+                        await pinnablePageControl.UpdateTileAsync(true);
+                        this.IsCurrentControlPinned = true;
+                    }
+                    catch
+                    {
+                        // In case of network error, don't bring down the app. Nothing we can do here...
+                    }
                 }
             }
         }

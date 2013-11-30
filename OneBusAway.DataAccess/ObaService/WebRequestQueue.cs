@@ -36,11 +36,6 @@ namespace OneBusAway.DataAccess.ObaService
     public class WebRequestQueue
     {
         /// <summary>
-        /// The amount of time before we time out a web request.
-        /// </summary>
-        private const int TIMEOUT_LENGTH = 5000;
-
-        /// <summary>
         /// Create the singleton instance.
         /// </summary>
         private static WebRequestQueue instance = new WebRequestQueue();
@@ -68,7 +63,7 @@ namespace OneBusAway.DataAccess.ObaService
             {
                 instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
                     {
-                        using(CancellationTokenSource source = new CancellationTokenSource(TIMEOUT_LENGTH))
+                        using(CancellationTokenSource source = new CancellationTokenSource(DataAccessConstants.TIMEOUT_LENGTH))
                         {
                             try
                             {
