@@ -71,7 +71,7 @@ namespace OneBusAway.Pages
         /// </summary>
         private async void OnPrivacyCommandExecuted(IUICommand command)
         {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("http://onebusaway.azurewebsites.net/PrivacyPolicy.html"));
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("http://onebusaway.org/privacy/"));
         }
 
         /// <summary>
