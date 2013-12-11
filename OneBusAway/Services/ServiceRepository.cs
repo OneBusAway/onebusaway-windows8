@@ -12,6 +12,7 @@ namespace OneBusAway.Shared.Services
         private IFileService fileService;
         private INetworkService networkService;
         private ISettingsService settingsService;
+        private IGeoLocationService geoLocationService;
 
         private ServiceRepository()
         {
@@ -50,6 +51,18 @@ namespace OneBusAway.Shared.Services
             set
             {
                 instance.settingsService = value;
+            }
+        }
+
+        public static IGeoLocationService GeoLocationService
+        {
+            get
+            {
+                return instance.geoLocationService;
+            }
+            set
+            {
+                instance.geoLocationService = value;
             }
         }
     }
