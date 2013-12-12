@@ -44,12 +44,7 @@ namespace OneBusAway.Controls
         private Location userLocation;
         private IUIHelper uiHelper;
         private HashSet<string> displayedBusStopLookup = new HashSet<string>();
-
-        /// <summary>
-        /// This bool is true when the user has already seen the oh my dialog.
-        /// </summary>
-        private bool hasShownOhMyDialog;            
-
+        
         public MapControl()
         {
             this.InitializeComponent();
@@ -61,15 +56,13 @@ namespace OneBusAway.Controls
 
             map.ViewChangeEnded += OnMapViewChangeEnded;
             this.uiHelper = new DefaultUIHelper(this.Dispatcher);
-
-            this.hasShownOhMyDialog = ApplicationData.Current.LocalSettings.Values.ContainsKey(UtilitiesConstants.OH_MY_KEY);
         }
 
         public string BingMapCredentials
         {
             get
             {
-                return Utilities.UtilitiesConstants.BingMapCredentials;
+                return Constants.BingsMapsServiceApiKey;
             }
         }
 
@@ -119,7 +112,7 @@ namespace OneBusAway.Controls
                 }
                 else
                 {
-                    map.Center = new Location(UtilitiesConstants.DefaultLatitude, UtilitiesConstants.DefaultLongitude);
+                    map.Center = new Location(Constants.DefaultLatitude, Constants.DefaultLongitude);
 
                     map.SetView(map.Center, ZoomLevel, new TimeSpan());
                 }

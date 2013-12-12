@@ -44,7 +44,7 @@ namespace OneBusAway.Converters
                     bool.TryParse(parameter as string, out invert);
                 }
 
-                if (mapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
+                if (mapView.ZoomLevel < Constants.MinBusStopVisibleZoom)
                 {
                     return (invert)
                         ? Visibility.Visible

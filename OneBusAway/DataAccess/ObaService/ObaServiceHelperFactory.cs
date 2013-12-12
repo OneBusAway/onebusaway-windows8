@@ -211,7 +211,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                 this.SetDefaultPath();
 
                 this.queryStringMap = new Dictionary<string, string>();
-                this.queryStringMap["key"] = UtilitiesConstants.API_KEY;
+                this.queryStringMap["key"] = Constants.ObaApiKey;
                 this.queryStringMap["Version"] = "2";
             }
 
@@ -333,9 +333,9 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             /// 
             /// <param name="cacheTimeout">Expected cache age in seconds</param>
             /// <returns>Cached query if existed and new; null otherwise.</returns>
-            private async Task<XDocument> GetCachedDocument(int cacheTimeout = UtilitiesConstants.DefaultCacheAge)
+            private async Task<XDocument> GetCachedDocument(int cacheTimeout = Constants.DefaultCacheAge)
             {
-                if (!string.IsNullOrEmpty(this.id) && cacheTimeout != UtilitiesConstants.NoCacheAge)
+                if (!string.IsNullOrEmpty(this.id) && cacheTimeout != Constants.NoCacheAge)
                 {
                     try
                     {
@@ -364,7 +364,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             /// <returns>An awaitable task</returns>
             private async Task<bool> TrySaveCachedDocument(XDocument doc, int expectedCacheAge)
             {
-                if (!String.IsNullOrEmpty(this.id) && expectedCacheAge != UtilitiesConstants.NoCacheAge && doc != null)
+                if (!String.IsNullOrEmpty(this.id) && expectedCacheAge != Constants.NoCacheAge && doc != null)
                 {
                     try
                     {

@@ -144,7 +144,7 @@ namespace OneBusAway.DataAccess.ObaService
                     helper.AddToQueryString("lonSpan", longitudeSpan.ToString(CultureInfo.CurrentCulture));
                 }
 
-                XDocument doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
+                XDocument doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge);
                 if (doc != null)
                 {
                     return (from stopElement in doc.Descendants("stop")
@@ -303,7 +303,7 @@ namespace OneBusAway.DataAccess.ObaService
                 helper.SetId(stopId);
                 helper.AddToQueryString("date", date.ToString("yyyy-MM-dd"));
 
-                doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
+                doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge);
                 if (doc != null)
                 {
                     var stopRouteScheduleElement = doc.Descendants("stopRouteSchedule")
@@ -400,7 +400,7 @@ namespace OneBusAway.DataAccess.ObaService
                 helper.SetId(stopId);
                 helper.AddToQueryString("minutesAfter", "60");
 
-                XDocument doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
+                XDocument doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge);
 
                 if (doc != null)
                 {
@@ -432,7 +432,7 @@ namespace OneBusAway.DataAccess.ObaService
                 var helper = await this.Factory.CreateHelperAsync(method);
                 helper.SetId(tripId);
 
-                XDocument doc = await helper.SendAndRecieveAsync(UtilitiesConstants.NoCacheAge);
+                XDocument doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge);
 
                 if (doc != null)
                 {

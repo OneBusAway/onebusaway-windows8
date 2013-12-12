@@ -62,22 +62,19 @@ namespace OneBusAway.DataAccess.ObaService
             lock (instance)
             {
                 instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
-                    {
-                        using(CancellationTokenSource source = new CancellationTokenSource(DataAccessConstants.TIMEOUT_LENGTH))
+                    {   
+                        try
                         {
-                            try
-                            {
-                                var responseString = await ServiceRepository.NetworkService.ReadAsStringAsync(uri);
-                                XDocument doc = XDocument.Parse(responseString);
+                            var responseString = await ServiceRepository.NetworkService.ReadAsStringAsync(uri);
+                            XDocument doc = XDocument.Parse(responseString);
 
-                                // Wait a bit to throttle the requests:
-                                await Task.Delay(50);
-                                return doc;
-                            }
-                            catch (TaskCanceledException)
-                            {
-                                throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
-                            }
+                            // Wait a bit to throttle the requests:
+                            await Task.Delay(50);
+                            return doc;
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
                         }
                     }).Unwrap();
 

@@ -93,7 +93,7 @@ namespace OneBusAway.ViewModels.PageControls
         public async Task NavigateDirectlyToStop(double latitude, double longitude, string selectedStopId)
         {
             var center = new Model.Point(latitude, longitude);
-            this.MapControlViewModel.MapView = new MapView(center, ViewModelConstants.ZoomedInMapZoom, false);
+            this.MapControlViewModel.MapView = new MapView(center, Constants.ZoomedInMapZoom, false);
 
             await this.MapControlViewModel.RefreshStopsForLocationAsync(MapView.Current);
             this.MapControlViewModel.SelectStop(selectedStopId);

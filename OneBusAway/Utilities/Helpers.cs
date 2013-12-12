@@ -118,7 +118,7 @@ namespace OneBusAway.Utilities
         {
             Dictionary<string, string> queryParameters = new Dictionary<string, string>();
 
-            queryParameters.Add(UtilitiesConstants.Parameter_BingServiceApiKey, UtilitiesConstants.BingsMapsServiceApiKey);
+            queryParameters.Add(Constants.Parameter_BingServiceApiKey, Constants.BingsMapsServiceApiKey);
 
             return queryParameters;
         }

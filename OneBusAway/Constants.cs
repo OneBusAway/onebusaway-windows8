@@ -17,38 +17,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OneBusAway.Utilities
+namespace OneBusAway
 {
     /// <summary>
     /// A collection of constants that are used thrughout the application.
     /// </summary>
-    public static class UtilitiesConstants    
+    public static class Constants    
     {
+        /// <summary>
+        /// Default map zoom when map control is loaded on any page
+        /// </summary>
+        public const double DefaultMapZoom = 12;
+
+        /// <summary>
+        /// Map zoom for a closer look than the default.
+        /// </summary>
+        public const double ZoomedInMapZoom = 16;
+        
         /// <summary>
         /// This is the API key for the application.
         /// </summary>
-        public const string API_KEY = "693c0a55-9ef0-4302-8bc3-f9b2db93e124";
-
-        /// <summary>
-        /// This is the URI of the server.
-        /// </summary>
-        public const string SERVER_URL = "http://api.onebusaway.org/api/where/";
-
-        /// <summary>
-        /// This is a local settings key that keeps track of whether the oh my dialog was shown.
-        /// </summary>
-        public const string OH_MY_KEY = "OhMyDialogWasShown";
-
+        public const string ObaApiKey = "693c0a55-9ef0-4302-8bc3-f9b2db93e124";
+        
         /// <summary>
         /// API Key to access Bing Maps Service
         /// </summary>
         public const string BingsMapsServiceApiKey = "AtX8n80j9qDzHLBakqiTlTwvNm0pp9I9uO1wHfu4UyAXvZosECwuYGqYoGSkxnGT";
-
-        /// <summary>
-        /// Key to use the Bing Maps control
-        /// </summary>
-        public const string BingMapCredentials = "AtX8n80j9qDzHLBakqiTlTwvNm0pp9I9uO1wHfu4UyAXvZosECwuYGqYoGSkxnGT";
-
+        
         /// <summary>
         /// Base address to access the REST based Bing location service
         /// </summary>

@@ -105,7 +105,7 @@ namespace OneBusAway.ViewModels.Controls
                 SetProperty(ref mapView, value);
                 MapView.Current = value;
 
-                if (this.RefreshBusStopsOnMapViewChanged && value.ZoomLevel > UtilitiesConstants.MinBusStopVisibleZoom)
+                if (this.RefreshBusStopsOnMapViewChanged && value.ZoomLevel > Constants.MinBusStopVisibleZoom)
                 {
                     var ignored = RefreshStopsForLocationAsync();
                 }
@@ -157,13 +157,13 @@ namespace OneBusAway.ViewModels.Controls
             if (this.UserLocation == null)
             {
                 this.UserLocation = MapView.Current.MapCenter;
-                this.MapView = new MapView(this.UserLocation, ViewModelConstants.DefaultMapZoom);
+                this.MapView = new MapView(this.UserLocation, Constants.DefaultMapZoom);
 
                 try
                 {
                     var position = await ServiceRepository.GeoLocationService.FindUserLocationAsync();
                     this.UserLocation = new Point(position.Latitude, position.Longitude);
-                    this.MapView = new MapView(this.UserLocation, ViewModelConstants.ZoomedInMapZoom);
+                    this.MapView = new MapView(this.UserLocation, Constants.ZoomedInMapZoom);
                 }
                 catch
                 {

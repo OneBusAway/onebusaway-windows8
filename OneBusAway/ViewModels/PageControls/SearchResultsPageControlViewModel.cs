@@ -116,7 +116,7 @@ namespace OneBusAway.ViewModels.PageControls
             
             var point = new OneBusAway.Model.Point(e.Location.Point.Coordinates[0], e.Location.Point.Coordinates[1]);
             this.MapControlViewModel.UserLocation = point;
-            this.MapControlViewModel.MapView = new MapView(point, ViewModelConstants.ZoomedInMapZoom, true);            
+            this.MapControlViewModel.MapView = new MapView(point, Constants.ZoomedInMapZoom, true);            
 
             // Find all the bus stops at this location and then show the routes for this address:
             await this.MapControlViewModel.RefreshStopsForLocationAsync();

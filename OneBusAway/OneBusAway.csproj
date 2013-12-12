@@ -37,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\BingService\BingMapsServiceHelper.cs" />
-    <Compile Include="DataAccess\DataAccessConstants.cs" />
     <Compile Include="DataAccess\ObaService\IObaServiceHelper.cs" />
     <Compile Include="DataAccess\ObaService\ObaDataAccess.cs" />
     <Compile Include="DataAccess\ObaService\ObaException.cs" />
@@ -76,7 +75,7 @@
     <Compile Include="Services\ServiceRepository.cs" />
     <Compile Include="Utilities\Enumerations.cs" />
     <Compile Include="Utilities\Helpers.cs" />
-    <Compile Include="Utilities\UtilitiesConstants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ViewModels\BusStopList.cs" />
     <Compile Include="ViewModels\Controls\BusStopControlViewModel.cs" />
     <Compile Include="ViewModels\Controls\DayOfTheWeekControlViewModel.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="ViewModels\SearchRouteResultViewModel.cs" />
     <Compile Include="ViewModels\StopSelectedEventArgs.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="ViewModels\ViewModelConstants.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

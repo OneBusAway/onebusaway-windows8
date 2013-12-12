@@ -47,7 +47,7 @@ namespace OneBusAway.DataAccess.BingService
                 longitude,
                 imageWidth,
                 imageHeight,
-                UtilitiesConstants.BingsMapsServiceApiKey);
+                Constants.BingsMapsServiceApiKey);
 
             return new MemoryStream(await ServiceRepository.NetworkService.ReadAsByteArrayAsync(url));
         }
@@ -67,14 +67,14 @@ namespace OneBusAway.DataAccess.BingService
             }
 
             Dictionary<string, string> queryParameters = Helpers.GetBasicParameters();
-            queryParameters.Add(UtilitiesConstants.Parameter_Query, query);
+            queryParameters.Add(Constants.Parameter_Query, query);
 
             if (userPosition != null)
             {
-                queryParameters.Add(UtilitiesConstants.Parameter_UserLocation, userPosition.Latitude + "," + userPosition.Longitude);
+                queryParameters.Add(Constants.Parameter_UserLocation, userPosition.Latitude + "," + userPosition.Longitude);
             }
 
-            string url = Helpers.CreateServiceUrl(UtilitiesConstants.BingLocationServiceBaseAddress, queryParameters);
+            string url = Helpers.CreateServiceUrl(Constants.BingLocationServiceBaseAddress, queryParameters);
 
             Response response = await Helpers.GetJsonResponse<Response>(url);
 
