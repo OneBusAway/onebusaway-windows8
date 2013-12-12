@@ -1,27 +1,53 @@
 ﻿using OneBusAway.Shared.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OneBusAway.Platforms.Windows8
 {
     public class NetworkService : INetworkService
     {
-        public Task<byte[]> ReadAsByteArrayAsync(string url)
+        public const int TIMEOUT_LENGTH = 5000;
+
+        public async Task<byte[]> ReadAsByteArrayAsync(string url)
         {
-            throw new NotImplementedException();
+            using (CancellationTokenSource source = new CancellationTokenSource(TIMEOUT_LENGTH))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return await message.Content.ReadAsByteArrayAsync();
+                }
+            }
         }
 
-        public Task<string> ReadAsStringAsync(string url)
+        public async Task<string> ReadAsStringAsync(string url)
         {
-            throw new NotImplementedException();
+            using (CancellationTokenSource source = new CancellationTokenSource(TIMEOUT_LENGTH))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return await message.Content.ReadAsStringAsync();
+                }
+            }
         }
 
-        public Task<System.IO.Stream> ReadAsStreamAsync(string url)
+        public async Task<Stream> ReadAsStreamAsync(string url)
         {
-            throw new NotImplementedException();
+            using (CancellationTokenSource source = new CancellationTokenSource(TIMEOUT_LENGTH))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return await message.Content.ReadAsStreamAsync();
+                }
+            }
         }
     }
 }

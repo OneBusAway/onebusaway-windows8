@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace OneBusAway.Platforms.Windows8
 {
@@ -11,18 +12,18 @@ namespace OneBusAway.Platforms.Windows8
     {
         public bool Contains(string setting)
         {
-            throw new NotImplementedException();
+            return ApplicationData.Current.LocalSettings.Values.ContainsKey(setting);
         }
 
         public string this[string setting]
         {
             get
             {
-                throw new NotImplementedException();
+                return (string)ApplicationData.Current.LocalSettings.Values[setting];
             }
             set
             {
-                throw new NotImplementedException();
+                ApplicationData.Current.LocalSettings.Values[setting] = value;
             }
         }
     }
