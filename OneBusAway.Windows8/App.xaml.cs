@@ -14,6 +14,8 @@
  */
 ﻿using OneBusAway.PageControls;
 using OneBusAway.Pages;
+using OneBusAway.Platforms.Windows8;
+using OneBusAway.Shared.Services;
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
 using System;
@@ -50,6 +52,12 @@ namespace OneBusAway
         /// </summary>
         public App()
         {
+            // Inject the platform specific services into the service repository:
+            ServiceRepository.FileService = new FileService();
+            ServiceRepository.GeoLocationService = new GeoLocationService();
+            ServiceRepository.NetworkService = new NetworkService();
+            ServiceRepository.SettingsService = new SettingsService();
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

@@ -106,25 +106,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\OneBusAway.DataAccess\OneBusAway.DataAccess.csproj">
-      <Project>{b612d55d-895b-4c25-a696-5c7dfeb6bde4}</Project>
-      <Name>OneBusAway.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OneBusAway.Model\OneBusAway.Model.csproj">
-      <Project>{73f2debf-f056-4bda-b578-c2c99062f10b}</Project>
-      <Name>OneBusAway.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OneBusAway.Utilities\OneBusAway.Utilities.csproj">
-      <Project>{92f2bf3e-5120-4744-9dbf-1d7e8aaba8cb}</Project>
-      <Name>OneBusAway.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OneBusAway.ViewModels\OneBusAway.ViewModels.csproj">
-      <Project>{cdd8c2c7-66da-4ab0-8295-939b8bea6537}</Project>
-      <Name>OneBusAway.ViewModels</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AddedToLockScreenBackgroundTask.cs" />
     <Compile Include="BackgroundTaskRegistrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,6 +118,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="OneBusAway.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OneBusAway.Platforms.Windows8\OneBusAway.Platforms.Windows8.csproj">
+      <Project>{d13662c3-6cbc-4dbc-8c36-54863f27a27a}</Project>
+      <Name>OneBusAway.Platforms.Windows8</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OneBusAway\OneBusAway.csproj">
+      <Project>{d585dd67-74dd-4f14-960e-0a79e2ad910c}</Project>
+      <Name>OneBusAway</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
