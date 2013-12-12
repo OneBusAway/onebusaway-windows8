@@ -39,10 +39,21 @@ namespace OneBusAway.Platforms.Windows8
 
         public async Task WriteFileAsync(string relativePath, Stream stream)
         {
-            var file = await ApplicationData.Current.LocalFolder.GetFileAsync(relativePath);
-            using (var fileStream = await file.OpenStreamForWriteAsync())
+            StorageFile file = null;
+            
+            var storageItem = await ApplicationData.Current.LocalFolder.TryGetItemAsync(relativePath);
+            if (storageItem == null)
             {
-                await stream.CopyToAsync(fileStream, (int)stream.Length);
+                file = await ApplicationData.Current.LocalFolder.CreateFileAsync(relativePath, CreationCollisionOption.ReplaceExisting);
+            }
+            else
+            {
+                file = await ApplicationData.Current.LocalFolder.GetFileAsync(relativePath);
+            }
+
+            using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                await stream.CopyToAsync(fileStream.AsStream(), (int)stream.Length);
             }
         }
     }
