@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Windows8", "OneB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway", "OneBusAway\OneBusAway.csproj", "{D585DD67-74DD-4F14-960E-0A79E2AD910C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Platforms.Windows8", "OneBusAway.Platforms.Windows8\OneBusAway.Platforms.Windows8.csproj", "{D13662C3-6CBC-4DBC-8C36-54863F27A27A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +193,26 @@ Global
 		{D585DD67-74DD-4F14-960E-0A79E2AD910C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D585DD67-74DD-4F14-960E-0A79E2AD910C}.Release|x64.ActiveCfg = Release|Any CPU
 		{D585DD67-74DD-4F14-960E-0A79E2AD910C}.Release|x86.ActiveCfg = Release|Any CPU
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|ARM.Build.0 = Debug|ARM
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|x64.ActiveCfg = Debug|x64
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|x64.Build.0 = Debug|x64
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|x86.ActiveCfg = Debug|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Debug|x86.Build.0 = Debug|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|ARM.ActiveCfg = Release|ARM
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|ARM.Build.0 = Release|ARM
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|x64.ActiveCfg = Release|x64
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|x64.Build.0 = Release|x64
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|x86.ActiveCfg = Release|x86
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
