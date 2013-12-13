@@ -12,7 +12,7 @@ namespace OneBusAway.Platforms.Windows8
 {
     public class NetworkService : INetworkService
     {
-        public const int TIMEOUT_LENGTH = 5000;
+        public const int TIMEOUT_LENGTH = 15000;
 
         public async Task<byte[]> ReadAsByteArrayAsync(string url)
         {
