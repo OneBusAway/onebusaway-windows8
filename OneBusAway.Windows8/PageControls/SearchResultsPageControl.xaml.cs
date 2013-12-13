@@ -14,6 +14,7 @@
  */
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
+using OneBusAway.Platforms.Windows8;
 using System;
 using System.Collections.Generic;
 using System.IO;

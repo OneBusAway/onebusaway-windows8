@@ -89,7 +89,7 @@
     <Compile Include="ViewModels\DayChangedEventArgs.cs" />
     <Compile Include="ViewModels\GlobalSuppressions.cs" />
     <Compile Include="ViewModels\ITrackingDataViewModel.cs" />
-    <Compile Include="ViewModels\IUIHelper.cs" />
+    <Compile Include="Services\IUIHelper.cs" />
     <Compile Include="ViewModels\LocationSelectedEventArgs.cs" />
     <Compile Include="ViewModels\ObservableCommand.cs" />
     <Compile Include="ViewModels\ObservableCommandProxy.cs" />

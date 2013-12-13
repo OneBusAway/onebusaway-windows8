@@ -34,6 +34,8 @@ using OneBusAway.ViewModels;
 using Windows.Storage;
 using Windows.UI.Popups;
 using OneBusAway.ViewModels.Controls;
+using OneBusAway.Platforms.Windows8;
+using OneBusAway.Shared.Services;
 
 namespace OneBusAway.Controls
 {

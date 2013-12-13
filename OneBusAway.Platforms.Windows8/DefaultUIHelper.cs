@@ -12,16 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using OneBusAway.Shared.Services;
 
-namespace OneBusAway
+namespace OneBusAway.Platforms.Windows8
 {
     /// <summary>
     /// Passed into some view models to help them interact with the UI.

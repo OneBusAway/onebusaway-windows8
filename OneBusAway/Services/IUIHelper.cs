@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OneBusAway.ViewModels
+namespace OneBusAway.Shared.Services
 {
     /// <summary>
     /// Interface allows view models to interact with the UI in an abstacted way.

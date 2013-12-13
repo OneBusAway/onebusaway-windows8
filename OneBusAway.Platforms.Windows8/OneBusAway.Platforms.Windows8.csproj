@@ -108,6 +108,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultUIHelper.cs" />
     <Compile Include="FileService.cs" />
     <Compile Include="GeoLocationService.cs" />
     <Compile Include="NetworkService.cs" />
