@@ -16,6 +16,8 @@ using OneBusAway.DataAccess;
 using OneBusAway.DataAccess.BingService;
 using OneBusAway.DataAccess.ObaService;
 using OneBusAway.Model;
+using OneBusAway.Platforms.Windows8;
+using OneBusAway.Shared.Services;
 using OneBusAway.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -41,6 +43,12 @@ namespace OneBusAway.Backgrounding
         /// </summary>
         public static async Task UpdateTilesAsync()
         {
+            // Inject the platform services into the PCL:
+            ServiceRepository.FileService = new FileService();
+            ServiceRepository.GeoLocationService = new GeoLocationService();
+            ServiceRepository.NetworkService = new NetworkService();
+            ServiceRepository.SettingsService = new SettingsService();
+
             try
             {
                 // First update the favorites:                

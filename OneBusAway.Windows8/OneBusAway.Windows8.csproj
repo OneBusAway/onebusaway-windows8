@@ -339,13 +339,13 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OneBusAway.Backgrounding\OneBusAway.Backgrounding.csproj">
-      <Project>{35672b4c-7575-4d5c-956b-3674d4cb5aec}</Project>
-      <Name>OneBusAway.Backgrounding</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OneBusAway.Platforms.Windows8\OneBusAway.Platforms.Windows8.csproj">
       <Project>{d13662c3-6cbc-4dbc-8c36-54863f27a27a}</Project>
       <Name>OneBusAway.Platforms.Windows8</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OneBusAway.Windows8.Backgrounding\OneBusAway.Windows8.Backgrounding.csproj">
+      <Project>{35672b4c-7575-4d5c-956b-3674d4cb5aec}</Project>
+      <Name>OneBusAway.Windows8.Backgrounding</Name>
     </ProjectReference>
     <ProjectReference Include="..\OneBusAway\OneBusAway.csproj">
       <Project>{d585dd67-74dd-4f14-960e-0a79e2ad910c}</Project>
