@@ -15,7 +15,7 @@
 ﻿using OneBusAway.PageControls;
 using OneBusAway.Pages;
 using OneBusAway.Platforms.Windows8;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
 using System;

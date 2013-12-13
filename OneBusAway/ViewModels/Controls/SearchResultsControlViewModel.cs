@@ -17,7 +17,7 @@ using OneBusAway.DataAccess.BingService;
 using OneBusAway.DataAccess.ObaService;
 using OneBusAway.Model;
 using OneBusAway.Model.BingService;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

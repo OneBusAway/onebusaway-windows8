@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Core;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 
 namespace OneBusAway.Platforms.Windows8
 {

@@ -24,7 +24,7 @@ using OneBusAway.Model;
 using OneBusAway.Utilities;
 using System.Threading;
 using System.Reflection;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 
 namespace OneBusAway.DataAccess.ObaService.ObaService
 {

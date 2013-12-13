@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OneBusAway.Shared.Services
+namespace OneBusAway.Services
 {
     public class ServiceRepository
     {

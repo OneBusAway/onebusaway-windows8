@@ -1,5 +1,5 @@
 ﻿using OneBusAway.Model;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -22,7 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using OneBusAway.Utilities;
-using OneBusAway.Shared.Services;
+using OneBusAway.Services;
 
 namespace OneBusAway.DataAccess.ObaService
 {
