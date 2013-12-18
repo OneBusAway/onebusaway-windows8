@@ -798,7 +798,7 @@ namespace OneBusAway
             IPinablePageControl pinnablePageControl = arg2 as IPinablePageControl;
             if (pinnablePageControl != null)
             {
-                this.IsCurrentControlPinned = await ServiceRepository.TileService.UnPinSecondaryTileAsync(pinnablePageControl);
+                this.IsCurrentControlPinned = !await ServiceRepository.TileService.UnPinSecondaryTileAsync(pinnablePageControl);
             }
         }
 
