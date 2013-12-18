@@ -20,6 +20,7 @@ using OneBusAway.Model;
 using OneBusAway.PageControls;
 using OneBusAway.Utilities;
 using OneBusAway.ViewModels;
+using OneBusAway.ViewModels.PageControls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Search;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -47,14 +49,29 @@ namespace OneBusAway.Pages
     /// <summary>
     /// Main Page of the OBA app
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IMainPage
     {
+        /// <summary>
+        /// The search pane.
+        /// </summary>
+        private SearchPane searchPane;
+
         public MainPage()
         {
+            // The OBA app should only ever have one main page, and that should
+            // always be this instance.
+            NavigationController.Instance.MainPage = this;
+
             this.InitializeComponent();
 
             // Add settings options:
             SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
+
+            this.searchPane = SearchPane.GetForCurrentView();
+            if (this.searchPane != null)
+            {
+                this.searchPane.QuerySubmitted += OnAppQuerySubmitted;
+            }
         }
 
         /// <summary>
@@ -164,6 +181,25 @@ namespace OneBusAway.Pages
             }
         }
 
+        public void ShowSearchPane()
+        {
+            if (this.searchPane != null)
+            {
+                this.searchPane.Show();
+            }
+        }
+
+        /// <summary>
+        /// Returns the current view model.
+        /// </summary>
+        public PageViewModelBase ViewModel
+        {
+            get
+            {
+                return this.DataContext as PageViewModelBase;
+            }
+        }
+
         /// <summary>
         /// Called when the size of the page changes.
         /// </summary>
@@ -173,6 +209,22 @@ namespace OneBusAway.Pages
             NavigationController.Instance.IsSnapped = (width <= 520);
             NavigationController.Instance.IsPortrait  = (520 < width && width < 1024);
             NavigationController.Instance.IsFullScreen = (1024 <= width);
+        }
+
+        /// <summary>
+        /// Searches for buses.
+        /// </summary>
+        private async void OnAppQuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
+        {
+            var searchViewModel = this.ViewModel as SearchResultsPageControlViewModel;
+            if (searchViewModel != null)
+            {
+                await searchViewModel.SearchAsync(args.QueryText);
+            }
+            else
+            {
+                await NavigationController.Instance.NavigateToPageControlAsync(PageControlTypes.SearchResults, args.QueryText);
+            }
         }
 
         /// <summary>

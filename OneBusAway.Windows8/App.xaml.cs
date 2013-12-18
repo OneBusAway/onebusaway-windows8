@@ -57,6 +57,9 @@ namespace OneBusAway
             ServiceRepository.GeoLocationService = new GeoLocationService();
             ServiceRepository.NetworkService = new NetworkService();
             ServiceRepository.SettingsService = new SettingsService();
+            ServiceRepository.PageControlService = new PageControlService();
+            ServiceRepository.MessageBoxService = new MessageBoxService();
+            ServiceRepository.TileService = new TileService();
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;

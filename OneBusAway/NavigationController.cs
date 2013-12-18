@@ -15,6 +15,7 @@
 using OneBusAway.Model;
 using OneBusAway.PageControls;
 using OneBusAway.Pages;
+using OneBusAway.Services;
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
 using System;
@@ -24,12 +25,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Search;
-using Windows.UI.Popups;
-using Windows.UI.StartScreen;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace OneBusAway
 {
@@ -142,11 +137,6 @@ namespace OneBusAway
         private MapView mapView;
 
         /// <summary>
-        /// The search controller is used to handle search queries.
-        /// </summary>
-        private SearchController searchController;
-
-        /// <summary>
         /// True when the app is full screen.
         /// </summary>
         private bool isFullScreen;
@@ -243,13 +233,10 @@ namespace OneBusAway
         /// <summary>
         /// Returns the main page.  Since we only have one page in the app, this is OK.
         /// </summary>
-        private static MainPage MainPage
+        public IMainPage MainPage
         {
-            get
-            {
-                var currentFrame = Window.Current.Content as Frame;
-                return (MainPage)currentFrame.Content;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -563,12 +550,10 @@ namespace OneBusAway
         /// <summary>
         /// Navigates to a page control.
         /// </summary>
-        public async Task<T> NavigateToPageControlAsync<T>(object parameter)
-            where T : IPageControl, new()
+        public async Task NavigateToPageControlAsync(PageControlTypes type, object parameter)
         {
-            T newPageControl = Activator.CreateInstance<T>();
+            IPageControl newPageControl = ServiceRepository.PageControlService.CreatePageControl(type);
             await NavigateToPageControlAsync(newPageControl, parameter);
-            return newPageControl;
         }
 
         /// <summary>
@@ -581,7 +566,7 @@ namespace OneBusAway
                 newPageControl.ViewModel.MapControlViewModel.CopyFrom(this.CurrentPageControl.ViewModel.MapControlViewModel);
             }
                         
-            NavigationController.MainPage.SetPageView(newPageControl);
+            this.MainPage.SetPageView(newPageControl);
 
             if (this.CurrentPageControl != null)
             {
@@ -602,20 +587,7 @@ namespace OneBusAway
         public async Task UpdateIsPinnableAsync(IPageControl pageControl)
         {
             // If this is a pinnable page control, see if we're pinned or not:
-            IPinablePageControl pinnablePageControl = pageControl as IPinablePageControl;
-            if (pinnablePageControl != null)
-            {
-                // See if we're pinned to start:
-                var query = from tile in await SecondaryTile.FindAllAsync()
-                            where string.Equals(pinnablePageControl.TileId, tile.TileId, StringComparison.OrdinalIgnoreCase)
-                            select tile;
-
-                this.IsCurrentControlPinned = query.Count() > 0;
-            }
-            else
-            {
-                this.IsCurrentControlPinned = false;
-            }
+            this.IsCurrentControlPinned = await ServiceRepository.TileService.PageControlIsCurrentlyPinned(pageControl);
         }   
 
         /// <summary>
@@ -707,7 +679,7 @@ namespace OneBusAway
             await previousPageControl.RestoreAsync();
 
             this.CurrentPageControl = previousPageControl;
-            MainPage.SetPageView(previousPageControl);
+            this.MainPage.SetPageView(previousPageControl);
             await this.UpdateIsPinnableAsync(this.CurrentPageControl);
         }
 
@@ -716,7 +688,7 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToFavoritesPageCommandExecuted(object arg1, object arg2)
         {
-            await this.NavigateToPageControlAsync<FavoritesPageControl>(arg2);
+            await this.NavigateToPageControlAsync(PageControlTypes.Favorites, arg2);
         }
 
         /// <summary>
@@ -724,7 +696,7 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToRealTimePageCommandExecuted(object arg1, object arg2)
         {
-            await this.NavigateToPageControlAsync<RealTimePageControl>(arg2);
+            await this.NavigateToPageControlAsync(PageControlTypes.RealTime, arg2);
         }
 
         /// <summary>
@@ -732,7 +704,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToHelpPageCommandExecuted(object arg1, object arg2)
         {
-            NavigationController.MainPage.ShowHelpFlyout(Convert.ToBoolean(arg2));
+            this.MainPage.ShowHelpFlyout(Convert.ToBoolean(arg2));
             return Task.FromResult<object>(null);
         }
 
@@ -741,12 +713,7 @@ namespace OneBusAway
         /// </summary>
         private Task OnGoToSearchPageCommandExecuted(object arg1, object arg2)
         {
-            if (this.searchController == null)
-            {
-                this.searchController = new SearchController();
-            }
-
-            this.searchController.ShowSearchPane();
+            this.MainPage.ShowSearchPane();
             return Task.FromResult<object>(null);
         }
 
@@ -755,7 +722,7 @@ namespace OneBusAway
         /// </summary>
         private async Task OnGoToTimeTablePageCommandExecuted(object arg1, object arg2)
         {            
-            await this.NavigateToPageControlAsync<TimeTablePageControl>(arg2);
+            await this.NavigateToPageControlAsync(PageControlTypes.TimeTable, arg2);
         }
 
         /// <summary>
@@ -768,11 +735,11 @@ namespace OneBusAway
             {
                 if (trackingData.IsNoData)
                 {
-                    await this.NavigateToPageControlAsync<TimeTablePageControl>(trackingData);
+                    await this.NavigateToPageControlAsync(PageControlTypes.TimeTable, trackingData);
                 }
                 else
                 {
-                    await this.NavigateToPageControlAsync<TripDetailsPageControl>(trackingData);
+                    await this.NavigateToPageControlAsync(PageControlTypes.TripDetails, trackingData);
                 }
             }
         }
@@ -800,9 +767,7 @@ namespace OneBusAway
                 {
                     try
                     {
-                        var messageDialog = new MessageDialog("OneBusAway does not have permission to access your location. You can change this in the Permissions section in the Settings pane.", "oh no");
-                        messageDialog.DefaultCommandIndex = 0;
-                        await messageDialog.ShowAsync().AsTask();
+                        await ServiceRepository.MessageBoxService.ShowAsync("oh no", "OneBusAway does not have permission to access your location. Please give the app permission to access your location and try again.");
                     }
                     catch
                     {
@@ -819,40 +784,9 @@ namespace OneBusAway
         private async Task OnPinStopToStartPageCommandExecuted(object arg1, object arg2)
         {
             IPinablePageControl pinnablePageControl = arg2 as IPinablePageControl;
-
             if (pinnablePageControl != null)
             {
-                Uri logoUri = new Uri("ms-appx:///Assets/Logo.scale-100.png");
-                Uri smallLogoUri = new Uri("ms-appx:///Assets/SmallLogo.scale-100.png");
-                Uri wideLogoUri = new Uri("ms-appx:///Assets/WideLogo.scale-100.png");
-                Uri largeLogoUri = new Uri("ms-appx:///Assets/Square310x310Logo.scale-100.png");
-
-                SecondaryTile secondaryTile = new SecondaryTile();
-                secondaryTile.TileId = pinnablePageControl.TileId;
-                secondaryTile.DisplayName = pinnablePageControl.TileName;
-                secondaryTile.Arguments = pinnablePageControl.GetParameters().ToQueryString();
-
-                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
-                secondaryTile.VisualElements.Square30x30Logo = smallLogoUri;
-                secondaryTile.VisualElements.Square150x150Logo = logoUri;
-                secondaryTile.VisualElements.Wide310x150Logo = wideLogoUri;
-                secondaryTile.VisualElements.Square310x310Logo = largeLogoUri;
-                secondaryTile.VisualElements.ForegroundText = ForegroundText.Light;                
-
-                if (await secondaryTile.RequestCreateAsync())
-                {
-                    try
-                    {
-                        await pinnablePageControl.UpdateTileAsync(true);
-                        this.IsCurrentControlPinned = true;
-                    }
-                    catch
-                    {
-                        // In case of network error, don't bring down the app. Nothing we can do here...
-                    }
-                }
+                this.IsCurrentControlPinned = await ServiceRepository.TileService.PinSecondaryTileAsync(pinnablePageControl);
             }
         }
 
@@ -864,18 +798,7 @@ namespace OneBusAway
             IPinablePageControl pinnablePageControl = arg2 as IPinablePageControl;
             if (pinnablePageControl != null)
             {
-                var secondaryTile = (from tile in await SecondaryTile.FindAllAsync()
-                                     where string.Equals(pinnablePageControl.TileId, tile.TileId, StringComparison.OrdinalIgnoreCase)
-                                     select tile).FirstOrDefault();
-
-                if (secondaryTile != null)
-                {
-                    if (await secondaryTile.RequestDeleteAsync())
-                    {
-                        await pinnablePageControl.UpdateTileAsync(false);
-                        this.IsCurrentControlPinned = false;
-                    }
-                }
+                this.IsCurrentControlPinned = await ServiceRepository.TileService.UnPinSecondaryTileAsync(pinnablePageControl);
             }
         }
 
@@ -884,7 +807,7 @@ namespace OneBusAway
             TrackingData trackingData = (TrackingData)arg2;
             StopAndRoutePair stopAndRoute = trackingData.StopAndRoute;
             
-            var trackingDataViewModel = NavigationController.MainPage.DataContext as ITrackingDataViewModel;
+            var trackingDataViewModel = this.MainPage.ViewModel as ITrackingDataViewModel;
             if (trackingDataViewModel != null)
             {
                 if (trackingData.IsFavorite)
@@ -923,30 +846,23 @@ namespace OneBusAway
         {
             Route route = (Route)arg2;
 
-            var currentFrame = Window.Current.Content as Frame;
-            if (currentFrame != null)
+            if (route != null)
             {
-                if (currentFrame.CurrentSourcePageType == typeof(MainPage))
-                {
-                    var page = currentFrame.Content as MainPage;
+                var pageViewModel = this.MainPage.ViewModel;
 
-                    if (page != null)
-                    {
-                        if (page.DataContext is RealTimePageControlViewModel)
-                        {
-                            RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)page.DataContext;
-                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
-                        }
-                        else if (page.DataContext is FavoritesPageControlViewModel)
-                        {
-                            FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)page.DataContext;
-                            viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
-                        }
-                        else
-                        {
-                            throw new Exception("NavigationController.FilterByRouteCommandExecuted: shouldn't get here!");
-                        }
-                    }
+                if (pageViewModel is RealTimePageControlViewModel)
+                {
+                    RealTimePageControlViewModel viewModel = (RealTimePageControlViewModel)pageViewModel;
+                    viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
+                }
+                else if (pageViewModel is FavoritesPageControlViewModel)
+                {
+                    FavoritesPageControlViewModel viewModel = (FavoritesPageControlViewModel)pageViewModel;
+                    viewModel.RoutesAndStopsViewModel.ToggleFilterByRoute(route);
+                }
+                else
+                {
+                    throw new Exception("NavigationController.FilterByRouteCommandExecuted: shouldn't get here!");
                 }
             }
 

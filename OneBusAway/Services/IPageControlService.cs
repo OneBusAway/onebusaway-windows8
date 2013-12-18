@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.Model;
+using OneBusAway.PageControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +21,14 @@ using System.Threading.Tasks;
 
 namespace OneBusAway.Services
 {
-    public interface IGeoLocationService
+    /// <summary>
+    /// Navigates to specific page controls in the app.
+    /// </summary>
+    public interface IPageControlService
     {
-        Task<Point> FindUserLocationAsync();
+        /// <summary>
+        /// Factory method that creates a page control.
+        /// </summary>
+        IPageControl CreatePageControl(PageControlTypes pageControlType);
     }
 }
