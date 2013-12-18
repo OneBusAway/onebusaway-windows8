@@ -31,6 +31,6 @@ namespace OneBusAway.Services
 
         Task<Stream> ReadFileAsStreamAsync(string relativePath);
 
-        Task WriteFileAsync(string relativePath, Stream stream);
+        Task<Stream> OpenFileWriteStreamAsync(string relativePath);
     }
 }

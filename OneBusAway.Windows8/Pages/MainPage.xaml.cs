@@ -66,12 +66,6 @@ namespace OneBusAway.Pages
 
             // Add settings options:
             SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
-
-            this.searchPane = SearchPane.GetForCurrentView();
-            if (this.searchPane != null)
-            {
-                this.searchPane.QuerySubmitted += OnAppQuerySubmitted;
-            }
         }
 
         /// <summary>
@@ -185,8 +179,11 @@ namespace OneBusAway.Pages
         {
             if (this.searchPane != null)
             {
-                this.searchPane.Show();
+                this.searchPane = SearchPane.GetForCurrentView();
+                this.searchPane.QuerySubmitted += OnAppQuerySubmitted;
             }
+
+            this.searchPane.Show();
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace OneBusAway.Platforms.Windows8
             return fileAccess.AsStream();
         }
 
-        public async Task WriteFileAsync(string relativePath, Stream stream)
+        public async Task<Stream> OpenFileWriteStreamAsync(string relativePath)
         {
             StorageFile file = null;
             
@@ -65,10 +65,8 @@ namespace OneBusAway.Platforms.Windows8
                 file = await ApplicationData.Current.LocalFolder.GetFileAsync(relativePath);
             }
 
-            using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-            {
-                await stream.CopyToAsync(fileStream.AsStream(), (int)stream.Length);
-            }
+            var randomAccessStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            return randomAccessStream.AsStream();
         }
     }
 }

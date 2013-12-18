@@ -94,11 +94,10 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                             doc = XDocument.Parse(xml);
 
                             try
-                            {
-                                using (var stream = new MemoryStream(0))
+                            {   
+                                using (var stream = await ServiceRepository.FileService.OpenFileWriteStreamAsync(REGIONS_XML_FILE))
                                 {
                                     doc.Save(stream);
-                                    await ServiceRepository.FileService.WriteFileAsync(REGIONS_XML_FILE, stream);
                                 }
                             }
                             catch
@@ -369,11 +368,9 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                     try
                     {
                         string path = this.GetCachedFilePath();
-
-                        using (var stream = new MemoryStream(0))
+                        using (var stream = await ServiceRepository.FileService.OpenFileWriteStreamAsync(path))
                         {
-                            doc.Save(stream);
-                            await ServiceRepository.FileService.WriteFileAsync(path, stream);
+                            doc.Save(stream);                            
                             return true;
                         }
                     }

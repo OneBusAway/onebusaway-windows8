@@ -75,10 +75,9 @@ namespace OneBusAway.Model
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<StopAndRoutePair>));
-                using (var memoryStream = new MemoryStream(0))
+                using (var stream = await ServiceRepository.FileService.OpenFileWriteStreamAsync(FavoritesFileName))
                 {
-                    serializer.Serialize(memoryStream, instance.favorites);
-                    await ServiceRepository.FileService.WriteFileAsync(FavoritesFileName, memoryStream);
+                    serializer.Serialize(stream, instance.favorites);
                 }                
             }
             catch
