@@ -177,7 +177,7 @@ namespace OneBusAway.Pages
 
         public void ShowSearchPane()
         {
-            if (this.searchPane != null)
+            if (this.searchPane == null)
             {
                 this.searchPane = SearchPane.GetForCurrentView();
                 this.searchPane.QuerySubmitted += OnAppQuerySubmitted;
