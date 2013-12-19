@@ -83,6 +83,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DefaultUIHelper.cs" />
     <Compile Include="FileService.cs" />
     <Compile Include="GeoLocationService.cs" />
     <Compile Include="MessageBoxService.cs" />

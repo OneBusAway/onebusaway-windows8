@@ -14,39 +14,92 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Bing.Maps;
-using Windows.Devices.Geolocation;
-using OneBusAway.Utilities;
 using OneBusAway.Model;
-using Windows.UI;
-using OneBusAway.ViewModels;
-using Windows.Storage;
-using Windows.UI.Popups;
-using OneBusAway.ViewModels.Controls;
 using OneBusAway.Platforms.Windows8;
 using OneBusAway.Services;
+using OneBusAway.ViewModels;
+using OneBusAway.ViewModels.Controls;
+using Windows.UI;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace OneBusAway.Controls
 {
     public partial class MapControl : UserControl
     {
+        #region Member Variables
+        
         private UserLocationIcon userLocationIcon;
         private bool centerOnUserLocation;
         private Location userLocation;
         private IUIHelper uiHelper;
         private HashSet<string> displayedBusStopLookup = new HashSet<string>();
-        
+
+        public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedProperty = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged", 
+            typeof(bool),
+            typeof(MapControl), 
+            new PropertyMetadata(false));
+
+        public static readonly DependencyProperty MapCenterProperty = DependencyProperty.Register("MapCenter", 
+            typeof(OneBusAway.Model.Point), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, MapCenterPropertyChanged));
+
+        public static readonly DependencyProperty UserLocationProperty = DependencyProperty.Register("UserLocation", 
+            typeof(OneBusAway.Model.Point),
+            typeof(MapControl), 
+            new PropertyMetadata(null, UserLocationChanged));
+
+        public static readonly DependencyProperty CnterOnUserLocationProperty = DependencyProperty.Register("CenterOnUserLocation", 
+            typeof(bool), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, CenterOnUserLocationChanged));
+
+        public static readonly DependencyProperty ZoomLevelProperty = DependencyProperty.Register("ZoomLevel", 
+            typeof(double), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, ZoomLevelChanged));
+
+        public static readonly DependencyProperty BusStopsProperty = DependencyProperty.Register("BusStops", 
+            typeof(BusStopList), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, BusStopsChanged));
+
+        public static readonly DependencyProperty BoundsWidthProperty = DependencyProperty.Register("BoundsWidth", 
+            typeof(double), 
+            typeof(MapControl), 
+            null);
+
+        public static readonly DependencyProperty BoundsHeightProperty = DependencyProperty.Register("BoundsHeight", 
+            typeof(double), 
+            typeof(MapControl),
+            null);
+
+        public static readonly DependencyProperty MapViewProperty = DependencyProperty.Register("MapView", 
+            typeof(MapView), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, MapViewChanged));
+
+        public static readonly DependencyProperty ShapesProperty = DependencyProperty.Register("Shapes", 
+            typeof(OneBusAway.Model.Shape), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, ShapesChanged));
+
+        public static readonly DependencyProperty ClearBusStopsOnZoomOutProperty = DependencyProperty.Register("ClearBusStopsOnZoomOut", 
+            typeof(bool), 
+            typeof(MapControl), 
+            new PropertyMetadata(true));
+
+        public static readonly DependencyProperty SelectedBusStopProperty = DependencyProperty.Register("SelectedBusStop", 
+            typeof(BusStopControlViewModel), 
+            typeof(MapControl), 
+            new PropertyMetadata(null, new PropertyChangedCallback(SelectedBusStopChanged)));
+
+        #endregion
+        #region Constructor
+
         public MapControl()
         {
             this.InitializeComponent();
@@ -60,39 +113,8 @@ namespace OneBusAway.Controls
             this.uiHelper = new DefaultUIHelper(this.Dispatcher);
         }
 
-        public string BingMapCredentials
-        {
-            get
-            {
-                return Constants.BingsMapsServiceApiKey;
-            }
-        }
-
-        #region DependencyProperty backed CLR Properties
-
-        public double BoundsWidth
-        {
-            get
-            {
-                return map.Bounds.Width;
-            }
-            set
-            {
-                map.Bounds.Width = value;
-            }
-        }
-
-        public double BoundsHeight
-        {
-            get
-            {
-                return map.Bounds.Height;
-            }
-            set
-            {
-                map.Bounds.Height = value;
-            }
-        }
+        #endregion
+        #region Properties
 
         public OneBusAway.Model.Point MapCenter
         {
@@ -109,13 +131,11 @@ namespace OneBusAway.Controls
                 if (value != null)
                 {
                     map.Center = new Location(value.Latitude, value.Longitude);
-
                     map.SetView(map.Center, ZoomLevel, new TimeSpan());
                 }
                 else
                 {
                     map.Center = new Location(Constants.DefaultLatitude, Constants.DefaultLongitude);
-
                     map.SetView(map.Center, ZoomLevel, new TimeSpan());
                 }
             }
@@ -125,11 +145,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return GetValue(UserLocationDP) as OneBusAway.Model.Point;
+                return GetValue(UserLocationProperty) as OneBusAway.Model.Point;
             }
             set
             {
-                SetValue(UserLocationDP, value);
+                SetValue(UserLocationProperty, value);
             }
         }
 
@@ -137,11 +157,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return (bool)GetValue(RefreshBusStopsOnMapViewChangedDP);
+                return (bool)GetValue(RefreshBusStopsOnMapViewChangedProperty);
             }
             set
             {
-                SetValue(RefreshBusStopsOnMapViewChangedDP, value);
+                SetValue(RefreshBusStopsOnMapViewChangedProperty, value);
             }
         }
 
@@ -166,11 +186,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return (double)GetValue(ZoomLevelDP);
+                return (double)GetValue(ZoomLevelProperty);
             }
             set
             {
-                SetValue(ZoomLevelDP, value);
+                SetValue(ZoomLevelProperty, value);
             }
         }
 
@@ -178,11 +198,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return GetValue(BusStopsDP) as BusStopList;
+                return GetValue(BusStopsProperty) as BusStopList;
             }
             set
             {
-                SetValue(BusStopsDP, value);
+                SetValue(BusStopsProperty, value);
             }
         }
 
@@ -190,11 +210,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return GetValue(ShapesDP) as List<Shape>;
+                return GetValue(ShapesProperty) as List<Shape>;
             }
             set
             {
-                SetValue(ShapesDP, value);
+                SetValue(ShapesProperty, value);
             }
         }
 
@@ -202,11 +222,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return GetValue(MapViewDP) as MapView;
+                return GetValue(MapViewProperty) as MapView;
             }
             set
             {
-                SetValue(MapViewDP, value);
+                SetValue(MapViewProperty, value);
             }
         }
 
@@ -214,11 +234,11 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return (bool)GetValue(ClearBusStopsOnZoomOutDP);
+                return (bool)GetValue(ClearBusStopsOnZoomOutProperty);
             }
             set
             {
-                SetValue(ClearBusStopsOnZoomOutDP, value);
+                SetValue(ClearBusStopsOnZoomOutProperty, value);
             }
         }
 
@@ -226,50 +246,22 @@ namespace OneBusAway.Controls
         {
             get
             {
-                return GetValue(SelectedBusStopDP) as BusStopControlViewModel;
+                return GetValue(SelectedBusStopProperty) as BusStopControlViewModel;
             }
             set
             {
-                SetValue(SelectedBusStopDP, value);
+                SetValue(SelectedBusStopProperty, value);
             }
         }
 
-        #endregion
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedDP = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged", typeof(bool), typeof(MapControl), new PropertyMetadata(false));
-
-        public static readonly DependencyProperty MapCenterDP = DependencyProperty.Register("MapCenter", typeof(OneBusAway.Model.Point), typeof(MapControl), new PropertyMetadata(null, MapCenterPropertyChanged));
-
-        public static readonly DependencyProperty UserLocationDP = DependencyProperty.Register("UserLocation", typeof(OneBusAway.Model.Point), typeof(MapControl), new PropertyMetadata(null, UserLocationChanged));
-
-        public static readonly DependencyProperty CnterOnUserLocationDP = DependencyProperty.Register("CenterOnUserLocation", typeof(bool), typeof(MapControl), new PropertyMetadata(null, CenterOnUserLocationChanged));
-
-        public static readonly DependencyProperty ZoomLevelDP = DependencyProperty.Register("ZoomLevel", typeof(double), typeof(MapControl), new PropertyMetadata(null, ZoomLevelChanged));
-
-        public static readonly DependencyProperty BusStopsDP = DependencyProperty.Register("BusStops", typeof(BusStopList), typeof(MapControl), new PropertyMetadata(null, BusStopsChanged));
-
-        public static readonly DependencyProperty BoundsWidthDP = DependencyProperty.Register("BoundsWidth", typeof(double), typeof(MapControl), null);
-
-        public static readonly DependencyProperty BoundsHeightDP = DependencyProperty.Register("BoundsHeight", typeof(double), typeof(MapControl), null);
-
-        public static readonly DependencyProperty MapViewDP = DependencyProperty.Register("MapView", typeof(MapView), typeof(MapControl), new PropertyMetadata(null, MapViewChanged));
-
-        public static readonly DependencyProperty ShapesDP = DependencyProperty.Register("Shapes", typeof(OneBusAway.Model.Shape), typeof(MapControl), new PropertyMetadata(null, ShapesChanged));
-
-        public static readonly DependencyProperty ClearBusStopsOnZoomOutDP = DependencyProperty.Register("ClearBusStopsOnZoomOut", typeof(bool), typeof(MapControl), new PropertyMetadata(true));
-
-        public static readonly DependencyProperty SelectedBusStopDP = DependencyProperty.Register("SelectedBusStop", typeof(BusStopControlViewModel), typeof(MapControl), new PropertyMetadata(null, new PropertyChangedCallback(SelectedBusStopChanged)));
 
         #endregion
+        #region Callbacks
 
-        #region Dependency Property Changed Callbacks
-
-        private static void MapViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void MapViewChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
-            var newValue = e.NewValue as MapView;
+            var mapControl = dependencyObject as MapControl;
+            var newValue = args.NewValue as MapView;
 
             if ((newValue == null) || 
                 (newValue.MapCenter.Latitude == mapControl.map.Center.Latitude && newValue.MapCenter.Longitude == mapControl.map.Center.Longitude))
@@ -303,21 +295,21 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Change the polylines on the map.
         /// </summary>
-        private static void ShapesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void ShapesChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            MapControl mapControl = (MapControl)d;
+            MapControl mapControl = (MapControl)dependencyObject;
 
-            if (e.OldValue != null)
+            if (args.OldValue != null)
             {
                 // remove all old polylines from the map:
                 mapControl.map.ShapeLayers.Clear();
             }
 
-            if (e.NewValue != null)
+            if (args.NewValue != null)
             {
                 MapShapeLayer routeLayer = new MapShapeLayer();
 
-                List<Shape> shapes = (List<Shape>)e.NewValue;
+                List<Shape> shapes = (List<Shape>)args.NewValue;
                 foreach (var shape in shapes)
                 {
                     MapPolyline polyline = new MapPolyline();
@@ -338,22 +330,22 @@ namespace OneBusAway.Controls
             }
         }
 
-        private static void SelectedBusStopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void SelectedBusStopChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            BusStopControlViewModel lastSelected = e.OldValue as BusStopControlViewModel;
+            BusStopControlViewModel lastSelected = args.OldValue as BusStopControlViewModel;
             if (lastSelected != null)
             {
                 lastSelected.IsSelected = false;
             }
 
-            BusStopControlViewModel newSelected = e.NewValue as BusStopControlViewModel;
+            BusStopControlViewModel newSelected = args.NewValue as BusStopControlViewModel;
             if (newSelected != null)
             {
                 newSelected.IsSelected = true;
 
                 // Make sure the new view model is bound to an existing control.
                 // If it's not then we need to find the one that is and make it selected:                
-                MapControl mapControl = (MapControl)d;
+                MapControl mapControl = (MapControl)dependencyObject;
                 var busStop = (from child in mapControl.map.Children
                                let currentBusStop = child as BusStop
                                where currentBusStop != null
@@ -372,17 +364,17 @@ namespace OneBusAway.Controls
             }
         }
 
-        private static void MapCenterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void MapCenterPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
+            var mapControl = dependencyObject as MapControl;
 
-            mapControl.MapCenter = (OneBusAway.Model.Point)e.NewValue;
+            mapControl.MapCenter = (OneBusAway.Model.Point)args.NewValue;
         }
 
-        private static void UserLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void UserLocationChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
-            var newValue = e.NewValue as OneBusAway.Model.Point;
+            var mapControl = dependencyObject as MapControl;
+            var newValue = args.NewValue as OneBusAway.Model.Point;
 
             if (newValue != null)
             {
@@ -401,17 +393,17 @@ namespace OneBusAway.Controls
             }
         }
 
-        private static void CenterOnUserLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void CenterOnUserLocationChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
+            var mapControl = dependencyObject as MapControl;
 
-            mapControl.CenterOnUserLocation = (bool)e.NewValue;
+            mapControl.CenterOnUserLocation = (bool)args.NewValue;
         }
 
-        private static void ZoomLevelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void ZoomLevelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
-            var zoomLevel = (double)e.NewValue;
+            var mapControl = dependencyObject as MapControl;
+            var zoomLevel = (double)args.NewValue;
 
             if (mapControl.map.ZoomLevel != zoomLevel)
             {
@@ -419,11 +411,11 @@ namespace OneBusAway.Controls
             }
         }
 
-        private static async void BusStopsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void BusStopsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var mapControl = d as MapControl;
+            var mapControl = dependencyObject as MapControl;
 
-            if (e.NewValue == null)
+            if (args.NewValue == null)
             {
                 mapControl.displayedBusStopLookup.Clear();
                 mapControl.map.Children.Clear();
@@ -434,7 +426,7 @@ namespace OneBusAway.Controls
             else
             {
                 MapControlViewModel mapControlViewModel = (MapControlViewModel)mapControl.DataContext;
-                var stops = e.NewValue as BusStopList;
+                var stops = args.NewValue as BusStopList;
 
                 if (stops.ClearExistingStops)
                 {
@@ -476,8 +468,6 @@ namespace OneBusAway.Controls
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Called when the map view change ends.  Store the map view and if we zoom out far enough, 
         /// clear the bus stops.
@@ -490,27 +480,8 @@ namespace OneBusAway.Controls
                 map.Bounds.Width);
 
             NavigationController.Instance.MapView = this.MapView;
-
-            //if (!this.hasShownOhMyDialog)
-            //{
-            //    lock (this)
-            //    {
-            //        if (!this.hasShownOhMyDialog)
-            //        {
-            //            // If we're zoomed out too far and we haven't shown the oh my dialog yet, show it now:
-            //            if (this.RefreshBusStopsOnMapViewChanged && this.MapView.ZoomLevel < UtilitiesConstants.MinBusStopVisibleZoom)
-            //            {
-            //                this.hasShownOhMyDialog = true;
-            //                var messageDialog = new MessageDialog("There are too many results. Try zooming in to street level.", "oh my");
-            //                messageDialog.DefaultCommandIndex = 0;
-            //                var ignored = messageDialog.ShowAsync().AsTask().ContinueWith(command =>
-            //                    {
-            //                        ApplicationData.Current.LocalSettings.Values[UtilitiesConstants.OH_MY_KEY] = true;
-            //                    });
-            //            }
-            //        }
-            //    }
-            //}
         }
+
+        #endregion        
     }
 }

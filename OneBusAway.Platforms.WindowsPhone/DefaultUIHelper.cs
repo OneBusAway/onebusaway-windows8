@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using OneBusAway.Services;
 using Windows.UI.Core;
 
-namespace OneBusAway.Platforms.Windows8
+namespace OneBusAway.Platforms.WindowsPhone
 {
     /// <summary>
     /// Passed into some view models to help them interact with the UI.
@@ -31,9 +32,9 @@ namespace OneBusAway.Platforms.Windows8
         /// <summary>
         /// Crteates the default UI helper.
         /// </summary>
-        public DefaultUIHelper(CoreDispatcher dispatcher)
+        public DefaultUIHelper()
         {
-            this.dispatcher = dispatcher;
+            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
         }
 
         /// <summary>
