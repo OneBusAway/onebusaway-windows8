@@ -45,6 +45,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Converters", "Converters", 
 		OneBusAway.Windows8\Converters\TrackingDataToPredictedArrivalInMinutes.cs = OneBusAway.Windows8\Converters\TrackingDataToPredictedArrivalInMinutes.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Triggers", "Triggers", "{7C277F2B-F4C1-44B7-A33B-3B1671359EE3}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Triggers\Trigger.cs = Shared\Triggers\Trigger.cs
+		Shared\Triggers\TriggerCollection.cs = Shared\Triggers\TriggerCollection.cs
+		Shared\Triggers\TriggerManager.cs = Shared\Triggers\TriggerManager.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,10 +200,11 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D13662C3-6CBC-4DBC-8C36-54863F27A27A} = {FF1034AA-C116-4983-8F0B-1B2CDEC671F9}
-		{0C5F2939-61DC-452E-914F-DA55798327D9} = {FF1034AA-C116-4983-8F0B-1B2CDEC671F9}
 		{35672B4C-7575-4D5C-956B-3674D4CB5AEC} = {FF1034AA-C116-4983-8F0B-1B2CDEC671F9}
-		{EFDA7B53-DCCB-46B9-AAC7-7D071515463F} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
+		{0C5F2939-61DC-452E-914F-DA55798327D9} = {FF1034AA-C116-4983-8F0B-1B2CDEC671F9}
 		{71555972-2EAB-4B6D-9B76-521DF55D2D14} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
+		{EFDA7B53-DCCB-46B9-AAC7-7D071515463F} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
 		{2BAABB45-6F99-4266-9974-AF365CB5568E} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
+		{7C277F2B-F4C1-44B7-A33B-3B1671359EE3} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
 	EndGlobalSection
 EndGlobal

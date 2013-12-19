@@ -150,6 +150,15 @@
     <Compile Include="..\Shared\Converters\TrackingDataToPredictedArrivalInMinutes.cs">
       <Link>Converters\TrackingDataToPredictedArrivalInMinutes.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Triggers\Trigger.cs">
+      <Link>Triggers\Trigger.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Triggers\TriggerCollection.cs">
+      <Link>Triggers\TriggerCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Triggers\TriggerManager.cs">
+      <Link>Triggers\TriggerManager.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

@@ -13,13 +13,17 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
+
+#if WINDOWS_PHONE
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Triggers
 {
