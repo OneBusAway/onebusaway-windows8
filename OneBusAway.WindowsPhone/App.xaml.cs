@@ -8,9 +8,9 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using OneBusAway.Platforms.WindowsPhone;
 using OneBusAway.Services;
-using OneBusAway.WindowsPhone.Resources;
+using OneBusAway.Resources;
 
-namespace OneBusAway.WindowsPhone
+namespace OneBusAway
 {
     public partial class App : Application
     {

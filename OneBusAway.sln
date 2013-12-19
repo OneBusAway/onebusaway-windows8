@@ -52,6 +52,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Triggers", "Triggers", "{7C
 		Shared\Triggers\TriggerManager.cs = Shared\Triggers\TriggerManager.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{582E2DEB-1AEF-403A-84A2-51698F42F46D}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Controls\BusStop.xaml = Shared\Controls\BusStop.xaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,5 +211,6 @@ Global
 		{EFDA7B53-DCCB-46B9-AAC7-7D071515463F} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
 		{2BAABB45-6F99-4266-9974-AF365CB5568E} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
 		{7C277F2B-F4C1-44B7-A33B-3B1671359EE3} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
+		{582E2DEB-1AEF-403A-84A2-51698F42F46D} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
 	EndGlobalSection
 EndGlobal

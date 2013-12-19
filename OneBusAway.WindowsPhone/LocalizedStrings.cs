@@ -1,6 +1,6 @@
-﻿using OneBusAway.WindowsPhone.Resources;
+﻿using OneBusAway.Resources;
 
-namespace OneBusAway.WindowsPhone
+namespace OneBusAway
 {
     /// <summary>
     /// Provides access to string resources.

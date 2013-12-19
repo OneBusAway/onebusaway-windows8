@@ -283,13 +283,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Common\StandardStyles.xaml">
+    <Page Include="..\Shared\Controls\BusStop.xaml">
+      <Link>Controls\BusStop.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\BusStop.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\BusStopHeaderControl.xaml">
       <SubType>Designer</SubType>

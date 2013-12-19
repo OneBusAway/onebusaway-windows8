@@ -7,9 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using OneBusAway.WindowsPhone.Resources;
+using OneBusAway.Resources;
 
-namespace OneBusAway.WindowsPhone
+namespace OneBusAway
 {
     public partial class MainPage : PhoneApplicationPage
     {
