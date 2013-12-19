@@ -90,6 +90,66 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Converters\ArrayToVisibilityConverter.cs">
+      <Link>Converters\ArrayToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToFontWeightConverter.cs">
+      <Link>Converters\BoolToFontWeightConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToInvertedConverter.cs">
+      <Link>Converters\BoolToInvertedConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToObaGreenConverter.cs">
+      <Link>Converters\BoolToObaGreenConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToThicknessConverter.cs">
+      <Link>Converters\BoolToThicknessConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToVisibilityConverter.cs">
+      <Link>Converters\BoolToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\CapitalLetterConverter.cs">
+      <Link>Converters\CapitalLetterConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\IsCurrentHourToThicknessConverter.cs">
+      <Link>Converters\IsCurrentHourToThicknessConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\IsFilteredToColorConverter.cs">
+      <Link>Converters\IsFilteredToColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\MapViewToVisibilityConverter.cs">
+      <Link>Converters\MapViewToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\NumberToDayOfTheWeekConverter.cs">
+      <Link>Converters\NumberToDayOfTheWeekConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\PageControlToPinnableVisibilityConverter.cs">
+      <Link>Converters\PageControlToPinnableVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StopAndRouteToFavoriteColorConverter.cs">
+      <Link>Converters\StopAndRouteToFavoriteColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StringEqualsToVisibilityConverter.cs">
+      <Link>Converters\StringEqualsToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StringFormatConverter.cs">
+      <Link>Converters\StringFormatConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\SubTextConverter.cs">
+      <Link>Converters\SubTextConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TimeToFontWeightConverter.cs">
+      <Link>Converters\TimeToFontWeightConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TimeToTextConverter.cs">
+      <Link>Converters\TimeToTextConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TrackingDataToColorConverter.cs">
+      <Link>Converters\TrackingDataToColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TrackingDataToPredictedArrivalInMinutes.cs">
+      <Link>Converters\TrackingDataToPredictedArrivalInMinutes.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -123,6 +183,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
@@ -166,7 +227,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
+    <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
@@ -178,4 +249,9 @@
   </Target>
   -->
   <ProjectExtensions />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
 </Project>

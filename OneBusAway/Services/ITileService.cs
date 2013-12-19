@@ -12,31 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using OneBusAway.PageControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
 
-namespace OneBusAway.Converters
+namespace OneBusAway.Services
 {
-    public class CapitalLetterConverter : IValueConverter
+    /// <summary>
+    /// The tile service handles pinning and unpinning of tiles from the start screen.
+    /// </summary>
+    public interface ITileService
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            string str = value as string;
-            if (!String.IsNullOrEmpty(str))
-            {
-                return str.ToUpper();
-            }
+        Task<bool> PageControlIsCurrentlyPinned(IPageControl pageControl);
 
-            return String.Empty;
-        }
+        Task<bool> PinSecondaryTileAsync(IPinablePageControl pinnablePageControl);
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotSupportedException();
-        }
+        Task<bool> UnPinSecondaryTileAsync(IPinablePageControl pinnablePageControl);
     }
 }

@@ -13,33 +13,50 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+#else
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    /// <summary>
-    /// Allows in-line xaml string formats.
-    /// </summary>
-    public class StringFormatConverter : IValueConverter
+    public class IsCurrentHourToThicknessConverter : IValueConverter
     {
-        /// <summary>
-        /// Assumes the parameter is a string format.
-        /// </summary>
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            return (value == null)
-                ? string.Empty
-                : string.Format(CultureInfo.CurrentCulture, parameter.ToString(), value.ToString()).ToUpper();
+            DateTime[] valueTime = (DateTime[])value;
+            if (valueTime.Length == 0)
+            {
+                return new Thickness(0);
+            }
+
+            double thickness = 0.0;
+            if (parameter != null)
+            {
+                double.TryParse(parameter as string, out thickness);
+            }
+
+            return (valueTime[0].Hour == DateTime.Now.Hour)
+                ? new Thickness(thickness)
+                : new Thickness(0);
         }
-        
+
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
-            throw new NotSupportedException();
+            throw new NotImplementedException();
         }
     }
 }

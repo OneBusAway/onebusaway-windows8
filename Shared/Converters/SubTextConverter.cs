@@ -12,42 +12,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.Model;
+using OneBusAway.ViewModels.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+#else
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class TrackingDataToColorConverter : IValueConverter
+    public class SubTextConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            TrackingData trackingData = (TrackingData)value;
-
-            if (trackingData.IsNoData)
-            {
-                return new SolidColorBrush(Color.FromArgb(0xFF, 0xcc, 0x99, 0x00));
-            }
-            else
-            {
-                int difference = trackingData.PredictedArrivalInMinutes - trackingData.ScheduledArrivalInMinutes;
-
-                if (difference > 0)
-                {
-                    return new SolidColorBrush(Color.FromArgb(0xFF, 0x24, 0xA0, 0xF2));
-                }
-
-                return new SolidColorBrush(Color.FromArgb(0xFF, 0x66, 0x66, 0x66));
-            }
+            var viewModel = (HeaderControlViewModel)value;
+            return (viewModel.HasSubText)
+                ? viewModel.SubText
+                : "ONE BUS AWAY";
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

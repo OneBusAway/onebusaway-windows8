@@ -13,36 +13,56 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
     /// <summary>
-    /// If the string value equals the converter parameter, then we set an element to be visible.
+    /// Converts a day of the week to a string.
     /// </summary>
-    public class StringEqualsToVisibilityConverter : IValueConverter
+    public class NumberToDayOfTheWeekConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            if (value == null || parameter == null)
+            int dayOfTheWeek = (int)value;
+            switch(dayOfTheWeek)
             {
-                return Visibility.Collapsed;
+                case 0:
+                    return "S";
+                case 1:
+                    return "M";
+                case 2:
+                    return "T";
+                case 3:
+                    return "W";
+                case 4:
+                    return "T";
+                case 5:
+                    return "F";
+                case 6:
+                    return "S";
             }
 
-            string valueString = value.ToString();
-            string parameterString = parameter.ToString();
-
-            return (string.Equals(valueString, parameterString, StringComparison.OrdinalIgnoreCase))
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            throw new ArgumentException(string.Format("Unknown day of the week {0}", dayOfTheWeek));
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

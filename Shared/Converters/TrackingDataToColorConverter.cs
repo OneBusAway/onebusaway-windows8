@@ -14,25 +14,52 @@
  */
 using OneBusAway.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Windows.Media;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class TrackingDataToPredictedArrivalInMinutes : IValueConverter
+    public class TrackingDataToColorConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
             TrackingData trackingData = (TrackingData)value;
-            return (trackingData.IsNoData)
-                ? "-"
-                : trackingData.PredictedArrivalInMinutes.ToString();
+
+            if (trackingData.IsNoData)
+            {
+                return new SolidColorBrush(Color.FromArgb(0xFF, 0xcc, 0x99, 0x00));
+            }
+            else
+            {
+                int difference = trackingData.PredictedArrivalInMinutes - trackingData.ScheduledArrivalInMinutes;
+
+                if (difference > 0)
+                {
+                    return new SolidColorBrush(Color.FromArgb(0xFF, 0x24, 0xA0, 0xF2));
+                }
+
+                return new SolidColorBrush(Color.FromArgb(0xFF, 0x66, 0x66, 0x66));
+            }
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

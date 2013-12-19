@@ -113,6 +113,66 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Converters\ArrayToVisibilityConverter.cs">
+      <Link>Converters\ArrayToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToFontWeightConverter.cs">
+      <Link>Converters\BoolToFontWeightConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToInvertedConverter.cs">
+      <Link>Converters\BoolToInvertedConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToObaGreenConverter.cs">
+      <Link>Converters\BoolToObaGreenConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToThicknessConverter.cs">
+      <Link>Converters\BoolToThicknessConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\BoolToVisibilityConverter.cs">
+      <Link>Converters\BoolToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\CapitalLetterConverter.cs">
+      <Link>Converters\CapitalLetterConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\IsCurrentHourToThicknessConverter.cs">
+      <Link>Converters\IsCurrentHourToThicknessConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\IsFilteredToColorConverter.cs">
+      <Link>Converters\IsFilteredToColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\MapViewToVisibilityConverter.cs">
+      <Link>Converters\MapViewToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\NumberToDayOfTheWeekConverter.cs">
+      <Link>Converters\NumberToDayOfTheWeekConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\PageControlToPinnableVisibilityConverter.cs">
+      <Link>Converters\PageControlToPinnableVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StopAndRouteToFavoriteColorConverter.cs">
+      <Link>Converters\StopAndRouteToFavoriteColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StringEqualsToVisibilityConverter.cs">
+      <Link>Converters\StringEqualsToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\StringFormatConverter.cs">
+      <Link>Converters\StringFormatConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\SubTextConverter.cs">
+      <Link>Converters\SubTextConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TimeToFontWeightConverter.cs">
+      <Link>Converters\TimeToFontWeightConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TimeToTextConverter.cs">
+      <Link>Converters\TimeToTextConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TrackingDataToColorConverter.cs">
+      <Link>Converters\TrackingDataToColorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Converters\TrackingDataToPredictedArrivalInMinutes.cs">
+      <Link>Converters\TrackingDataToPredictedArrivalInMinutes.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -162,26 +222,6 @@
     <Compile Include="Controls\UserLocation.xaml.cs">
       <DependentUpon>UserLocation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ArrayToVisibilityConverter.cs" />
-    <Compile Include="Converters\BoolToFontWeightConverter.cs" />
-    <Compile Include="Converters\BoolToInvertedConverter.cs" />
-    <Compile Include="Converters\BoolToThicknessConverter.cs" />
-    <Compile Include="Converters\BoolToObaGreenConverter.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\CapitalLetterConverter.cs" />
-    <Compile Include="Converters\IsCurrentHourToThicknessConverter.cs" />
-    <Compile Include="Converters\IsFilteredToColorConverter.cs" />
-    <Compile Include="Converters\MapViewToVisibilityConverter.cs" />
-    <Compile Include="Converters\NumberToDayOfTheWeekConverter.cs" />
-    <Compile Include="Converters\PageControlToPinnableVisibilityConverter.cs" />
-    <Compile Include="Converters\StopAndRouteToFavoriteColorConverter.cs" />
-    <Compile Include="Converters\StringEqualsToVisibilityConverter.cs" />
-    <Compile Include="Converters\StringFormatConverter.cs" />
-    <Compile Include="Converters\TimeToFontWeightConverter.cs" />
-    <Compile Include="Converters\TimeToTextConverter.cs" />
-    <Compile Include="Converters\SubTextConverter.cs" />
-    <Compile Include="Converters\TrackingDataToColorConverter.cs" />
-    <Compile Include="Converters\TrackingDataToPredictedArrivalInMinutes.cs" />
     <Compile Include="PageControls\FavoritesPageControl.xaml.cs">
       <DependentUpon>FavoritesPageControl.xaml</DependentUpon>
     </Compile>
@@ -213,6 +253,7 @@
     <None Include="OneBusAway.licenseheader" />
     <None Include="OneBusAway_StoreKey.pfx" />
     <None Include="OneBusAway_TemporaryKey.pfx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />
@@ -347,10 +388,16 @@
       <Name>OneBusAway</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

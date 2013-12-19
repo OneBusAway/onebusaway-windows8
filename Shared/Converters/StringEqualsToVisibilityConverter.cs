@@ -13,31 +13,47 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Text;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Globalization;
+#else
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class TimeToFontWeightConverter : IValueConverter
+    /// <summary>
+    /// If the string value equals the converter parameter, then we set an element to be visible.
+    /// </summary>
+    public class StringEqualsToVisibilityConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            if (value is DateTime)
+            if (value == null || parameter == null)
             {
-                DateTime time = (DateTime)value;
-                return (time.Hour < 12)
-                    ? FontWeights.Normal
-                    : FontWeights.Bold;
+                return Visibility.Collapsed;
             }
 
-            return FontWeights.Normal;
+            string valueString = value.ToString();
+            string parameterString = parameter.ToString();
+
+            return (string.Equals(valueString, parameterString, StringComparison.OrdinalIgnoreCase))
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

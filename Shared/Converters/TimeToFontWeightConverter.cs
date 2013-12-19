@@ -12,28 +12,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.ViewModels;
-using OneBusAway.ViewModels.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
+using Windows.UI.Text;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class SubTextConverter : IValueConverter
+    public class TimeToFontWeightConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            var viewModel = (HeaderControlViewModel)value;
-            return (viewModel.HasSubText)
-                ? viewModel.SubText
-                : "ONE BUS AWAY";
+            if (value is DateTime)
+            {
+                DateTime time = (DateTime)value;
+                return (time.Hour < 12)
+                    ? FontWeights.Normal
+                    : FontWeights.Bold;
+            }
+
+            return FontWeights.Normal;
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

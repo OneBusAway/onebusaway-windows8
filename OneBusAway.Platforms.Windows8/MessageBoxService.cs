@@ -12,26 +12,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using OneBusAway.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
+using Windows.UI.Popups;
 
-namespace OneBusAway.Converters
+namespace OneBusAway.Platforms.Windows8
 {
-    public class BoolToInvertedConverter : IValueConverter
+    public class MessageBoxService : IMessageBoxService
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        /// <summary>
+        /// Nothing to do.
+        /// </summary>
+        public MessageBoxService()
         {
-            bool boolValue = (bool)value;
-            return !boolValue;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        /// <summary>
+        /// Shows a message box.
+        /// </summary>
+        public async Task ShowAsync(string title, string message)
         {
-            throw new NotSupportedException();
+            var messageDialog = new MessageDialog(message, title);
+            messageDialog.DefaultCommandIndex = 0;
+            await messageDialog.ShowAsync().AsTask();
         }
     }
 }

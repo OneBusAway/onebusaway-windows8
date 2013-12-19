@@ -13,12 +13,15 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Globalization;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
@@ -28,7 +31,11 @@ namespace OneBusAway.Converters
         /// Converts a bool to a visibility.  If the parameter is set we will try 
         /// & parse it and use it to determine whether the value should be inverted.
         /// </summary>
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
             bool? boolValue = (bool?)value;
             bool invert = false;
@@ -44,7 +51,11 @@ namespace OneBusAway.Converters
             return (boolValue.HasValue && boolValue.Value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

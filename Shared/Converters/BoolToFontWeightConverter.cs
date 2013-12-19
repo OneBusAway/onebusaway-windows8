@@ -13,37 +13,51 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Globalization;
+#else
+using Windows.UI.Text;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class IsCurrentHourToThicknessConverter : IValueConverter
+    public class BoolToFontWeightConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            DateTime[] valueTime = (DateTime[])value;
-            if (valueTime.Length == 0)
-            {
-                return new Thickness(0);
-            }
-
-            double thickness = 0.0;
+            bool invert = false;
             if (parameter != null)
             {
-                double.TryParse(parameter as string, out thickness);
+                bool.TryParse(parameter as string, out invert);
             }
 
-            return (valueTime[0].Hour == DateTime.Now.Hour)
-                ? new Thickness(thickness)
-                : new Thickness(0);
+            if (invert)
+            {
+                return ((bool)value)
+                    ? FontWeights.Normal
+                    : FontWeights.Bold;
+            }
+            else
+            {
+                return ((bool)value)
+                    ? FontWeights.Bold
+                    : FontWeights.Normal;
+            }   
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotImplementedException();
         }

@@ -12,31 +12,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+using System.Globalization;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+
+#else
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class IsFilteredToColorConverter : IValueConverter
+    /// <summary>
+    /// Allows in-line xaml string formats.
+    /// </summary>
+    public class StringFormatConverter : IValueConverter
     {
+        /// <summary>
+        /// Assumes the parameter is a string format.
+        /// </summary>
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            TrackingData trackingData = (TrackingData)value;
-            return (trackingData.IsFiltered)
-                ? new SolidColorBrush(Colors.White)
-                : new SolidColorBrush(Colors.Black);
+            return (value == null)
+                ? string.Empty
+                : string.Format(CultureInfo.CurrentCulture, parameter.ToString(), value.ToString()).ToUpper();
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

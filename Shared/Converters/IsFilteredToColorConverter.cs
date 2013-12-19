@@ -12,45 +12,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using OneBusAway.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Windows.Media;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Windows.UI;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class BoolToObaGreenConverter : IValueConverter
+    public class IsFilteredToColorConverter : IValueConverter
     {
-        private SolidColorBrush obaGreenBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x78, 0xAA, 0x36));
-        private SolidColorBrush grayBrush = new SolidColorBrush(Colors.Gray);
-
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            bool invert = false;
-            if (parameter != null)
-            {
-                bool.TryParse(parameter as string, out invert);
-            }
-
-            if (invert)
-            {
-                return ((bool)value)
-                    ? grayBrush
-                    : obaGreenBrush;
-            }
-            else
-            {
-                return ((bool)value)
-                    ? obaGreenBrush
-                    : grayBrush;
-            }
+            TrackingData trackingData = (TrackingData)value;
+            return (trackingData.IsFiltered)
+                ? new SolidColorBrush(Colors.White)
+                : new SolidColorBrush(Colors.Black);
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotImplementedException();
         }

@@ -12,23 +12,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.PageControls;
 using System;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class PageControlToPinnableVisibilityConverter : IValueConverter
+    public class TimeToTextConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            return (value is IPinablePageControl && !NavigationController.Instance.IsSnapped)
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            if (value is DateTime)
+            {
+                DateTime time = (DateTime)value;
+                if (time > DateTime.MinValue)
+                {
+                    string format = (string)parameter;
+                    return time.ToString(format);
+                }
+            }
+
+            return "-";            
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

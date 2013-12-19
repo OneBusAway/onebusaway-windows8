@@ -13,30 +13,39 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Windows.Media;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class BoolToThicknessConverter : IValueConverter
+    public class StopAndRouteToFavoriteColorConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            double thickness = 0.0;
-            if (value == null || !double.TryParse(parameter as string, out thickness))
-            {
-                return new Thickness(0.0);
-            }
-
-            bool boolValue = (bool)value;
-            return new Thickness((boolValue) ? thickness : 0.0);
+            bool isFavorite = (bool)value;
+            return (isFavorite)
+                ? new SolidColorBrush(Color.FromArgb(0xFF, 0x78, 0xAA, 0x36))
+                : new SolidColorBrush(Color.FromArgb(0xFF, 0xCF, 0xCF, 0xCF));
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

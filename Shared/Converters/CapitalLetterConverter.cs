@@ -12,29 +12,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using OneBusAway.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class StopAndRouteToFavoriteColorConverter : IValueConverter
+    public class CapitalLetterConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            bool isFavorite = (bool)value;
-            return (isFavorite)
-                ? new SolidColorBrush(Color.FromArgb(0xFF, 0x78, 0xAA, 0x36))
-                : new SolidColorBrush(Color.FromArgb(0xFF, 0xCF, 0xCF, 0xCF));
+            string str = value as string;
+            if (!String.IsNullOrEmpty(str))
+            {
+                return str.ToUpper();
+            }
+
+            return String.Empty;
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

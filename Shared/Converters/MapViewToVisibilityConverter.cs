@@ -13,14 +13,16 @@
  * limitations under the License.
  */
 using OneBusAway.Model;
-using OneBusAway.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Windows;
+using System.Globalization;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
@@ -33,7 +35,11 @@ namespace OneBusAway.Converters
         /// <summary>
         /// Returns Visible if the maps zoom level is greater than the minimum bus stop visible zoom.
         /// </summary>
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
             MapView mapView = value as MapView;
             if (mapView != null)
@@ -64,7 +70,11 @@ namespace OneBusAway.Converters
         /// <summary>
         /// Not supported.
         /// </summary>
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }

@@ -12,43 +12,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using OneBusAway.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Text;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+#else
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class BoolToFontWeightConverter : IValueConverter
+    public class TrackingDataToPredictedArrivalInMinutes : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            bool invert = false;
-            if (parameter != null)
-            {
-                bool.TryParse(parameter as string, out invert);
-            }
-
-            if (invert)
-            {
-                return ((bool)value)
-                    ? FontWeights.Normal
-                    : FontWeights.Bold;
-            }
-            else
-            {
-                return ((bool)value)
-                    ? FontWeights.Bold
-                    : FontWeights.Normal;
-            }   
+            TrackingData trackingData = (TrackingData)value;
+            return (trackingData.IsNoData)
+                ? "-"
+                : trackingData.PredictedArrivalInMinutes.ToString();
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

@@ -19,6 +19,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows8", "Windows8", "{FF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows Phone", "Windows Phone", "{3BF5B101-1106-4CE8-B81E-653823D6C586}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Converters", "Converters", "{2BAABB45-6F99-4266-9974-AF365CB5568E}"
+	ProjectSection(SolutionItems) = preProject
+		OneBusAway.Windows8\Converters\ArrayToVisibilityConverter.cs = OneBusAway.Windows8\Converters\ArrayToVisibilityConverter.cs
+		OneBusAway.Windows8\Converters\BoolToFontWeightConverter.cs = OneBusAway.Windows8\Converters\BoolToFontWeightConverter.cs
+		OneBusAway.Windows8\Converters\BoolToInvertedConverter.cs = OneBusAway.Windows8\Converters\BoolToInvertedConverter.cs
+		OneBusAway.Windows8\Converters\BoolToObaGreenConverter.cs = OneBusAway.Windows8\Converters\BoolToObaGreenConverter.cs
+		OneBusAway.Windows8\Converters\BoolToThicknessConverter.cs = OneBusAway.Windows8\Converters\BoolToThicknessConverter.cs
+		OneBusAway.Windows8\Converters\BoolToVisibilityConverter.cs = OneBusAway.Windows8\Converters\BoolToVisibilityConverter.cs
+		OneBusAway.Windows8\Converters\CapitalLetterConverter.cs = OneBusAway.Windows8\Converters\CapitalLetterConverter.cs
+		OneBusAway.Windows8\Converters\IsCurrentHourToThicknessConverter.cs = OneBusAway.Windows8\Converters\IsCurrentHourToThicknessConverter.cs
+		OneBusAway.Windows8\Converters\IsFilteredToColorConverter.cs = OneBusAway.Windows8\Converters\IsFilteredToColorConverter.cs
+		OneBusAway.Windows8\Converters\MapViewToVisibilityConverter.cs = OneBusAway.Windows8\Converters\MapViewToVisibilityConverter.cs
+		OneBusAway.Windows8\Converters\NumberToDayOfTheWeekConverter.cs = OneBusAway.Windows8\Converters\NumberToDayOfTheWeekConverter.cs
+		OneBusAway.Windows8\Converters\PageControlToPinnableVisibilityConverter.cs = OneBusAway.Windows8\Converters\PageControlToPinnableVisibilityConverter.cs
+		OneBusAway.Windows8\Converters\StopAndRouteToFavoriteColorConverter.cs = OneBusAway.Windows8\Converters\StopAndRouteToFavoriteColorConverter.cs
+		OneBusAway.Windows8\Converters\StringEqualsToVisibilityConverter.cs = OneBusAway.Windows8\Converters\StringEqualsToVisibilityConverter.cs
+		OneBusAway.Windows8\Converters\StringFormatConverter.cs = OneBusAway.Windows8\Converters\StringFormatConverter.cs
+		OneBusAway.Windows8\Converters\SubTextConverter.cs = OneBusAway.Windows8\Converters\SubTextConverter.cs
+		OneBusAway.Windows8\Converters\TimeToFontWeightConverter.cs = OneBusAway.Windows8\Converters\TimeToFontWeightConverter.cs
+		OneBusAway.Windows8\Converters\TimeToTextConverter.cs = OneBusAway.Windows8\Converters\TimeToTextConverter.cs
+		OneBusAway.Windows8\Converters\TrackingDataToColorConverter.cs = OneBusAway.Windows8\Converters\TrackingDataToColorConverter.cs
+		OneBusAway.Windows8\Converters\TrackingDataToPredictedArrivalInMinutes.cs = OneBusAway.Windows8\Converters\TrackingDataToPredictedArrivalInMinutes.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,5 +197,6 @@ Global
 		{35672B4C-7575-4D5C-956B-3674D4CB5AEC} = {FF1034AA-C116-4983-8F0B-1B2CDEC671F9}
 		{EFDA7B53-DCCB-46B9-AAC7-7D071515463F} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
 		{71555972-2EAB-4B6D-9B76-521DF55D2D14} = {3BF5B101-1106-4CE8-B81E-653823D6C586}
+		{2BAABB45-6F99-4266-9974-AF365CB5568E} = {31B5CF15-EBA4-41C6-AAD9-EFD4D01DDD24}
 	EndGlobalSection
 EndGlobal

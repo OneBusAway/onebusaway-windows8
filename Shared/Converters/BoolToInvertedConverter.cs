@@ -13,32 +13,33 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#if WINDOWS_PHONE
+using System.Windows.Data;
+using System.Globalization;
+#else
 using Windows.UI.Xaml.Data;
+#endif
 
 namespace OneBusAway.Converters
 {
-    public class TimeToTextConverter : IValueConverter
+    public class BoolToInvertedConverter : IValueConverter
     {
+#if WINDOWS_PHONE
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object Convert(object value, Type targetType, object parameter, string language)
+#endif
         {
-            if (value is DateTime)
-            {
-                DateTime time = (DateTime)value;
-                if (time > DateTime.MinValue)
-                {
-                    string format = (string)parameter;
-                    return time.ToString(format);
-                }
-            }
-
-            return "-";            
+            bool boolValue = (bool)value;
+            return !boolValue;
         }
 
+#if WINDOWS_PHONE
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+#endif
         {
             throw new NotSupportedException();
         }
