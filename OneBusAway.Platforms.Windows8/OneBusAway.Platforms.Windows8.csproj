@@ -112,7 +112,6 @@
     <Compile Include="FileService.cs" />
     <Compile Include="GeoLocationService.cs" />
     <Compile Include="MessageBoxService.cs" />
-    <Compile Include="NetworkService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsService.cs" />
     <Compile Include="TileService.cs" />

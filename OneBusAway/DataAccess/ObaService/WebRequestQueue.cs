@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using OneBusAway.Utilities;
 using OneBusAway.Services;
+using System.Net.Http;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -65,7 +66,16 @@ namespace OneBusAway.DataAccess.ObaService
                     {   
                         try
                         {
-                            var responseString = await ServiceRepository.NetworkService.ReadAsStringAsync(uri);
+                            string responseString = null;
+                            using (CancellationTokenSource source = new CancellationTokenSource(Constants.HttpTimeoutLength))
+                            {
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    var message = await client.GetAsync(uri, source.Token);
+                                    responseString = await message.Content.ReadAsStringAsync();
+                                }
+                            } 
+
                             XDocument doc = XDocument.Parse(responseString);
 
                             // Wait a bit to throttle the requests:

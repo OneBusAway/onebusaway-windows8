@@ -25,6 +25,7 @@ using OneBusAway.Utilities;
 using System.Threading;
 using System.Reflection;
 using OneBusAway.Services;
+using System.Net.Http;
 
 namespace OneBusAway.DataAccess.ObaService.ObaService
 {
@@ -90,8 +91,15 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         // the old document until the server is back!
                         if (doc == null || existingFileHasExpired)
                         {
-                            var xml = await ServiceRepository.NetworkService.ReadAsStringAsync(REGIONS_SERVICE_URI);
-                            doc = XDocument.Parse(xml);
+                            using (CancellationTokenSource source = new CancellationTokenSource(Constants.HttpTimeoutLength))
+                            {
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    var message = await client.GetAsync(REGIONS_SERVICE_URI, source.Token);
+                                    var xml = await message.Content.ReadAsStringAsync();
+                                    doc = XDocument.Parse(xml);
+                                }
+                            }                            
 
                             try
                             {   

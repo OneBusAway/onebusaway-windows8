@@ -55,7 +55,6 @@ namespace OneBusAway
             // Inject the platform specific services into the service repository:
             ServiceRepository.FileService = new FileService();
             ServiceRepository.GeoLocationService = new GeoLocationService();
-            ServiceRepository.NetworkService = new NetworkService();
             ServiceRepository.SettingsService = new SettingsService();
             ServiceRepository.PageControlService = new PageControlService();
             ServiceRepository.MessageBoxService = new MessageBoxService();

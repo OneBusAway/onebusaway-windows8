@@ -23,6 +23,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace OneBusAway.DataAccess.BingService
 {
@@ -49,7 +50,14 @@ namespace OneBusAway.DataAccess.BingService
                 imageHeight,
                 Constants.BingsMapsServiceApiKey);
 
-            return new MemoryStream(await ServiceRepository.NetworkService.ReadAsByteArrayAsync(url));
+            using (CancellationTokenSource source = new CancellationTokenSource(Constants.HttpTimeoutLength))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return new MemoryStream(await message.Content.ReadAsByteArrayAsync());
+                }
+            }
         }
 
         /// <summary>

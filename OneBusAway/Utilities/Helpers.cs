@@ -21,6 +21,8 @@ using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Net.Http;
 
 namespace OneBusAway.Utilities
 {
@@ -40,7 +42,15 @@ namespace OneBusAway.Utilities
             }
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-            return (T)serializer.ReadObject(await ServiceRepository.NetworkService.ReadAsStreamAsync(url));
+
+            using (CancellationTokenSource source = new CancellationTokenSource(Constants.HttpTimeoutLength))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var message = await client.GetAsync(url, source.Token);
+                    return (T)serializer.ReadObject(await message.Content.ReadAsStreamAsync());
+                }
+            }            
         }
 
         /// <summary>

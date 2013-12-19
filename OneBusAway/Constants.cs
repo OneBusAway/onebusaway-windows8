@@ -25,6 +25,11 @@ namespace OneBusAway
     public static class Constants    
     {
         /// <summary>
+        /// This is the length of time before we time out network calls.
+        /// </summary>
+        public const int HttpTimeoutLength = 15000;
+
+        /// <summary>
         /// Default map zoom when map control is loaded on any page
         /// </summary>
         public const double DefaultMapZoom = 12;

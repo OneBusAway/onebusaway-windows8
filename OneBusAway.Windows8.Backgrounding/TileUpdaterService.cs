@@ -46,7 +46,6 @@ namespace OneBusAway.Backgrounding
             // Inject the platform services into the PCL:
             ServiceRepository.FileService = new FileService();
             ServiceRepository.GeoLocationService = new GeoLocationService();
-            ServiceRepository.NetworkService = new NetworkService();
             ServiceRepository.SettingsService = new SettingsService();
 
             try

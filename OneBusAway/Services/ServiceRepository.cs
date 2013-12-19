@@ -24,7 +24,6 @@ namespace OneBusAway.Services
     {
         private static ServiceRepository instance = new ServiceRepository();
         private IFileService fileService;
-        private INetworkService networkService;
         private ISettingsService settingsService;
         private IGeoLocationService geoLocationService;
         private IPageControlService pageControlService;
@@ -44,18 +43,6 @@ namespace OneBusAway.Services
             set
             {
                 instance.fileService = value;
-            }
-        }
-
-        public static INetworkService NetworkService
-        {
-            get
-            {
-                return instance.networkService;
-            }
-            set
-            {
-                instance.networkService = value;
             }
         }
 

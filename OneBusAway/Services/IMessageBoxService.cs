@@ -14,19 +14,17 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OneBusAway.Services
 {
-    public interface INetworkService
+    /// <summary>
+    /// Abstracts platform specific mechanisms for alerting the user.
+    /// </summary>
+    public interface IMessageBoxService
     {
-        Task<byte[]> ReadAsByteArrayAsync(string url);
-
-        Task<string> ReadAsStringAsync(string url);
-
-        Task<Stream> ReadAsStreamAsync(string url);
+        Task ShowAsync(string title, string message);
     }
 }
