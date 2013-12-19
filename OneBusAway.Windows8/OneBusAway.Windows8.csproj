@@ -113,6 +113,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Controls\ControlUtilities.cs">
+      <Link>Controls\ControlUtilities.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Converters\ArrayToVisibilityConverter.cs">
       <Link>Converters\ArrayToVisibilityConverter.cs</Link>
     </Compile>
@@ -191,7 +194,6 @@
     <Compile Include="Controls\BusStopHeaderControl.xaml.cs">
       <DependentUpon>BusStopHeaderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ControlUtilities.cs" />
     <Compile Include="Controls\DayOfTheWeekControl.xaml.cs">
       <DependentUpon>DayOfTheWeekControl.xaml</DependentUpon>
     </Compile>
@@ -288,13 +290,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Common\StandardStyles.xaml">
+    <Page Include="..\Shared\Controls\BusStopHeaderControl.xaml">
+      <Link>Controls\BusStopHeaderControl.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\BusStopHeaderControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DayOfTheWeekControl.xaml">
       <SubType>Designer</SubType>

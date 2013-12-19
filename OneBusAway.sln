@@ -55,6 +55,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{582E2DEB-1AEF-403A-84A2-51698F42F46D}"
 	ProjectSection(SolutionItems) = preProject
 		Shared\Controls\BusStop.xaml = Shared\Controls\BusStop.xaml
+		Shared\Controls\ControlUtilities.cs = Shared\Controls\ControlUtilities.cs
 	EndProjectSection
 EndProject
 Global

@@ -90,6 +90,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Controls\ControlUtilities.cs">
+      <Link>Controls\ControlUtilities.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Converters\ArrayToVisibilityConverter.cs">
       <Link>Converters\ArrayToVisibilityConverter.cs</Link>
     </Compile>
@@ -165,6 +168,12 @@
     <Compile Include="Controls\BusStop.xaml.cs">
       <DependentUpon>BusStop.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BusStopHeaderControl.xaml.cs">
+      <DependentUpon>BusStopHeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MapControl.xaml.cs">
+      <DependentUpon>MapControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -189,6 +198,15 @@
       <Link>Controls\BusStop.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Shared\Controls\BusStopHeaderControl.xaml">
+      <Link>Controls\BusStopHeaderControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
