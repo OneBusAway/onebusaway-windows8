@@ -19,6 +19,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Phone.Maps.Controls;
 using OneBusAway.Model;
 using OneBusAway.Platforms.WindowsPhone;
@@ -32,7 +33,12 @@ namespace OneBusAway.Controls
     {
         #region Member Variables
 
-        private UserLocationIcon userLocationIcon;
+        private MapLayer routeLayer;
+        private MapLayer busStopLayer;        
+        private MapLayer userLocationLayer;
+
+        private Image userLocationIcon;
+
         private bool centerOnUserLocation;
         private GeoCoordinate userLocation;
         private IUIHelper uiHelper;
@@ -105,7 +111,16 @@ namespace OneBusAway.Controls
         {
             this.InitializeComponent();
 
-            this.userLocationIcon = new UserLocationIcon();
+            this.routeLayer = new MapLayer();
+            this.busStopLayer = new MapLayer();
+            this.userLocationLayer = new MapLayer();
+            
+            this.userLocationIcon = new Image();
+            this.userLocationIcon.Source = new BitmapImage(new Uri(@"/Assets/CenterIcon.png", UriKind.RelativeOrAbsolute));
+
+            this.map.Layers.Add(this.userLocationLayer);
+            this.map.Layers.Add(this.routeLayer);
+            this.map.Layers.Add(this.busStopLayer);
 
             // Setting MapCenter to null will center the map to Puget Sound and set the default Zoom level.
             this.MapCenter = null;
@@ -303,13 +318,11 @@ namespace OneBusAway.Controls
             if (args.OldValue != null)
             {
                 // remove all old polylines from the map:
-                mapControl.map.Layers.Clear();
+                mapControl.routeLayer.Clear();
             }
 
             if (args.NewValue != null)
             {
-                MapLayer routeLayer = new MapLayer();
-
                 List<Shape> shapes = (List<Shape>)args.NewValue;
                 foreach (var shape in shapes)
                 {
@@ -324,13 +337,11 @@ namespace OneBusAway.Controls
                     }
 
                     polyline.Path = locations;
-                    routeLayer.Add(new MapOverlay()
+                    mapControl.routeLayer.Add(new MapOverlay()
                     {
                         Content = polyline,
                     });
                 }
-
-                mapControl.map.Layers.Add(routeLayer);
             }
         }
 
@@ -350,9 +361,7 @@ namespace OneBusAway.Controls
                 // Make sure the new view model is bound to an existing control.
                 // If it's not then we need to find the one that is and make it selected:                
                 MapControl mapControl = (MapControl)dependencyObject;
-                var busStop = (from child in mapControl.map.Children
-                               let currentBusStop = child as BusStop
-                               where currentBusStop != null
+                var busStop = (from currentBusStop in mapControl.busStopLayer.Select(overlay => overlay.Content).OfType<BusStop>()
                                let busStopControlViewModel = currentBusStop.ViewModel
                                where busStopControlViewModel != null
                                  && string.Equals(busStopControlViewModel.StopId, newSelected.StopId, StringComparison.OrdinalIgnoreCase)
@@ -384,16 +393,22 @@ namespace OneBusAway.Controls
             {
                 mapControl.userLocation = new GeoCoordinate(newValue.Latitude, newValue.Longitude);
 
-                if (!mapControl.map.Children.Contains(mapControl.userLocationIcon))
+                MapOverlay locationOverlay = null;
+                if (mapControl.userLocationLayer.Count == 0)
                 {
-                    mapControl.map.Children.Add(mapControl.userLocationIcon);
+                    locationOverlay = new MapOverlay();
+                    mapControl.userLocationLayer.Add(locationOverlay);
+                }
+                else
+                {
+                    locationOverlay = mapControl.userLocationLayer[0];
                 }
 
-                MapLayer.SetPosition(mapControl.userLocationIcon, mapControl.userLocation);
+                locationOverlay.GeoCoordinate = mapControl.userLocation;
             }
-            else
+            else if (mapControl.userLocationLayer.Count > 0)
             {
-                mapControl.map.Children.Remove(mapControl.userLocationIcon);
+                mapControl.userLocationLayer.RemoveAt(0);
             }
         }
 
@@ -422,10 +437,7 @@ namespace OneBusAway.Controls
             if (args.NewValue == null)
             {
                 mapControl.displayedBusStopLookup.Clear();
-                mapControl.map.Children.Clear();
-
-                mapControl.map.Children.Add(mapControl.userLocationIcon);
-                MapLayer.SetPosition(mapControl.userLocationIcon, mapControl.userLocation);
+                mapControl.busStopLayer.Clear();
             }
             else
             {
@@ -436,7 +448,7 @@ namespace OneBusAway.Controls
                 {
                     // If the clear existing stops property is set to true, 
                     // then we should clear the existing stops:
-                    mapControl.map.Children.Clear();
+                    mapControl.busStopLayer.Clear();
                     mapControl.displayedBusStopLookup.Clear();
                 }
 
@@ -459,14 +471,16 @@ namespace OneBusAway.Controls
                         BusStop busStopIcon = new BusStop();
                         busStopIcon.ViewModel = busStopControlViewModel;
 
-                        mapControl.map.Children.Add(busStopIcon);
-
-                        // Wait for the UI to idle before we add another bus stop to make the UI more responsive:
-                        await mapControl.uiHelper.WaitForIdleAsync();
+                        mapControl.busStopLayer.Add(new MapOverlay()
+                            {
+                                GeoCoordinate = new GeoCoordinate(stop.Latitude, stop.Longitude),
+                                Content = busStopIcon
+                            });
 
                         mapControl.displayedBusStopLookup.Add(stop.StopId);
 
-                        MapLayer.SetPosition(busStopIcon, new Location(stop.Latitude, stop.Longitude));
+                        // Wait for the UI to idle before we add another bus stop to make the UI more responsive:
+                        await mapControl.uiHelper.WaitForIdleAsync();                        
                     }
                 }
             }
