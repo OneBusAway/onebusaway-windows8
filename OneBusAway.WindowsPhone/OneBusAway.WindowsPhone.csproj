@@ -174,13 +174,18 @@
     <Compile Include="Controls\DayOfTheWeekControl.xaml.cs">
       <DependentUpon>DayOfTheWeekControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FavoriteControl.xaml.cs">
+      <DependentUpon>FavoriteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ScalableTextBlock.xaml.cs">
       <DependentUpon>ScalableTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UserLocationIcon.xaml.cs" />
+    <Compile Include="Controls\UserLocationIcon.xaml.cs">
+      <DependentUpon>UserLocationIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -213,6 +218,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DayOfTheWeekControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FavoriteControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

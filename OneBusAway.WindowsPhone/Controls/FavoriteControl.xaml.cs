@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using System.Windows.Controls;
+using Microsoft.Phone.Controls;
 
 namespace OneBusAway.Controls
 {
@@ -27,7 +27,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Fires the AddToFavorites command and passes it our data context.
         /// </summary>
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnTapped(object sender, GestureEventArgs e)
         {
             NavigationController.Instance.AddToFavoritesCommand.Execute(this.DataContext);
         }
