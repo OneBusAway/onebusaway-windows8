@@ -26,7 +26,7 @@
              d:DesignHeight="30"
              d:DesignWidth="100">
 
-    <Grid x:Name="grid" 
+    <Grid Tap="OnTapped"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
         <Rectangle HorizontalAlignment="Stretch"

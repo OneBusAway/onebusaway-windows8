@@ -74,8 +74,6 @@ namespace OneBusAway.Controls
         {
             this.InitializeComponent();
 
-            this.grid.Tap += OnTapped;
-
             this.proxy = new NavigationControllerProxy();
             this.proxy.PropertyChanged += OnProxyPropertyChanged;
             this.Unloaded += (sender, args) => this.proxy.PropertyChanged -= OnProxyPropertyChanged;

@@ -74,8 +74,6 @@ namespace OneBusAway.Controls
         public ScalableTextBlock()
         {
             this.InitializeComponent();
-
-            this.grid.PointerPressed += this.OnPointerPressed;
             
             this.proxy = new NavigationControllerProxy();
             this.proxy.PropertyChanged += OnProxyPropertyChanged;
