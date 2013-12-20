@@ -1,0 +1,23 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/OneBusAway/bin
+/OneBusAway/obj
+/OneBusAway.Platforms.Windows8/bin/x86/Debug
+/OneBusAway.Platforms.Windows8/obj/x86/Debug
+/OneBusAway.Platforms.WindowsPhone/Bin/x86/Debug
+/OneBusAway.Platforms.WindowsPhone/obj
+/OneBusAway.Web/bin
+/OneBusAway.Web/obj/Debug
+/OneBusAway.Web/obj/Release
+/OneBusAway.Windows8/bin/x86/Debug
+/OneBusAway.Windows8/obj/x86/Debug
+/OneBusAway.Windows8.Backgrounding/bin/x86/Debug
+/OneBusAway.Windows8.Backgrounding/obj/x86/Debug
+/OneBusAway.WindowsPhone/Bin/x86/Debug
+/OneBusAway.WindowsPhone/obj
+/packages
+/ReleaseAppPackages
+*.suo
+*.user

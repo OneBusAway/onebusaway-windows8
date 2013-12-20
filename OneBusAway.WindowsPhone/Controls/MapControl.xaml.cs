@@ -36,9 +36,7 @@ namespace OneBusAway.Controls
         private MapLayer routeLayer;
         private MapLayer busStopLayer;        
         private MapLayer userLocationLayer;
-
-        private Image userLocationIcon;
-
+        
         private bool centerOnUserLocation;
         private GeoCoordinate userLocation;
         private IUIHelper uiHelper;
@@ -114,9 +112,6 @@ namespace OneBusAway.Controls
             this.routeLayer = new MapLayer();
             this.busStopLayer = new MapLayer();
             this.userLocationLayer = new MapLayer();
-            
-            this.userLocationIcon = new Image();
-            this.userLocationIcon.Source = new BitmapImage(new Uri(@"/Assets/CenterIcon.png", UriKind.RelativeOrAbsolute));
 
             this.map.Layers.Add(this.userLocationLayer);
             this.map.Layers.Add(this.routeLayer);
@@ -397,6 +392,7 @@ namespace OneBusAway.Controls
                 if (mapControl.userLocationLayer.Count == 0)
                 {
                     locationOverlay = new MapOverlay();
+                    locationOverlay.Content = new UserLocationIcon();
                     mapControl.userLocationLayer.Add(locationOverlay);
                 }
                 else

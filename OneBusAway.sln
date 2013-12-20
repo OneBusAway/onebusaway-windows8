@@ -58,6 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{58
 		Shared\Controls\BusStopHeaderControl.xaml = Shared\Controls\BusStopHeaderControl.xaml
 		Shared\Controls\ControlUtilities.cs = Shared\Controls\ControlUtilities.cs
 		Shared\Controls\ScalableTextBlock.xaml = Shared\Controls\ScalableTextBlock.xaml
+		Shared\Controls\UserLocation.xaml = Shared\Controls\UserLocation.xaml
 	EndProjectSection
 EndProject
 Global

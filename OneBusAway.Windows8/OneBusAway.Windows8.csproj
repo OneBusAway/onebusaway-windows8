@@ -230,8 +230,8 @@
     <Compile Include="Controls\TimeTableControl.xaml.cs">
       <DependentUpon>TimeTableControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UserLocation.xaml.cs">
-      <DependentUpon>UserLocation.xaml</DependentUpon>
+    <Compile Include="Controls\UserLocationIcon.xaml.cs">
+      <DependentUpon>UserLocationIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="PageControls\FavoritesPageControl.xaml.cs">
       <DependentUpon>FavoritesPageControl.xaml</DependentUpon>
@@ -300,6 +300,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="..\Shared\Controls\UserLocationIcon.xaml">
+      <Link>Controls\UserLocationIcon.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -345,10 +350,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TimeTableControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\UserLocation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
