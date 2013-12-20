@@ -14,10 +14,9 @@
  */
 using System;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace OneBusAway.Controls
 {
@@ -27,23 +26,23 @@ namespace OneBusAway.Controls
     public sealed partial class ScalableTextBlock : UserControl
     {
         public static readonly DependencyProperty LargeFontSizeProperty = DependencyProperty.Register("LargeFontSize",
-            typeof(double), 
-            typeof(ScalableTextBlock), 
+            typeof(double),
+            typeof(ScalableTextBlock),
             new PropertyMetadata(14.0));
-        
+
         public static readonly DependencyProperty NormalFontSizeProperty = DependencyProperty.Register("NormalFontSize",
-            typeof(double), 
-            typeof(ScalableTextBlock), 
+            typeof(double),
+            typeof(ScalableTextBlock),
             new PropertyMetadata(12.0));
-        
+
         public static readonly DependencyProperty SnappedFontSizeProperty = DependencyProperty.Register("SnappedFontSize",
-            typeof(double), 
-            typeof(ScalableTextBlock), 
+            typeof(double),
+            typeof(ScalableTextBlock),
             new PropertyMetadata(10.0));
-        
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", 
-            typeof(string), 
-            typeof(ScalableTextBlock), 
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text",
+            typeof(string),
+            typeof(ScalableTextBlock),
             new PropertyMetadata(null));
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command",
@@ -75,12 +74,12 @@ namespace OneBusAway.Controls
         {
             this.InitializeComponent();
 
-            this.grid.PointerPressed += this.OnPointerPressed;
-            
+            this.grid.Tap += OnTapped;
+
             this.proxy = new NavigationControllerProxy();
             this.proxy.PropertyChanged += OnProxyPropertyChanged;
             this.Unloaded += (sender, args) => this.proxy.PropertyChanged -= OnProxyPropertyChanged;
-        }        
+        }
 
         public string Text
         {
@@ -136,7 +135,7 @@ namespace OneBusAway.Controls
         /// </summary>
         private void OnProxyPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(string.Equals("IsSnapped", e.PropertyName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals("IsSnapped", e.PropertyName, StringComparison.OrdinalIgnoreCase))
             {
                 CalculateState();
             }
@@ -172,12 +171,12 @@ namespace OneBusAway.Controls
         /// <summary>
         /// If there is a command bound to this text block, invoke it.
         /// </summary>
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnTapped(object sender, GestureEventArgs e)
         {
             if (this.Command != null && this.Command.CanExecute(this.CommandParameter))
             {
                 this.Command.Execute(this.CommandParameter);
             }
-        }        
+        }
     }
 }

@@ -174,6 +174,9 @@
     <Compile Include="Controls\MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ScalableTextBlock.xaml.cs">
+      <DependentUpon>ScalableTextBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -201,6 +204,11 @@
     </Page>
     <Page Include="..\Shared\Controls\BusStopHeaderControl.xaml">
       <Link>Controls\BusStopHeaderControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Shared\Controls\ScalableTextBlock.xaml">
+      <Link>Controls\ScalableTextBlock.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

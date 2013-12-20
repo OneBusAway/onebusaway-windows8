@@ -26,9 +26,9 @@
              d:DesignHeight="30"
              d:DesignWidth="100">
 
-    <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          PointerPressed="OnPointerPressed">
+    <Grid x:Name="grid" 
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
         <Rectangle HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch"
                    Fill="Transparent" />
