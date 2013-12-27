@@ -18,7 +18,7 @@ using System.Collections.Generic;
 #if WINDOWS_PHONE
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Markup;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,6 +30,9 @@ namespace OneBusAway.Triggers
     /// <summary>
     /// Trigger collection is a list of triggers.
     /// </summary>
+#if WINDOWS_PHONE
+    [ContentProperty("Triggers")]
+#endif
     public class TriggerCollection : DependencyObject, IList<Trigger>
     {
         /// <summary>
@@ -43,12 +46,31 @@ namespace OneBusAway.Triggers
         private Control control;
 
         /// <summary>
+        /// This constructor is called from the phone project.
+        /// </summary>
+        public TriggerCollection()
+        {
+        }
+
+        /// <summary>
         /// The owning control.
         /// </summary>
         public TriggerCollection(Control control)
         {
             this.control = control;
             this.triggers = new List<Trigger>();
+        }
+
+        public List<Trigger> Triggers
+        {
+            get
+            {
+                return this.triggers;
+            }
+            set
+            {
+                this.triggers = value;
+            }
         }
 
         /// <summary>

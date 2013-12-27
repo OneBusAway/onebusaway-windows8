@@ -72,6 +72,15 @@ namespace OneBusAway.Triggers
             return collection;
         }
 
+        public static void SetTriggers(Control control, TriggerCollection collection)
+        {
+            if (!instance.triggerLookup.ContainsKey(control))
+            {
+                instance.triggerLookup[control] = collection;
+                control.Unloaded += OnControlUnloaded;
+            }
+        }
+
         /// <summary>
         /// Unregisters triggers when the control is unloaded.
         /// </summary>

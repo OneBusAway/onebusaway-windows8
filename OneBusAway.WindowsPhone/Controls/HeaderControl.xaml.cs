@@ -12,7 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Windows.UI.Xaml.Controls;
+
+using System.Windows.Controls;
 
 namespace OneBusAway.Controls
 {
