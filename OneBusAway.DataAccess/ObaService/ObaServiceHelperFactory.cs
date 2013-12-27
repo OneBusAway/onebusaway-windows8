@@ -287,9 +287,17 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             }
 
             /// <summary>
+            /// Sends and receives with a default cancellation token.
+            /// </summary>
+            public Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge)
+            {
+                return SendAndRecieveAsync(cacheTimeout, CancellationToken.None);
+            }
+
+            /// <summary>
             /// Sends a payload to the service asynchronously.
             /// </summary>
-            public async Task<XDocument> SendAndRecieveAsync(int cacheTimeout)
+            public async Task<XDocument> SendAndRecieveAsync(int cacheTimeout, CancellationToken token)
             {
                 XDocument doc = await this.GetCachedDocument(cacheTimeout);
                 if (doc == null)
@@ -298,11 +306,12 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                     {
                         try
                         {
+                            token.ThrowIfCancellationRequested();
                             this.uriBuilder.Query = this.CreateQueryString();
 
                             using (var client = new HttpClient())
                             {
-                                doc = await WebRequestQueue.SendAsync(client, this.uriBuilder.ToString());
+                                doc = await WebRequestQueue.SendAsync(client, this.uriBuilder.ToString(), token);
                             }
 
                             // Verify that OBA sent us a valid document and that it's status code is 200:                

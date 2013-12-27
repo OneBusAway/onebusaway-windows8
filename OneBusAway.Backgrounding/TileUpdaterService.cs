@@ -39,7 +39,7 @@ namespace OneBusAway.Backgrounding
         /// <summary>
         /// Runs the tile updating service.
         /// </summary>
-        public static async Task UpdateTilesAsync()
+        public static async Task UpdateTilesAsync(CancellationToken token)
         {
             try
             {
@@ -50,9 +50,11 @@ namespace OneBusAway.Backgrounding
                 List<TrackingData> favoritesRealTimeData = new List<TrackingData>();
                 foreach (StopAndRoutePair favorite in favorites)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     // Get tracking data for this stop:
                     var obaDataAccess = ObaDataAccess.Create();
-                    TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(favorite.Stop);
+                    TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(favorite.Stop, token);
 
                     // Adds the tracking data to the list:
                     favoritesRealTimeData.AddRange(from data in trackingData
@@ -68,6 +70,7 @@ namespace OneBusAway.Backgrounding
                 var pinnedStopTiles = await SecondaryTile.FindAllAsync();
                 foreach (var pinnedStopTile in pinnedStopTiles)
                 {
+                    token.ThrowIfCancellationRequested();
                     PageInitializationParameters parameters = null;
 
                     // Be safe and try this first...should never happen.
@@ -81,7 +84,7 @@ namespace OneBusAway.Backgrounding
                         {
                             // Get the tracking data:
                             var obaDataAccess = ObaDataAccess.Create(lat, lon);
-                            TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(stopId);
+                            TrackingData[] trackingData = await obaDataAccess.GetTrackingDataForStopAsync(stopId, token);
 
                             TileXMLBuilder secondaryTileBuilder = new TileXMLBuilder(pinnedStopTile.TileId);
 

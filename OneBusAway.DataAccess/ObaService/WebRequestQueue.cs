@@ -57,7 +57,7 @@ namespace OneBusAway.DataAccess.ObaService
         /// <summary>
         /// Queues a web request into our queue and returns an awaitable task.
         /// </summary>
-        public static Task<XDocument> SendAsync(HttpClient client, string uri)
+        public static Task<XDocument> SendAsync(HttpClient client, string uri, CancellationToken token)
         {
             lock (instance)
             {
@@ -65,9 +65,13 @@ namespace OneBusAway.DataAccess.ObaService
                     {
                         using(CancellationTokenSource source = new CancellationTokenSource(DataAccessConstants.TIMEOUT_LENGTH))
                         {
+                            CancellationToken cancellationToken = (token == CancellationToken.None)
+                                ? source.Token
+                                : token;
+
                             try
                             {
-                                var response = await client.GetAsync(uri, source.Token);
+                                var response = await client.GetAsync(uri, cancellationToken);
                                 XDocument doc = XDocument.Parse(await response.Content.ReadAsStringAsync());
 
                                 // Wait a bit to throttle the requests:
