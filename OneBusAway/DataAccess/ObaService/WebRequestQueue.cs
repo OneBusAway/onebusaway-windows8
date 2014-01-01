@@ -75,9 +75,9 @@ namespace OneBusAway.DataAccess.ObaService
 
                                 using (HttpClient client = new HttpClient())
                                 {
-                                        var message = await client.GetAsync(uri, source.Token);
-                                        responseString = await message.Content.ReadAsStringAsync();
-                                } 
+                                    var message = await client.GetAsync(uri, source.Token);
+                                    responseString = await message.Content.ReadAsStringAsync();
+                                }
 
                                 XDocument doc = XDocument.Parse(responseString);
 
@@ -85,10 +85,11 @@ namespace OneBusAway.DataAccess.ObaService
                                 await Task.Delay(50);
                                 return doc;
                             }
-                            catch (TaskCanceledException)
-                            {
-                                throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
-                            }
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
+                        }
                     }).Unwrap();
 
                 return instance.currentTask;

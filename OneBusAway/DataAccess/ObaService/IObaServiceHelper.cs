@@ -55,7 +55,7 @@ namespace OneBusAway.DataAccess.ObaService
         /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
-        Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge);
+        Task<XDocument> SendAndRecieveAsync(int cacheTimeout = Constants.DefaultCacheAge);
 
         /// <summary>
         /// Sends a payload to the service asynchronously and reads the response with a specific cancellation token.

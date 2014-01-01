@@ -289,7 +289,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             /// <summary>
             /// Sends and receives with a default cancellation token.
             /// </summary>
-            public Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge)
+            public Task<XDocument> SendAndRecieveAsync(int cacheTimeout = Constants.DefaultCacheAge)
             {
                 return SendAndRecieveAsync(cacheTimeout, CancellationToken.None);
             }
