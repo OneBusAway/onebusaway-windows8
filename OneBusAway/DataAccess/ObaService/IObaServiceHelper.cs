@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -54,6 +55,11 @@ namespace OneBusAway.DataAccess.ObaService
         /// <summary>
         /// Sends a payload to the service asynchronously and reads the response.
         /// </summary>
-        Task<XDocument> SendAndRecieveAsync(int cacheTimeout = Constants.DefaultCacheAge);
+        Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge);
+
+        /// <summary>
+        /// Sends a payload to the service asynchronously and reads the response with a specific cancellation token.
+        /// </summary>
+        Task<XDocument> SendAndRecieveAsync(int cacheTimeout, CancellationToken token);
     }
 }

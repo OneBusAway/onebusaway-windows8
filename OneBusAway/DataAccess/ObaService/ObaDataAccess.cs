@@ -24,6 +24,7 @@ using OneBusAway.Model;
 using OneBusAway.Utilities;
 using OneBusAway.DataAccess.ObaService;
 using OneBusAway.DataAccess.ObaService.ObaService;
+using System.Threading;
 
 namespace OneBusAway.DataAccess.ObaService
 {
@@ -387,10 +388,15 @@ namespace OneBusAway.DataAccess.ObaService
             return new RouteData();
         }
 
+        public Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId)
+        {
+            return GetTrackingDataForStopAsync(stopId, CancellationToken.None);
+        }
+
         /// <summary>
         /// Returns real time tracking data for the buses at a particular stop.
         /// </summary>
-        public async Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId)
+        public async Task<TrackingData[]> GetTrackingDataForStopAsync(string stopId, CancellationToken token)
         {
             try
             {
@@ -400,7 +406,7 @@ namespace OneBusAway.DataAccess.ObaService
                 helper.SetId(stopId);
                 helper.AddToQueryString("minutesAfter", "60");
 
-                XDocument doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge);
+                XDocument doc = await helper.SendAndRecieveAsync(Constants.NoCacheAge, token);
 
                 if (doc != null)
                 {

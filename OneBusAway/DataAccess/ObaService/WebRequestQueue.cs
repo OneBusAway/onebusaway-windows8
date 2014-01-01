@@ -58,34 +58,37 @@ namespace OneBusAway.DataAccess.ObaService
         /// <summary>
         /// Queues a web request into our queue and returns an awaitable task.
         /// </summary>
-        public static Task<XDocument> SendAsync(string uri)
+        public static Task<XDocument> SendAsync(string uri, CancellationToken token)
         {
             lock (instance)
             {
                 instance.currentTask = instance.currentTask.ContinueWith(async previousTask =>
-                    {   
+                    {
                         try
                         {
                             string responseString = null;
                             using (CancellationTokenSource source = new CancellationTokenSource(Constants.HttpTimeoutLength))
                             {
+                                CancellationToken cancellationToken = (token == CancellationToken.None)
+                                    ? source.Token
+                                    : token;
+
                                 using (HttpClient client = new HttpClient())
                                 {
-                                    var message = await client.GetAsync(uri, source.Token);
-                                    responseString = await message.Content.ReadAsStringAsync();
-                                }
-                            } 
+                                        var message = await client.GetAsync(uri, source.Token);
+                                        responseString = await message.Content.ReadAsStringAsync();
+                                } 
 
-                            XDocument doc = XDocument.Parse(responseString);
+                                XDocument doc = XDocument.Parse(responseString);
 
-                            // Wait a bit to throttle the requests:
-                            await Task.Delay(50);
-                            return doc;
-                        }
-                        catch (TaskCanceledException)
-                        {
-                            throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
-                        }
+                                // Wait a bit to throttle the requests:
+                                await Task.Delay(50);
+                                return doc;
+                            }
+                            catch (TaskCanceledException)
+                            {
+                                throw new ObaException(401, "An internal error prevented the request from completing, or the server could not be found");
+                            }
                     }).Unwrap();
 
                 return instance.currentTask;

@@ -373,5 +373,20 @@
       <PackageArchitecture>x64</PackageArchitecture>
       <PackageMaxArchitectureVersion>1.0.0.40</PackageMaxArchitectureVersion>
     </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.0.0</OsMinVersion>
+      <PackageArchitecture>arm</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.1.0.41</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.0.0</OsMinVersion>
+      <PackageArchitecture>x86</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.1.0.41</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.0.0</OsMinVersion>
+      <PackageArchitecture>x64</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.1.0.41</PackageMaxArchitectureVersion>
+    </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

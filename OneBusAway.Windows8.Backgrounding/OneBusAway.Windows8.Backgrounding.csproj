@@ -112,7 +112,6 @@
     <Compile Include="RemovedFromLockScreenBackgroundTask.cs" />
     <Compile Include="StartupBackgroundTask.cs" />
     <Compile Include="TileUpdaterService.cs" />
-    <Compile Include="TimedCache.cs" />
     <Compile Include="TimerBackgroundTask.cs" />
     <Compile Include="UserPresentBackgroundTask.cs" />
   </ItemGroup>

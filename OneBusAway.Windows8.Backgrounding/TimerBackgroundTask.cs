@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 
@@ -33,13 +34,18 @@ namespace OneBusAway.Backgrounding
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             var deferral = taskInstance.GetDeferral();
+
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            taskInstance.Canceled += (sender, reason) => tokenSource.Cancel();
+
             try
             {
-                await TileUpdaterService.UpdateTilesAsync();
+                await TileUpdaterService.UpdateTilesAsync(tokenSource.Token);
             }
             finally
             {
                 deferral.Complete();
+                tokenSource.Dispose();
             }
         }
     }

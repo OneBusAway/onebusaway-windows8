@@ -74,13 +74,13 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         // Try and load the regions xml file locally:
                         try
                         {
-                            // Expire the regions xml file after 7 days:
+                            // Expire the regions xml file after 7 days:                            
                             var fileText = await ServiceRepository.FileService.ReadFileAsStringAsync(REGIONS_XML_FILE);
                             doc = XDocument.Parse(fileText);
 
                             var createdTime = await ServiceRepository.FileService.GetFileCreatedTimeAsync(REGIONS_XML_FILE);
                             existingFileHasExpired = (DateTime.Now - createdTime).TotalDays >= 7;
-                        }
+                            }
                         catch
                         {
                             // OK, couldn't load.
@@ -97,12 +97,12 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                                 {
                                     var message = await client.GetAsync(REGIONS_SERVICE_URI, source.Token);
                                     var xml = await message.Content.ReadAsStringAsync();
-                                    doc = XDocument.Parse(xml);
-                                }
+                                doc = XDocument.Parse(xml);
+                            }
                             }                            
 
                             try
-                            {   
+                            {
                                 using (var stream = await ServiceRepository.FileService.OpenFileWriteStreamAsync(REGIONS_XML_FILE))
                                 {
                                     doc.Save(stream);
@@ -287,9 +287,17 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
             }
 
             /// <summary>
+            /// Sends and receives with a default cancellation token.
+            /// </summary>
+            public Task<XDocument> SendAndRecieveAsync(int cacheTimeout = UtilitiesConstants.DefaultCacheAge)
+            {
+                return SendAndRecieveAsync(cacheTimeout, CancellationToken.None);
+            }
+
+            /// <summary>
             /// Sends a payload to the service asynchronously.
             /// </summary>
-            public async Task<XDocument> SendAndRecieveAsync(int cacheTimeout)
+            public async Task<XDocument> SendAndRecieveAsync(int cacheTimeout, CancellationToken token)
             {
                 XDocument doc = await this.GetCachedDocument(cacheTimeout);
                 if (doc == null)
@@ -298,9 +306,10 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                     {
                         try
                         {
+                            token.ThrowIfCancellationRequested();
                             this.uriBuilder.Query = this.CreateQueryString();
 
-                            doc = await WebRequestQueue.SendAsync(this.uriBuilder.ToString());                            
+                            doc = await WebRequestQueue.SendAsync(this.uriBuilder.ToString(), token);                            
 
                             // Verify that OBA sent us a valid document and that it's status code is 200:                
                             int returnCode = doc.Root.GetFirstElementValue<int>("code");
@@ -350,7 +359,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
 
                         // Make sure the file hasn't expired yet:
                         if ((DateTime.Now - dateModified).TotalSeconds < cacheTimeout)
-                        {
+                            {
                             string xmlString = await ServiceRepository.FileService.ReadFileAsStringAsync(this.GetCachedFilePath());
                             return XDocument.Parse(xmlString);
                         }
@@ -378,7 +387,7 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         string path = this.GetCachedFilePath();
                         using (var stream = await ServiceRepository.FileService.OpenFileWriteStreamAsync(path))
                         {
-                            doc.Save(stream);                            
+                            doc.Save(stream);
                             return true;
                         }
                     }
