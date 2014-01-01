@@ -44,6 +44,7 @@ namespace OneBusAway.Backgrounding
             finally
             {
                 deferral.Complete();
+                tokenSource.Dispose();
             }
         }
     }
