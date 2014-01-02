@@ -326,8 +326,14 @@ namespace OneBusAway.DataAccess.ObaService.ObaService
                         {
                             // Make sure ObaExceptions bubble up because we expect them. 
                             // Note 401 means busy
-                            ObaException obaException = e as ObaException;
-                            if (obaException != null && obaException.ErrorCode != 401)
+                            if (e is ObaException)
+                            {
+                                if (((ObaException)e).ErrorCode != 401)
+                                {
+                                    throw;
+                                }
+                            }
+                            else if (e is OperationCanceledException)
                             {
                                 throw;
                             }

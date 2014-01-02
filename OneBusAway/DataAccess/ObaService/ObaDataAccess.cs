@@ -419,8 +419,12 @@ namespace OneBusAway.DataAccess.ObaService
                             select new TrackingData(serverTime, stopId, stopName, arrivalAndDepartureElement)).ToArray();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                if (e is OperationCanceledException)
+                {
+                    throw;
+                }
             }
 
             return new TrackingData[] { };
