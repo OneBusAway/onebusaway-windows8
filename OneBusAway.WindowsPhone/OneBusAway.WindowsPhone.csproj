@@ -186,6 +186,9 @@
     <Compile Include="Controls\RouteMapsAndSchedulesControl.xaml.cs">
       <DependentUpon>RouteMapsAndSchedulesControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RoutesAndStopsControl.xaml.cs">
+      <DependentUpon>RoutesAndStopsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ScalableTextBlock.xaml.cs">
       <DependentUpon>ScalableTextBlock.xaml</DependentUpon>
     </Compile>
@@ -240,6 +243,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RouteMapsAndSchedulesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RoutesAndStopsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
