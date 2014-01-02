@@ -33,7 +33,7 @@ namespace OneBusAway.Platforms.Windows8
         {
             get
             {
-                return (string)ApplicationData.Current.LocalSettings.Values[setting];
+                return ApplicationData.Current.LocalSettings.Values[setting].ToString();
             }
             set
             {
