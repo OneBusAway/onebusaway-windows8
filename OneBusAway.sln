@@ -1,12 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway", "OneBusAway\OneBusAway.csproj", "{0C5F2939-61DC-452E-914F-DA55798327D9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{35672B4C-7575-4D5C-956B-3674D4CB5AEC} = {35672B4C-7575-4D5C-956B-3674D4CB5AEC}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.DataAccess", "OneBusAway.DataAccess\OneBusAway.DataAccess.csproj", "{B612D55D-895B-4C25-A696-5C7DFEB6BDE4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB} = {92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}
+		{73F2DEBF-F056-4BDA-B578-C2C99062F10B} = {73F2DEBF-F056-4BDA-B578-C2C99062F10B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Model", "OneBusAway.Model\OneBusAway.Model.csproj", "{73F2DEBF-F056-4BDA-B578-C2C99062F10B}"
 EndProject
@@ -17,35 +23,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Web", "OneBusAway.Web\OneBusAway.Web.csproj", "{F754B1D3-BE0F-47B1-B5C0-F47111A020AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Backgrounding", "OneBusAway.Backgrounding\OneBusAway.Backgrounding.csproj", "{35672B4C-7575-4D5C-956B-3674D4CB5AEC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB} = {92F2BF3E-5120-4744-9DBF-1D7E8AABA8CB}
+		{B612D55D-895B-4C25-A696-5C7DFEB6BDE4} = {B612D55D-895B-4C25-A696-5C7DFEB6BDE4}
+		{73F2DEBF-F056-4BDA-B578-C2C99062F10B} = {73F2DEBF-F056-4BDA-B578-C2C99062F10B}
+		{CDD8C2C7-66DA-4AB0-8295-939B8BEA6537} = {CDD8C2C7-66DA-4AB0-8295-939B8BEA6537}
+	EndProjectSection
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mbraude.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = OneBusAway\\OneBusAway.csproj
-		SccProjectName1 = OneBusAway
-		SccLocalPath1 = OneBusAway
-		SccProjectUniqueName2 = OneBusAway.DataAccess\\OneBusAway.DataAccess.csproj
-		SccProjectName2 = OneBusAway.DataAccess
-		SccLocalPath2 = OneBusAway.DataAccess
-		SccProjectUniqueName3 = OneBusAway.Model\\OneBusAway.Model.csproj
-		SccProjectName3 = OneBusAway.Model
-		SccLocalPath3 = OneBusAway.Model
-		SccProjectUniqueName4 = OneBusAway.ViewModels\\OneBusAway.ViewModels.csproj
-		SccProjectName4 = OneBusAway.ViewModels
-		SccLocalPath4 = OneBusAway.ViewModels
-		SccProjectUniqueName5 = OneBusAway.Utilities\\OneBusAway.Utilities.csproj
-		SccProjectName5 = OneBusAway.Utilities
-		SccLocalPath5 = OneBusAway.Utilities
-		SccProjectUniqueName6 = OneBusAway.Web\\OneBusAway.Web.csproj
-		SccProjectName6 = OneBusAway.Web
-		SccLocalPath6 = OneBusAway.Web
-		SccProjectUniqueName7 = OneBusAway.Backgrounding\\OneBusAway.Backgrounding.csproj
-		SccProjectName7 = OneBusAway.Backgrounding
-		SccLocalPath7 = OneBusAway.Backgrounding
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
