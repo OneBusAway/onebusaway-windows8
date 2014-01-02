@@ -31,7 +31,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Common/StandardStyles.xaml" />
+                <ResourceDictionary Source="../Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <conv:ArrayToVisibilityConverter x:Key="arrayToVisibilityConverter" />
             <oba:NavigationControllerProxy x:Key="navigationProxy" />

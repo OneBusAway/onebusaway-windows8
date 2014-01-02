@@ -30,7 +30,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Common/StandardStyles.xaml" />
+                <ResourceDictionary Source="../Common/StandardStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <conv:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
             <conv:StringFormatConverter x:Key="stringFormatConverter" />

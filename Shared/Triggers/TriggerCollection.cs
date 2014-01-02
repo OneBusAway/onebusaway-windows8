@@ -35,10 +35,10 @@ namespace OneBusAway.Triggers
 #endif
     public class TriggerCollection : DependencyObject, IList<Trigger>
     {
-        /// <summary>
-        /// A list of triggers.
-        /// </summary>
-        private List<Trigger> triggers;
+        public static DependencyProperty TriggersProperty = DependencyProperty.Register("Triggers",
+            typeof(List<Trigger>),
+            typeof(TriggerCollection),
+            new PropertyMetadata(null));
 
         /// <summary>
         /// The owning control for this collection.
@@ -50,6 +50,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public TriggerCollection()
         {
+            this.Triggers = new List<Trigger>();
         }
 
         /// <summary>
@@ -58,18 +59,18 @@ namespace OneBusAway.Triggers
         public TriggerCollection(Control control)
         {
             this.control = control;
-            this.triggers = new List<Trigger>();
+            this.Triggers = new List<Trigger>();
         }
 
         public List<Trigger> Triggers
         {
             get
             {
-                return this.triggers;
+                return (List<Trigger>)GetValue(TriggersProperty);
             }
             set
             {
-                this.triggers = value;
+                this.SetValue(TriggersProperty, value);
             }
         }
 
@@ -78,7 +79,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public int IndexOf(Trigger item)
         {
-            return this.triggers.IndexOf(item);
+            return this.Triggers.IndexOf(item);
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public void Insert(int index, Trigger item)
         {
-            this.triggers.Insert(index, item);
+            this.Triggers.Insert(index, item);
         }
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public void RemoveAt(int index)
         {
-            this.triggers.RemoveAt(index);
+            this.Triggers.RemoveAt(index);
         }
 
         /// <summary>
@@ -104,11 +105,11 @@ namespace OneBusAway.Triggers
         {
             get
             {
-                return this.triggers[index];
+                return this.Triggers[index];
             }
             set
             {
-                this.triggers[index] = value;
+                this.Triggers[index] = value;
             }
         }
 
@@ -117,7 +118,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public void Add(Trigger item)
         {
-            this.triggers.Add(item);
+            this.Triggers.Add(item);
             item.SetValue(Trigger.ControlProperty, this.control);
         }
 
@@ -126,7 +127,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public void Clear()
         {
-            this.triggers.Clear();
+            this.Triggers.Clear();
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public bool Contains(Trigger item)
         {
-            return this.triggers.Contains(item);
+            return this.Triggers.Contains(item);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public void CopyTo(Trigger[] array, int arrayIndex)
         {
-            this.triggers.CopyTo(array, arrayIndex);
+            this.Triggers.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace OneBusAway.Triggers
         {
             get 
             {
-                return this.triggers.Count;
+                return this.Triggers.Count;
             }
         }
 
@@ -172,7 +173,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public bool Remove(Trigger item)
         {
-            return this.triggers.Remove(item);
+            return this.Triggers.Remove(item);
         }
 
         /// <summary>
@@ -180,7 +181,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public IEnumerator<Trigger> GetEnumerator()
         {
-            return this.triggers.GetEnumerator();
+            return this.Triggers.GetEnumerator();
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.triggers.GetEnumerator();
+            return this.Triggers.GetEnumerator();
         }
     }
 }
