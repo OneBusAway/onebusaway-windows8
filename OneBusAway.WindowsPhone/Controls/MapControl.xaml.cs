@@ -75,12 +75,12 @@ namespace OneBusAway.Controls
         public static readonly DependencyProperty BoundsWidthProperty = DependencyProperty.Register("BoundsWidth",
             typeof(double),
             typeof(MapControl),
-            null);
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty BoundsHeightProperty = DependencyProperty.Register("BoundsHeight",
             typeof(double),
             typeof(MapControl),
-            null);
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty MapViewProperty = DependencyProperty.Register("MapView",
             typeof(MapView),
