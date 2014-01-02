@@ -39,7 +39,7 @@ namespace OneBusAway.Triggers
         /// Triggers attached property definition.
         /// </summary>
         public static readonly DependencyProperty TriggersProperty = DependencyProperty.RegisterAttached("Triggers",
-            typeof(List<Trigger>),
+            typeof(TriggerCollection),
             typeof(TriggerManager),
             new PropertyMetadata(null));
 
