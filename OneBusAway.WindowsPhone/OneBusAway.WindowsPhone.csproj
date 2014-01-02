@@ -195,6 +195,9 @@
     <Compile Include="Controls\SearchResultsControl.xaml.cs">
       <DependentUpon>SearchResultsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TimeTableControl.xaml.cs">
+      <DependentUpon>TimeTableControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserLocationIcon.xaml.cs">
       <DependentUpon>UserLocationIcon.xaml</DependentUpon>
     </Compile>
@@ -258,6 +261,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SearchResultsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TimeTableControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
