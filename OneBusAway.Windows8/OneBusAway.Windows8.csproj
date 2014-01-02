@@ -206,9 +206,6 @@
     <Compile Include="Controls\HelpFlyout.xaml.cs">
       <DependentUpon>HelpFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HelpFlyoutControl.xaml.cs">
-      <DependentUpon>HelpFlyoutControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
@@ -310,10 +307,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\HelpFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\HelpFlyoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

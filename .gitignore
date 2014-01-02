@@ -13,8 +13,16 @@
 /OneBusAway.Web/obj/Release
 /OneBusAway.Windows8/bin/x86/Debug
 /OneBusAway.Windows8/obj/x86/Debug
+/OneBusAway.Windows8/bin/x64/Debug
+/OneBusAway.Windows8/obj/x64/Debug
+/OneBusAway.Windows8/bin/arm/Debug
+/OneBusAway.Windows8/obj/arm/Debug
 /OneBusAway.Windows8.Backgrounding/bin/x86/Debug
 /OneBusAway.Windows8.Backgrounding/obj/x86/Debug
+/OneBusAway.Windows8.Backgrounding/bin/x64/Debug
+/OneBusAway.Windows8.Backgrounding/obj/x64/Debug
+/OneBusAway.Windows8.Backgrounding/bin/arm/Debug
+/OneBusAway.Windows8.Backgrounding/obj/arm/Debug
 /OneBusAway.WindowsPhone/Bin/x86/Debug
 /OneBusAway.WindowsPhone/obj
 /packages
