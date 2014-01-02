@@ -299,6 +299,7 @@
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Images\favs.png" />
     <Content Include="Images\feature.search.png" />
+    <Content Include="Images\location.png" />
     <Content Include="Images\refresh.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
