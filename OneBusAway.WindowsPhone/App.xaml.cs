@@ -6,9 +6,6 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using OneBusAway.Platforms.WindowsPhone;
-using OneBusAway.Services;
-using OneBusAway.Resources;
 
 namespace OneBusAway
 {
@@ -25,11 +22,6 @@ namespace OneBusAway
         /// </summary>
         public App()
         {
-            ServiceRepository.FileService = new FileService();
-            ServiceRepository.GeoLocationService = new GeoLocationService();
-            ServiceRepository.MessageBoxService = new MessageBoxService();
-            ServiceRepository.SettingsService = new SettingsService();            
-
             // Global handler for uncaught exceptions.
             UnhandledException += Application_UnhandledException;
 
@@ -192,24 +184,8 @@ namespace OneBusAway
         {
             try
             {
-                // Set the font to match the display language defined by the
-                // ResourceLanguage resource string for each supported language.
-                //
-                // Fall back to the font of the neutral language if the Display
-                // language of the phone is not supported.
-                //
-                // If a compiler error is hit then ResourceLanguage is missing from
-                // the resource file.
-                RootFrame.Language = XmlLanguage.GetLanguage(AppResources.ResourceLanguage);
-
-                // Set the FlowDirection of all elements under the root frame based
-                // on the ResourceFlowDirection resource string for each
-                // supported language.
-                //
-                // If a compiler error is hit then ResourceFlowDirection is missing from
-                // the resource file.
-                FlowDirection flow = (FlowDirection)Enum.Parse(typeof(FlowDirection), AppResources.ResourceFlowDirection);
-                RootFrame.FlowDirection = flow;
+                RootFrame.Language = XmlLanguage.GetLanguage("en-us");
+                RootFrame.FlowDirection = FlowDirection.LeftToRight;
             }
             catch
             {

@@ -57,15 +57,15 @@ namespace OneBusAway.Controls
             typeof(MapControl),
             new PropertyMetadata(null, UserLocationChanged));
 
-        public static readonly DependencyProperty CnterOnUserLocationProperty = DependencyProperty.Register("CenterOnUserLocation",
+        public static readonly DependencyProperty CenterOnUserLocationProperty = DependencyProperty.Register("CenterOnUserLocation",
             typeof(bool),
             typeof(MapControl),
-            new PropertyMetadata(null, CenterOnUserLocationChanged));
+            new PropertyMetadata(false, CenterOnUserLocationChanged));
 
         public static readonly DependencyProperty ZoomLevelProperty = DependencyProperty.Register("ZoomLevel",
             typeof(double),
             typeof(MapControl),
-            new PropertyMetadata(null, ZoomLevelChanged));
+            new PropertyMetadata(14.0, ZoomLevelChanged));
 
         public static readonly DependencyProperty BusStopsProperty = DependencyProperty.Register("BusStops",
             typeof(BusStopList),
@@ -75,12 +75,12 @@ namespace OneBusAway.Controls
         public static readonly DependencyProperty BoundsWidthProperty = DependencyProperty.Register("BoundsWidth",
             typeof(double),
             typeof(MapControl),
-            new PropertyMetadata(null));
+            new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty BoundsHeightProperty = DependencyProperty.Register("BoundsHeight",
             typeof(double),
             typeof(MapControl),
-            new PropertyMetadata(null));
+            new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty MapViewProperty = DependencyProperty.Register("MapView",
             typeof(MapView),

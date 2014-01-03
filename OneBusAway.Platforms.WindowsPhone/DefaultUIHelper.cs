@@ -34,7 +34,8 @@ namespace OneBusAway.Platforms.WindowsPhone
         /// </summary>
         public DefaultUIHelper()
         {
-            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+            // TODO: figure out how to get this to work
+            //this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
         }
 
         /// <summary>
