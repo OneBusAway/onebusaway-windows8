@@ -74,7 +74,10 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+            double width = e.NewSize.Width;
+            NavigationController.Instance.IsSnapped = (width <= 520);
+            NavigationController.Instance.IsPortrait = (520 < width && width < 1024);
+            NavigationController.Instance.IsFullScreen = (1024 <= width);
         }
 
         /// <summary>

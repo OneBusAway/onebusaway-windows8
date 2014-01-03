@@ -61,7 +61,6 @@
         </trig:TriggerCollection>
     </trig:TriggerManager.Triggers>
 
-
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="grid"
           Background="White">
@@ -224,58 +223,3 @@
     </VisualStateManager.VisualStateGroups>
 
 </phone:PhoneApplicationPage>
-
-<!--<Page x:Class="OneBusAway.Pages.MainPage"
-      x:Name="root"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      
-        
-    </Grid>
-
-    <Page.BottomAppBar>
-
-        <AppBar x:Name="appBar"
-                Background="{StaticResource obaGreen}">
-            <StackPanel HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding GoBackCommand, Source={StaticResource navigationProxy}}"
-                        IsEnabled="{Binding CanGoBack, Source={StaticResource navigationProxy}}"
-                        Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                        Content="&#xE112;" />
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding GoToSearchPageCommand, Source={StaticResource navigationProxy}}"
-                        Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                        Content="&#xE094;" />
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding GoToFavoritesPageCommand, Source={StaticResource navigationProxy}}"
-                        Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                        Content="&#xE113;" />
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding RefreshCommand, Source={StaticResource navigationProxy}}"
-                        Content="&#xE117;" />
-                <Button Style="{StaticResource AppBarButtonStyle}"
-                        Command="{Binding GoToUsersLocationCommand, Source={StaticResource navigationProxy}}"
-                        Content="&#xE139;" />
-                <Grid Visibility="{Binding IsSnapped, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
-                    <StackPanel Orientation="Horizontal"
-                                Visibility="{Binding CurrentPageControl, Source={StaticResource navigationProxy}, Converter={StaticResource pageControlToPinnableVisibilityConverter}}">
-                        <Button Style="{StaticResource AppBarButtonStyle}"
-                                Command="{Binding PinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
-                                CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
-                                Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=true}"
-                                Content="&#xE141;" />
-                        <Button Style="{StaticResource AppBarButtonStyle}"
-                                Command="{Binding UnPinStopToStartPageCommand, Source={StaticResource navigationProxy}}"
-                                CommandParameter="{Binding CurrentPageControl, Source={StaticResource navigationProxy}}"
-                                Visibility="{Binding IsCurrentControlPinned, Source={StaticResource navigationProxy}, Converter={StaticResource boolToVisibilityConverter}}"
-                                Content="&#xE196;" />
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </AppBar>
-    </Page.BottomAppBar>
-
-</Page>-->

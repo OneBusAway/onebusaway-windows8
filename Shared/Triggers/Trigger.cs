@@ -84,14 +84,6 @@ namespace OneBusAway.Triggers
         }
 
         /// <summary>
-        /// Evaluates the trigger and changes state if neccessary.
-        /// </summary>
-        public void Evaluate()
-        {
-            
-        }
-
-        /// <summary>
         /// Called when the binding updates us.  Here is where we will change visual states.
         /// </summary>
         private static void OnCurrentValueChanged(DependencyObject depObject, DependencyPropertyChangedEventArgs args)

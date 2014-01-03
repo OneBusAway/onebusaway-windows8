@@ -78,6 +78,7 @@ namespace OneBusAway.Triggers
             {
                 instance.triggerLookup[control] = collection;
                 control.Unloaded += OnControlUnloaded;
+                collection.Control = control;
             }
         }
 

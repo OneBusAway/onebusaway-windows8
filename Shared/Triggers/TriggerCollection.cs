@@ -40,10 +40,10 @@ namespace OneBusAway.Triggers
             typeof(TriggerCollection),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// The owning control for this collection.
-        /// </summary>
-        private Control control;
+        public static DependencyProperty ControlProperty = DependencyProperty.Register("Control",
+            typeof(Control),
+            typeof(TriggerCollection),
+            new PropertyMetadata(null, new PropertyChangedCallback(OnControlChanged)));
 
         /// <summary>
         /// This constructor is called from the phone project.
@@ -58,7 +58,7 @@ namespace OneBusAway.Triggers
         /// </summary>
         public TriggerCollection(Control control)
         {
-            this.control = control;
+            this.Control = control;
             this.Triggers = new List<Trigger>();
         }
 
@@ -71,6 +71,18 @@ namespace OneBusAway.Triggers
             set
             {
                 this.SetValue(TriggersProperty, value);
+            }
+        }
+
+        public Control Control
+        {
+            get
+            {
+                return (Control)GetValue(ControlProperty);
+            }
+            set
+            {
+                SetValue(ControlProperty, value);
             }
         }
 
@@ -114,12 +126,12 @@ namespace OneBusAway.Triggers
         }
 
         /// <summary>
-        /// Adds an item.
+        /// Adds an item. This is called from the Windows 8 runtime.
         /// </summary>
         public void Add(Trigger item)
         {
             this.Triggers.Add(item);
-            item.SetValue(Trigger.ControlProperty, this.control);
+            item.SetValue(Trigger.ControlProperty, this.Control);
         }
 
         /// <summary>
@@ -190,6 +202,28 @@ namespace OneBusAway.Triggers
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.Triggers.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Called when the control property changes. Make sure we set the control property
+        /// for all the triggers.
+        /// </summary>
+        private static void OnControlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            TriggerCollection collection = d as TriggerCollection;
+            Control newControl = e.NewValue as Control;
+
+            if (collection != null && newControl != null)
+            {
+                List<Trigger> triggers = collection.Triggers;
+                if (triggers != null)
+                {
+                    foreach (var trigger in triggers)
+                    {
+                        trigger.SetValue(Trigger.ControlProperty, newControl);
+                    }
+                }
+            }            
         }
     }
 }
