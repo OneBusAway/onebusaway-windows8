@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 using OneBusAway.PageControls;
 using OneBusAway.Pages;
 using OneBusAway.ViewModels.PageControls;
+using Windows.Graphics.Display;
 
 namespace OneBusAway.WindowsPhone.Pages
 {
@@ -75,6 +70,25 @@ namespace OneBusAway.WindowsPhone.Pages
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             double width = e.NewSize.Width;
+            switch (DisplayProperties.ResolutionScale)
+            {
+                case ResolutionScale.Scale140Percent:
+                    width *= 1.4;
+                    break;
+
+                case ResolutionScale.Scale150Percent:
+                    width *= 1.5;
+                    break;
+
+                case ResolutionScale.Scale160Percent:
+                    width *= 1.6;
+                    break;
+
+                case ResolutionScale.Scale180Percent:
+                    width *= 1.8;
+                    break;
+            }
+
             NavigationController.Instance.IsSnapped = (width <= 520);
             NavigationController.Instance.IsPortrait = (520 < width && width < 1024);
             NavigationController.Instance.IsFullScreen = (1024 <= width);
