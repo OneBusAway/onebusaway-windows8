@@ -89,8 +89,8 @@ namespace OneBusAway.WindowsPhone.Pages
                     break;
             }
 
-            NavigationController.Instance.IsSnapped = (width <= 520);
-            NavigationController.Instance.IsPortrait = (520 < width && width < 1024);
+            NavigationController.Instance.IsSnapped = (width <= 480);
+            NavigationController.Instance.IsPortrait = (480 < width && width < 1024);
             NavigationController.Instance.IsFullScreen = (1024 <= width);
         }
 
