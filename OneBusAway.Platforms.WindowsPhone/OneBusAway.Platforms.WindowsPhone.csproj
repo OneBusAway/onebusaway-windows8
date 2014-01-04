@@ -89,6 +89,7 @@
     <Compile Include="MessageBoxService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsService.cs" />
+    <Compile Include="TileService.cs" />
     <Compile Include="UIHelperService.cs" />
   </ItemGroup>
   <ItemGroup>

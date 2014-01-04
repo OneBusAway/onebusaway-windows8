@@ -33,11 +33,11 @@ namespace OneBusAway.Platforms.WindowsPhone
         {
             get
             {
-                throw new NotSupportedException();
+                return String.Empty;
             }
             set
             {
-                throw new NotSupportedException();
+                // Ignored for now:
             }
         }
     }

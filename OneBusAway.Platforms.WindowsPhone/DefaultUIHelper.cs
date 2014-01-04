@@ -27,15 +27,11 @@ namespace OneBusAway.Platforms.WindowsPhone
     /// </summary>
     public class DefaultUIHelper : IUIHelper
     {
-        private CoreDispatcher dispatcher;
-
         /// <summary>
         /// Crteates the default UI helper.
         /// </summary>
         public DefaultUIHelper()
         {
-            // TODO: figure out how to get this to work
-            //this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
         }
 
         /// <summary>
@@ -52,7 +48,6 @@ namespace OneBusAway.Platforms.WindowsPhone
             foreach (var item in newItems)
             {
                 collection.Add(item);
-                await WaitForIdleAsync();
                 await Task.Delay(20);
             }
         }
@@ -60,9 +55,9 @@ namespace OneBusAway.Platforms.WindowsPhone
         /// <summary>
         /// Allows view models to wait for the UI to idle.
         /// </summary>
-        public async Task WaitForIdleAsync()
+        public Task WaitForIdleAsync()
         {
-            await this.dispatcher.RunIdleAsync(args => { });
+            return Task.FromResult<object>(null);
         }
     }
 }

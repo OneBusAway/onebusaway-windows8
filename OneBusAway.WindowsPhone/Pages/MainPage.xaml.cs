@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Phone.Controls;
 using OneBusAway.PageControls;
 using OneBusAway.Pages;
+using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
 using Windows.Graphics.Display;
 
@@ -18,8 +19,12 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         public MainPage()
         {
+            // The OBA app should only ever have one main page, and that should
+            // always be this instance.
+            NavigationController.Instance.MainPage = this;
+
             InitializeComponent();
-            this.proxy = (NavigationControllerProxy)this.Resources["navigationProxy"];
+            this.proxy = (NavigationControllerProxy)this.Resources["navigationProxy"];            
         }
 
         /// <summary>
@@ -38,7 +43,37 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         public void NavigateToPageControlByArguments(string arguments)
         {
-            throw new NotImplementedException();
+            IPageControl pageControl = null;
+            object parameter = arguments;
+
+            if (string.IsNullOrEmpty(arguments))
+            {
+                pageControl = new FavoritesPageControl();
+            }
+            else
+            {
+                PageInitializationParameters parameters;
+                if (PageInitializationParameters.TryCreate(arguments, out parameters))
+                {
+                    string pageControlName = parameters.GetParameter<string>("pageControl");
+                    if (!string.IsNullOrEmpty(pageControlName))
+                    {
+                        // Make sure the type is a valid page control:
+                        Type pageControlType = Type.GetType(pageControlName, false);
+                        if (pageControlType != null)
+                        {
+                            pageControl = Activator.CreateInstance(pageControlType) as IPageControl;
+                            parameter = parameters;
+                        }
+                    }
+                }
+            }
+
+            // Important: to make sure we don't time out opening OBA on ARM devices, load the page control when we idle.
+            var ignored = this.Dispatcher.RunIdleAsync(async () =>
+            {
+                await NavigationController.Instance.NavigateToPageControlAsync(pageControl, parameter);
+            });
         }
 
         /// <summary>
@@ -46,7 +81,8 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         public void SetPageView(IPageControl pageControl)
         {
-            throw new NotImplementedException();
+            this.scrollViewer.Content = pageControl;
+            this.DataContext = pageControl.ViewModel;
         }
 
         /// <summary>
@@ -54,6 +90,7 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         public void ShowHelpFlyout(bool calledFromSettings)
         {
+            // TODO:
             throw new NotImplementedException();
         }
 
@@ -62,6 +99,8 @@ namespace OneBusAway.WindowsPhone.Pages
         /// </summary>
         public void ShowSearchPane()
         {
+            // TODO:
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace OneBusAway.WindowsPhone.PageControls
         /// </summary>
         public IPageControl CreatePageControl(PageControlTypes pageControlType)
         {
-            throw new NotImplementedException();
+            return new FavoritesPageControl();
         }
     }
 }

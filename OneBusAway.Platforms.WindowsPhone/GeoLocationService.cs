@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using OneBusAway.Model;
 using OneBusAway.Services;
+using Windows.Devices.Geolocation;
 
 namespace OneBusAway.Platforms.WindowsPhone
 {
@@ -14,14 +11,17 @@ namespace OneBusAway.Platforms.WindowsPhone
     /// </summary>
     public class GeoLocationService : IGeoLocationService
     {
-        private GeoLocationService service;
+        /// <summary>
+        /// This is the geo locator object that's used to find our location.
+        /// </summary>
+        private Geolocator geoLocator;
 
         /// <summary>
         /// Creates the service.
         /// </summary>
         public GeoLocationService()
         {
-            this.service = new GeoLocationService();            
+            this.geoLocator = new Geolocator();
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace OneBusAway.Platforms.WindowsPhone
         /// <returns></returns>
         public async Task<Point> FindUserLocationAsync()
         {
-            var location = await service.FindUserLocationAsync();
-            return new Point(location.Latitude, location.Longitude);
+            var location = await geoLocator.GetGeopositionAsync();
+            return new Point(location.Coordinate.Latitude, location.Coordinate.Longitude);
         }
     }
 }

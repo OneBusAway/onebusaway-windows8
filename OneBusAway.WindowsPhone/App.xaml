@@ -5,11 +5,10 @@
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
 
     <Application.ApplicationLifetimeObjects>
-        <!--Required object that handles lifetime events for the application-->
-        <shell:PhoneApplicationService Launching="Application_Launching"
-                                       Closing="Application_Closing"
-                                       Activated="Application_Activated"
-                                       Deactivated="Application_Deactivated" />
+        <shell:PhoneApplicationService Launching="OnApplicationLaunching"
+                                       Closing="OnApplicationClosing"
+                                       Activated="OnApplicationActivated"
+                                       Deactivated="OnApplicationDeactivated" />
     </Application.ApplicationLifetimeObjects>
 
 </Application>
