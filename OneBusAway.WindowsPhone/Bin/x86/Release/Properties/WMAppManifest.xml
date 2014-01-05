@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <Languages xmlns="">
-    <Language code="en" />
-  </Languages>
-  <App xmlns="" ProductID="{71555972-2eab-4b6d-9b76-521df55d2d14}" Title="OneBusAway" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="MJB Software" Description="Provides real-time information for transit agencies in supported regions." Publisher="MJB Software" PublisherID="{45936a15-613a-4c7f-9ca8-458b1bc2c8a8}">
+  <App xmlns="" ProductID="{f170f10c-fcdb-465a-ba0b-5cc248f24f4d}" Title="OneBusAway" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="MJB Software" Description="Provides real-time information for transit agencies supported by OneBusAway.org." Publisher="MJB Software" PublisherID="{476280ca-cd46-46f3-9f4f-f7230d5de77a}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
