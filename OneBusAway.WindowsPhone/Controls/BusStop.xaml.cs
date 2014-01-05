@@ -32,8 +32,7 @@ namespace OneBusAway.Controls
         private static StringEqualsToVisibilityConverter stringEqualsToVisibilityConverter = new StringEqualsToVisibilityConverter();
         private static BoolToVisibilityConverter boolToVisibilityConverter = new BoolToVisibilityConverter();
 
-        private static BitmapImage busBitmapImage = new BitmapImage(new Uri("ms-appx:///Assets/bus.png"));
-        private static SolidColorBrush crimsonBrush = new SolidColorBrush(Colors.Magenta);
+        private static BitmapImage busBitmapImage = new BitmapImage(new Uri("/Images/bus.png", UriKind.RelativeOrAbsolute));
         private static SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
 
         private BusStopHeaderControl headerControl;
@@ -177,7 +176,7 @@ namespace OneBusAway.Controls
         {
             Polygon polygon = new Polygon();
             polygon.Points = new PointCollection() { new System.Windows.Point(0, 0), new System.Windows.Point(8, 5), new System.Windows.Point(0, 10) };
-            polygon.Fill = crimsonBrush;
+            polygon.Fill = redBrush;
             polygon.Margin = margin;
             polygon.RenderTransformOrigin = new System.Windows.Point(.5, .5);
             polygon.RenderTransform = new RotateTransform() { Angle = angle };

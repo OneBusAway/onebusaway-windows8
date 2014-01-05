@@ -298,6 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Images\bus.png" />
     <Content Include="Images\favs.png" />
     <Content Include="Images\feature.search.png" />
     <Content Include="Images\location.png" />
