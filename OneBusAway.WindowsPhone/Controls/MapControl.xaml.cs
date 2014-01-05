@@ -16,8 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Phone.Maps.Controls;
@@ -40,6 +43,8 @@ namespace OneBusAway.Controls
         private bool centerOnUserLocation;
         private GeoCoordinate userLocation;
         private IUIHelper uiHelper;
+        private Task updateViewTask;
+        private CancellationTokenSource cancellationTokenSource;
         private HashSet<string> displayedBusStopLookup = new HashSet<string>();
 
         public static readonly DependencyProperty RefreshBusStopsOnMapViewChangedProperty = DependencyProperty.Register("RefreshBusStopsOnMapViewChanged",
@@ -121,7 +126,11 @@ namespace OneBusAway.Controls
             this.MapCenter = null;
 
             this.map.ViewChanged += OnMapViewChangeEnded;
-            this.uiHelper = new DefaultUIHelper();            
+            this.map.CenterChanged += OnMapCenterChanged;
+            this.uiHelper = new DefaultUIHelper();
+
+            this.updateViewTask = Task.FromResult<object>(null);
+            this.cancellationTokenSource = new CancellationTokenSource();
         }
 
         #endregion
@@ -482,18 +491,57 @@ namespace OneBusAway.Controls
             }
         }
 
+        private void OnMapViewChangeEnded(object sender, MapViewChangedEventArgs e)
+        {
+            this.UpdateMapView();
+        }
+
+        private void OnMapCenterChanged(object sender, MapCenterChangedEventArgs e)
+        {
+            this.UpdateMapView();
+        }
+
         /// <summary>
         /// Called when the map view change ends.  Store the map view and if we zoom out far enough, 
         /// clear the bus stops.
+        /// 
+        /// As the user is moving the map around with their finger, the center will change constantly. 
+        /// To avoid making too many calls to the OBA service to get bus stops, this method will
+        /// try and wait 1 second for the user to finish before it queries OBA.
         /// </summary>
-        private void OnMapViewChangeEnded(object sender, MapViewChangedEventArgs e)
+        private void UpdateMapView()
         {
-            this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude),
-                map.ZoomLevel,
-                map.Height,
-                map.Width);
+            // Cancel the previous task:
+            this.cancellationTokenSource.Cancel();
 
-            NavigationController.Instance.MapView = this.MapView;
+            // Make a new cancellation token source for this update:
+            this.cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = this.cancellationTokenSource.Token;
+
+            // Execute the tasks serially by continuing from the previous task:
+            this.updateViewTask = this.updateViewTask.ContinueWith(async prev =>
+                {
+                    try
+                    {
+                        await Task.Delay(1000, token);
+
+                        // Must be run on the UI thread. Don't await it. If another 
+                        // map change comes in, it will execute on the UI thread later:
+                        var ignored = this.Dispatcher.RunIdleAsync(() =>
+                            {
+                                this.MapView = new MapView(new Model.Point(map.Center.Latitude, map.Center.Longitude),
+                                    map.ZoomLevel,
+                                    map.Height,
+                                    map.Width);
+
+                                NavigationController.Instance.MapView = this.MapView;
+                            });
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Ignored, it's expected that we will be cancelled
+                    }
+                }).Unwrap();          
         }
 
         #endregion
