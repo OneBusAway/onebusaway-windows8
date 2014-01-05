@@ -34,7 +34,7 @@ namespace OneBusAway.WindowsPhone.Pages
         {
             get
             {
-                return null;
+                return this.DataContext as PageViewModelBase;;
             }
         }
 
