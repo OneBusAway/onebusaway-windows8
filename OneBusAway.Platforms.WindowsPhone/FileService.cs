@@ -48,6 +48,22 @@ namespace OneBusAway.Platforms.WindowsPhone
         public Task<Stream> OpenFileWriteStreamAsync(string relativePath)
         {
             var store = IsolatedStorageFile.GetUserStoreForApplication();
+
+            // Create any directorties in the path:
+            string temporaryPath = string.Empty;
+            string[] directories = relativePath.Split(Path.DirectorySeparatorChar);
+            foreach (string directory in directories)
+            {
+                if (! Path.HasExtension(directory))
+                {
+                    temporaryPath = Path.Combine(temporaryPath, directory);
+                    if (! store.DirectoryExists(temporaryPath))
+                    {
+                        store.CreateDirectory(temporaryPath);
+                    }
+                }
+            }
+
             return Task.FromResult<Stream>(store.OpenFile(relativePath, FileMode.Create));
         }
     }
