@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 using System.Windows.Controls;
-using Microsoft.Phone.Controls;
+using System.Windows.Input;
 
 namespace OneBusAway.Controls
 {
@@ -27,7 +27,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Fires the AddToFavorites command and passes it our data context.
         /// </summary>
-        private void OnTapped(object sender, GestureEventArgs e)
+        private void OnTap(object sender, GestureEventArgs e)
         {
             NavigationController.Instance.AddToFavoritesCommand.Execute(this.DataContext);
         }
