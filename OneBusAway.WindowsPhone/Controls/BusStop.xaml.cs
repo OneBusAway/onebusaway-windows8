@@ -220,10 +220,11 @@ namespace OneBusAway.Controls
         /// </summary>
         private void OnTap(object sender, GestureEventArgs e)
         {
-            if (this.viewModel != null)
+            FrameworkElement element = sender as FrameworkElement;
+            if (this.viewModel != null && element != null)
             {
                 // Find the Map control that we're parented to:
-                MapControl mapControl = ControlUtilities.GetParent<MapControl>(this.Parent);
+                MapControl mapControl = ControlUtilities.GetParent<MapControl>(element.Parent);
                 if (mapControl != null)
                 {
                     MapControlViewModel mapControlViewModel = mapControl.DataContext as MapControlViewModel;

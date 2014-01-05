@@ -19,7 +19,17 @@ namespace OneBusAway.WindowsPhone.PageControls
         /// </summary>
         public IPageControl CreatePageControl(PageControlTypes pageControlType)
         {
-            return new FavoritesPageControl();
+            switch (pageControlType)
+            {
+                case PageControlTypes.Favorites:
+                    return new FavoritesPageControl();
+
+                case PageControlTypes.RealTime:
+                    return new RealTimePageControl();
+
+                default:
+                    throw new NotSupportedException();
+            }            
         }
     }
 }
