@@ -31,12 +31,6 @@ namespace OneBusAway.Platforms.Windows8
         {
 
         }
-        /// <summary>
-        /// Nothing to do for Windows 8.
-        /// </summary>
-        public void Dispose()
-        {            
-        }
 
         public bool Contains(string setting)
         {

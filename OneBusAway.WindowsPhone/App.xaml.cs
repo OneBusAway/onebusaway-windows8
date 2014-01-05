@@ -61,7 +61,6 @@ namespace OneBusAway
 
         private void OnApplicationClosing(object sender, ClosingEventArgs e)
         {
-            ServiceRepository.SettingsService.Dispose();
         }
 
         // Code to execute on Unhandled Exceptions
