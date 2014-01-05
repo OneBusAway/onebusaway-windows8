@@ -24,6 +24,20 @@ namespace OneBusAway.Platforms.Windows8
 {
     public class SettingsService : ISettingsService
     {
+        /// <summary>
+        /// Creates the settings service.
+        /// </summary>
+        public SettingsService()
+        {
+
+        }
+        /// <summary>
+        /// Nothing to do for Windows 8.
+        /// </summary>
+        public void Dispose()
+        {            
+        }
+
         public bool Contains(string setting)
         {
             return ApplicationData.Current.LocalSettings.Values.ContainsKey(setting);

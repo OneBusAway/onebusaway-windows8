@@ -23,7 +23,7 @@ namespace OneBusAway.Services
     /// <summary>
     /// Retrieves settings from the app.
     /// </summary>
-    public interface ISettingsService
+    public interface ISettingsService : IDisposable
     {
         bool Contains(string setting);
 
