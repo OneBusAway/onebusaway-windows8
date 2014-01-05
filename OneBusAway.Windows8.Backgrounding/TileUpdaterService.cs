@@ -12,23 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using OneBusAway.DataAccess;
-using OneBusAway.DataAccess.BingService;
 using OneBusAway.DataAccess.ObaService;
 using OneBusAway.Model;
 using OneBusAway.Platforms.Windows8;
 using OneBusAway.Services;
 using OneBusAway.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Background;
-using Windows.Data.Xml.Dom;
-using Windows.System.Threading;
-using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 
 namespace OneBusAway.Backgrounding

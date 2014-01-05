@@ -39,7 +39,6 @@ namespace OneBusAway.ViewModels.PageControls
             this.HeaderViewModel.SubText = "TRIP DETAILS";            
             this.TripTimelineControlViewModel = new TripTimelineControlViewModel();
 
-            this.MapControlViewModel = new MapControlViewModel();
             this.MapControlViewModel.RefreshBusStopsOnMapViewChanged = false;
             this.MapControlViewModel.StopSelected += OnStopSelected;
         }

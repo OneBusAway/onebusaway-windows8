@@ -28,7 +28,7 @@ namespace OneBusAway.ViewModels.Controls
     /// <summary>
     /// View model for the map control
     /// </summary>
-    public class MapControlViewModel : ViewModelBase
+    public class MapControlViewModel : ViewModelBase, IGeoLocationServiceObserver
     {
         private OneBusAway.Model.Point userLocation;
         private MapView mapView;
@@ -46,6 +46,8 @@ namespace OneBusAway.ViewModels.Controls
         {
             this.mapView = MapView.Current;
             this.RefreshBusStopsOnMapViewChanged = true;
+
+            ServiceRepository.GeoLocationService.RegisterForLocationChanged(this);
         }
 
         /// <summary>
@@ -385,6 +387,14 @@ namespace OneBusAway.ViewModels.Controls
                 northSouthSpan,
                 eastWestSpan,
                 true);
+        }
+
+        /// <summary>
+        /// This method is called when the geo location service has a new lat / lon for us.
+        /// </summary>
+        public void OnUserLocationChanged(Point newLocation)
+        {
+            this.UserLocation = newLocation;
         }
     }
 }

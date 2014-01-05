@@ -16,26 +16,11 @@
 using OneBusAway.Pages;
 using OneBusAway.Platforms.Windows8;
 using OneBusAway.Services;
-using OneBusAway.ViewModels;
-using OneBusAway.ViewModels.PageControls;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Search;
-using Windows.Devices.Geolocation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -52,14 +37,6 @@ namespace OneBusAway
         /// </summary>
         public App()
         {
-            // Inject the platform specific services into the service repository:
-            ServiceRepository.FileService = new FileService();
-            ServiceRepository.GeoLocationService = new GeoLocationService();
-            ServiceRepository.SettingsService = new SettingsService();
-            ServiceRepository.PageControlService = new PageControlService();
-            ServiceRepository.MessageBoxService = new MessageBoxService();
-            ServiceRepository.TileService = new TileService();
-
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
@@ -72,6 +49,16 @@ namespace OneBusAway
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            // Inject the platform specific services into the service repository.
+            // Note - we do it here because the dispatcher is not created
+            // before this point:
+            ServiceRepository.FileService = new FileService();
+            ServiceRepository.GeoLocationService = new GeoLocationService(CoreWindow.GetForCurrentThread().Dispatcher);
+            ServiceRepository.SettingsService = new SettingsService();
+            ServiceRepository.PageControlService = new PageControlService();
+            ServiceRepository.MessageBoxService = new MessageBoxService();
+            ServiceRepository.TileService = new TileService();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             if (rootFrame == null)

@@ -21,8 +21,21 @@ using System.Threading.Tasks;
 
 namespace OneBusAway.Services
 {
+    /// <summary>
+    /// Defines an object that can listen to events on the geo location service.
+    /// Using the observer pattern instead of events so that the location service
+    /// can use weak references to make manage garbage collection, instead of relying on
+    /// the caller to unregister.
+    /// </summary>
+    public interface IGeoLocationServiceObserver
+    {
+        void OnUserLocationChanged(Point newLocation);
+    }
+
     public interface IGeoLocationService
     {
+        void RegisterForLocationChanged(IGeoLocationServiceObserver observer);
+
         Task<Point> FindUserLocationAsync();
     }
 }
