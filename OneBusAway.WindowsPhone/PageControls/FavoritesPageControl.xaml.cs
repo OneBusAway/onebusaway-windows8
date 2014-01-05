@@ -79,7 +79,7 @@ namespace OneBusAway.PageControls
             this.viewModel.MapControlViewModel.UnSelectStop();
 
             // Don't let this restore stop the page transition. Populate it on idle after we've refreshed the UI:
-            var ignored = CoreWindow.GetForCurrentThread().Dispatcher.RunIdleAsync(async args => await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync());
+            var ignored = this.Dispatcher.RunIdleAsync(async () => await this.viewModel.RoutesAndStopsViewModel.PopulateFavoritesAsync());
             return Task.FromResult<object>(null);
         }
 

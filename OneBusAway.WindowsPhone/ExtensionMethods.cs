@@ -41,12 +41,12 @@ namespace OneBusAway
         /// <summary>
         /// Overload that returns an actual result.
         /// </summary>
-        public static Task<T> RunIdleAsync<T>(this Dispatcher dispatcher, Func<T> func)
+        public static Task<Task<T>> RunIdleAsync<T>(this Dispatcher dispatcher, Func<Task<T>> func)
         {
-            TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();
+            TaskCompletionSource<Task<T>> tcs = new TaskCompletionSource<Task<T>>();
             dispatcher.BeginInvoke(() =>
             {
-                T result = default(T);
+                Task<T> result = Task.FromResult<T>(default(T));
                 try
                 {
                     result = func();
