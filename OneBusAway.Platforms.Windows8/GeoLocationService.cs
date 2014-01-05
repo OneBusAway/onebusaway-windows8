@@ -42,6 +42,7 @@ namespace OneBusAway.Platforms.Windows8
 
             this.locator = new Geolocator();
             this.locator.DesiredAccuracy = PositionAccuracy.High;
+            this.locator.ReportInterval = 5000;
 
             // In some cases, ther emay be no dispatcher...for instance,
             // if we are in the background process. In that case, there's no point in listening
