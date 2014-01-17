@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 using System;
+using System.Linq;
 
 #if WINDOWS_PHONE
 using System.Windows.Data;
@@ -33,7 +34,21 @@ namespace OneBusAway.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
 #endif
         {
-            DateTime[] valueTime = (DateTime[])value;
+            DateTime[] valueTime = new DateTime[] { };
+            if (value is string)
+            {
+                string dateString = value as string;
+                if (!string.IsNullOrEmpty(dateString))
+                {
+                    valueTime = (from s in dateString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                 select DateTime.Parse(s)).ToArray();
+                }
+            }
+            else if (value is DateTime[])
+            {
+                valueTime = (DateTime[])value;
+            }
+
             if (valueTime.Length == 0)
             {
                 return new Thickness(0);

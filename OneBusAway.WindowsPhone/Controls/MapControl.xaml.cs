@@ -93,7 +93,7 @@ namespace OneBusAway.Controls
             new PropertyMetadata(null, MapViewChanged));
 
         public static readonly DependencyProperty ShapesProperty = DependencyProperty.Register("Shapes",
-            typeof(OneBusAway.Model.Shape),
+            typeof(List<OneBusAway.Model.Shape>),
             typeof(MapControl),
             new PropertyMetadata(null, ShapesChanged));
 

@@ -14,11 +14,11 @@
  */
 using System;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using OneBusAway.Model;
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.Controls;
 using OneBusAway.ViewModels.PageControls;
-using Windows.UI.Xaml.Controls;
 
 namespace OneBusAway.PageControls
 {
@@ -46,7 +46,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public PageViewModelBase ViewModel
         {
-            get 
+            get
             {
                 return this.viewModel;
             }

@@ -27,6 +27,9 @@ namespace OneBusAway.WindowsPhone.PageControls
                 case PageControlTypes.RealTime:
                     return new RealTimePageControl();
 
+                case PageControlTypes.TimeTable:
+                    return new TimeTablePageControl();
+
                 default:
                     throw new NotSupportedException();
             }            
