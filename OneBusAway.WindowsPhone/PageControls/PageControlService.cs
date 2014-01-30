@@ -30,6 +30,9 @@ namespace OneBusAway.WindowsPhone.PageControls
                 case PageControlTypes.TimeTable:
                     return new TimeTablePageControl();
 
+                case PageControlTypes.TripDetails:
+                    return new TripDetailsPageControl();
+
                 default:
                     throw new NotSupportedException();
             }            

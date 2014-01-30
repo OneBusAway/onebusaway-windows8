@@ -31,7 +31,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Called when the user selects a stop.
         /// </summary>
-        private void OnStopTapped(object sender, GestureEventArgs e)
+        private void OnStopTapped(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var viewModel = this.DataContext as TripTimelineControlViewModel;
             if (viewModel != null)
@@ -107,6 +107,7 @@ namespace OneBusAway.Controls
                     }
                 }
             }
-        }        
+        }
+
     }
 }

@@ -15,12 +15,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using OneBusAway.DataAccess.ObaService;
 using OneBusAway.Model;
 using OneBusAway.ViewModels;
 using OneBusAway.ViewModels.PageControls;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace OneBusAway.PageControls
 {
@@ -51,7 +51,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         public PageViewModelBase ViewModel
         {
-            get 
+            get
             {
                 return this.viewModel;
             }
@@ -131,7 +131,7 @@ namespace OneBusAway.PageControls
         /// </summary>
         private void OnControlUnloaded(object sender, RoutedEventArgs e)
         {
-            this.viewModel.MapControlViewModel.UnselectClosestStop();            
+            this.viewModel.MapControlViewModel.UnselectClosestStop();
         }
 
         /// <summary>
@@ -152,6 +152,6 @@ namespace OneBusAway.PageControls
         public PageInitializationParameters GetParameters()
         {
             throw new NotImplementedException();
-        }        
+        }
     }
 }
