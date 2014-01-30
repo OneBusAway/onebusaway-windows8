@@ -65,19 +65,11 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="mainGrid"
-              Grid.Column="0"
-              Grid.Row="0"
-              Margin="80,0,0,0">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
+        <StackPanel x:Name="stackPanel"
+                    Orientation="Vertical"
+                    VerticalAlignment="Bottom"
+                    Margin="20,0,0,-10">
+            
             <ctrls:ScalableTextBlock x:Name="littleHeaderTextBlock"
                                      Grid.Column="0"
                                      Grid.Row="0"
@@ -86,7 +78,7 @@
                                      VerticalAlignment="Bottom"
                                      HorizontalAlignment="Left"
                                      Opacity=".5"
-                                     Margin="10,0,0,-10"
+                                     Margin="0,0,0,-10"
                                      Text="ONE BUS AWAY"
                                      NormalFontSize="16"
                                      SnappedFontSize="14"
@@ -97,14 +89,12 @@
                                      Grid.Row="1"
                                      FontWeight="Bold"
                                      Foreground="White"
-                                     Margin="10,0,0,0"
-                                     VerticalAlignment="Bottom"
+                                     VerticalAlignment="Bottom"                                     
                                      HorizontalAlignment="Left"
                                      NormalFontSize="34"
                                      SnappedFontSize="28"
-                                     Height="31"
                                      Text="{Binding SubText}" />
-        </Grid>
+        </StackPanel>
 
         <!-- Links on top right -->
         <Grid x:Name="linksGrid"
@@ -120,7 +110,8 @@
                 <ColumnDefinition Width=".3*" />
             </Grid.ColumnDefinitions>
 
-            <ctrls:ScalableTextBlock Grid.Column="0"
+            <ctrls:ScalableTextBlock x:Name="goToFavoritesButton" 
+                                     Grid.Column="0"
                                      Grid.Row="0"
                                      Margin="20,0,20,0"
                                      Foreground="White"
@@ -131,7 +122,8 @@
                                      FontFamily="Segoe UI Symbol"
                                      Text="&#xE113;" />
 
-            <ctrls:ScalableTextBlock Grid.Column="1"
+            <ctrls:ScalableTextBlock x:Name="goToHelpButton"                                     
+                                     Grid.Column="1"
                                      Grid.Row="0"
                                      Margin="20,0,20,0"
                                      Foreground="White"
@@ -143,7 +135,8 @@
                                      FontFamily="Segoe UI Symbol"
                                      Text="&#x2753;" />
 
-            <ctrls:ScalableTextBlock Grid.Column="2"
+            <ctrls:ScalableTextBlock x:Name="goToSearchButton" 
+                                     Grid.Column="2"
                                      Grid.Row="0"
                                      Margin="20,0,20,0"
                                      Foreground="White"
@@ -166,24 +159,32 @@
                             <DiscreteObjectKeyFrame KeyTime="0"
                                                     Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="subTextTextBlock"
-                                                       Storyboard.TargetProperty="Height">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="25" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="littleHeaderTextBlock"
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="stackPanel"
                                                        Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="11,0,0,-6" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainGrid"
-                                                       Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                    Value="0,0,0,0" />
+                                                    Value="10,0,0,-8" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-                <VisualState x:Name="IsPortrait" />
+                <VisualState x:Name="IsPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="goToFavoritesButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0,10,10,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="goToHelpButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0,10,10,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="goToSearchButton"
+                                                       Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                    Value="0,10,10,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
