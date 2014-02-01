@@ -114,12 +114,10 @@ namespace OneBusAway.Controls
         {
             this.InitializeComponent();
 
-            this.routeLayer = new MapLayer();
             this.busStopLayer = new MapLayer();
             this.userLocationLayer = new MapLayer();
 
             this.map.Layers.Add(this.userLocationLayer);
-            this.map.Layers.Add(this.routeLayer);
             this.map.Layers.Add(this.busStopLayer);
 
             // Setting MapCenter to null will center the map to Puget Sound and set the default Zoom level.
@@ -322,7 +320,7 @@ namespace OneBusAway.Controls
             if (args.OldValue != null)
             {
                 // remove all old polylines from the map:
-                mapControl.routeLayer.Clear();
+                mapControl.map.MapElements.Clear();
             }
 
             if (args.NewValue != null)
@@ -341,10 +339,7 @@ namespace OneBusAway.Controls
                     }
 
                     polyline.Path = locations;
-                    mapControl.routeLayer.Add(new MapOverlay()
-                    {
-                        Content = polyline,
-                    });
+                    mapControl.map.MapElements.Add(polyline);
                 }
             }
         }
