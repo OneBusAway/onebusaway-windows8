@@ -291,7 +291,7 @@ namespace OneBusAway.Controls
 
             if (newValue.AnimateChange)
             {
-                if (newValue.BoundsWidth != 0 && newValue.BoundsHeight != 0)
+                if (! (newValue.BoundsWidth.IsZeroOrNaN() || newValue.BoundsHeight.IsZeroOrNaN()))
                 {
                     mapControl.map.SetView(new LocationRectangle(newLocation, newValue.BoundsWidth, newValue.BoundsHeight));
                     newValue.AnimateChange = false;

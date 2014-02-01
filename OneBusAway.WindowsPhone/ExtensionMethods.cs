@@ -63,5 +63,13 @@ namespace OneBusAway
 
             return tcs.Task;
         }
+
+        /// <summary>
+        /// Utility method that returns true if a number is either 0 or NaN.
+        /// </summary>
+        public static bool IsZeroOrNaN(this double d)
+        {
+            return d == 0 || double.IsNaN(d);
+        }
     }
 }
