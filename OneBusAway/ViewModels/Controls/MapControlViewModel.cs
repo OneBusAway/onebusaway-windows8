@@ -182,7 +182,7 @@ namespace OneBusAway.ViewModels.Controls
                 var position = await ServiceRepository.GeoLocationService.FindUserLocationAsync();
 
                 this.UserLocation = new Point(position.Latitude, position.Longitude);
-                this.MapView = new MapView(this.UserLocation, this.MapView.ZoomLevel, true);                
+                this.MapView = new MapView(this.UserLocation, Constants.ZoomedInMapZoom, true);                
                 return true;
             }
             catch (UnauthorizedAccessException)
