@@ -30,11 +30,6 @@ namespace OneBusAway
         public const int HttpTimeoutLength = 15000;
 
         /// <summary>
-        /// Default map zoom when map control is loaded on any page
-        /// </summary>
-        public const double DefaultMapZoom = 12;
-
-        /// <summary>
         /// Map zoom for a closer look than the default.
         /// </summary>
         public const double ZoomedInMapZoom = 16;

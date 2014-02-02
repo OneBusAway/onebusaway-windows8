@@ -62,11 +62,6 @@ namespace OneBusAway.Controls
             typeof(MapControl),
             new PropertyMetadata(null, UserLocationChanged));
 
-        public static readonly DependencyProperty CenterOnUserLocationProperty = DependencyProperty.Register("CenterOnUserLocation",
-            typeof(bool),
-            typeof(MapControl),
-            new PropertyMetadata(false, CenterOnUserLocationChanged));
-
         public static readonly DependencyProperty ZoomLevelProperty = DependencyProperty.Register("ZoomLevel",
             typeof(double),
             typeof(MapControl),
@@ -287,7 +282,7 @@ namespace OneBusAway.Controls
                 return;
             }
 
-            var newLocation = new GeoCoordinate(newValue.MapCenter.Latitude, newValue.MapCenter.Longitude);
+            var newLocation = newValue.MapCenter.ToCoordinate();
 
             if (newValue.AnimateChange)
             {
@@ -305,8 +300,7 @@ namespace OneBusAway.Controls
             }
             else
             {
-                mapControl.map.Center = newLocation;
-                mapControl.map.ZoomLevel = newValue.ZoomLevel;
+                mapControl.map.SetView(newLocation, newValue.ZoomLevel, MapAnimationKind.None);
             }
         }
 
@@ -390,7 +384,7 @@ namespace OneBusAway.Controls
 
             if (newValue != null)
             {
-                mapControl.userLocation = new GeoCoordinate(newValue.Latitude, newValue.Longitude);
+                mapControl.userLocation = newValue.ToCoordinate();
 
                 MapOverlay locationOverlay = null;
                 if (mapControl.userLocationLayer.Count == 0)
@@ -411,14 +405,7 @@ namespace OneBusAway.Controls
                 mapControl.userLocationLayer.RemoveAt(0);
             }
         }
-
-        private static void CenterOnUserLocationChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            var mapControl = dependencyObject as MapControl;
-
-            mapControl.CenterOnUserLocation = (bool)args.NewValue;
-        }
-
+        
         private static void ZoomLevelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             var mapControl = dependencyObject as MapControl;

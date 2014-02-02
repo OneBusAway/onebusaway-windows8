@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,6 +71,16 @@ namespace OneBusAway
         public static bool IsZeroOrNaN(this double d)
         {
             return d == 0 || double.IsNaN(d);
+        }
+
+        /// <summary>
+        /// Utility method converts a point to a geocoordinate.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static GeoCoordinate ToCoordinate(this OneBusAway.Model.Point point)
+        {
+            return new GeoCoordinate(point.Latitude, point.Longitude);
         }
     }
 }

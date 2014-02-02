@@ -95,7 +95,6 @@
         <ctrls:MapControl x:Name="mainPageMap"
                           Grid.Row="2"
                           Grid.Column="1"
-                          CenterOnUserLocation="True"
                           DataContext="{Binding MapControlViewModel}"
                           RefreshBusStopsOnMapViewChanged="{Binding RefreshBusStopsOnMapViewChanged}"
                           MapView="{Binding MapView, Mode=TwoWay}"

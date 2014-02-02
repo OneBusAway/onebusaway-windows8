@@ -158,9 +158,6 @@ namespace OneBusAway.ViewModels.Controls
             // If we already have a location, don't get it again:
             if (this.UserLocation == null)
             {
-                this.UserLocation = MapView.Current.MapCenter;
-                this.MapView = new MapView(this.UserLocation, Constants.DefaultMapZoom);
-
                 try
                 {
                     var position = await ServiceRepository.GeoLocationService.FindUserLocationAsync();
