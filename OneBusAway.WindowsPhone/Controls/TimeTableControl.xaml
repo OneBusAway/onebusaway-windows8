@@ -40,7 +40,8 @@
             <conv:StringFormatConverter x:Key="stringFormatConverter" />
             <conv:IsCurrentHourToThicknessConverter x:Key="isCurrentHourToThicknessConverter" />
             <conv:CapitalLetterConverter x:Key="capitalLetterConverter" />
-            <oba:NavigationControllerProxy x:Key="navigationProxy" />
+            <conv:StringArrayToTypeArrayConverter x:Key="stringArrayToTypeArrayConverter" />
+            <oba:NavigationControllerProxy x:Key="navigationProxy" />            
 
             <DataTemplate x:Key="dateTimesDataTemplate">
                 <Grid>
@@ -48,7 +49,7 @@
                                   Margin="0,5,0,0"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                  ItemsSource="{Binding}">
+                                  ItemsSource="{Binding Converter={StaticResource stringArrayToTypeArrayConverter}, ConverterParameter='System.DateTime'}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <toolkit:WrapPanel Orientation="Horizontal"

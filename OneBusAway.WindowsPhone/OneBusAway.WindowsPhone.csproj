@@ -204,6 +204,7 @@
     <Compile Include="Controls\UserLocationIcon.xaml.cs">
       <DependentUpon>UserLocationIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\StringArrayToTypeArrayConverter.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="PageControls\FavoritesPageControl.xaml.cs">
       <DependentUpon>FavoritesPageControl.xaml</DependentUpon>
