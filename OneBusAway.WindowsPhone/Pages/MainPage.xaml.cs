@@ -88,19 +88,17 @@ namespace OneBusAway.WindowsPhone.Pages
         /// <summary>
         /// Shows the help flyout.
         /// </summary>
-        public void ShowHelpFlyout(bool calledFromSettings)
+        public async void ShowHelpFlyout(bool calledFromSettings)
         {
-            // TODO:
-            throw new NotImplementedException();
+            await this.flyoutContainerControl.AnimateFlyInAsync();
         }
 
         /// <summary>
         /// Shows the search pane.
         /// </summary>
-        public void ShowSearchPane()
+        public async void ShowSearchPane()
         {
-            // TODO:
-            throw new NotImplementedException();
+            await this.flyoutContainerControl.AnimateFlyInAsync();
         }
 
         /// <summary>

@@ -177,6 +177,9 @@
     <Compile Include="Controls\FavoriteControl.xaml.cs">
       <DependentUpon>FavoriteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FlyoutContainerControl.xaml.cs">
+      <DependentUpon>FlyoutContainerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HeaderControl.xaml.cs">
       <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
@@ -253,6 +256,10 @@
     <Page Include="Controls\FavoriteControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FlyoutContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\HeaderControl.xaml">
       <Generator>MSBuild:Compile</Generator>

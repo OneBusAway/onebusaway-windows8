@@ -4,6 +4,7 @@ using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace OneBusAway
@@ -81,6 +82,25 @@ namespace OneBusAway
         public static GeoCoordinate ToCoordinate(this OneBusAway.Model.Point point)
         {
             return new GeoCoordinate(point.Latitude, point.Longitude);
+        }
+        
+        /// <summary>
+        /// Allows callers to await the completion of an animation.
+        /// </summary>
+        public static Task WaitForStoryboardToFinishAsync(this Storyboard storyboard)
+        {
+            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+
+            EventHandler onCompleted = null;
+            onCompleted = (sender, e) =>
+                {
+                    storyboard.Completed -= onCompleted;
+                    tcs.SetResult(null);
+                };
+
+            storyboard.Completed += onCompleted;
+            storyboard.Begin();
+            return tcs.Task;
         }
     }
 }

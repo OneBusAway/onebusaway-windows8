@@ -80,7 +80,6 @@
                            x:Name="appBarLauncherRow" />
         </Grid.RowDefinitions>
 
-
         <!--Header control-->
         <ctrls:HeaderControl Grid.ColumnSpan="2"
                              Grid.Row="0"
@@ -102,6 +101,12 @@
                           BusStops="{Binding BusStops, Mode=TwoWay}"
                           Shapes="{Binding Shapes}"
                           SelectedBusStop="{Binding SelectedBusStop, Mode=TwoWay}" />
+
+        <ctrls:FlyoutContainerControl x:Name="flyoutContainerControl"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Grid.Row="0"
+                                      Grid.RowSpan="4" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
