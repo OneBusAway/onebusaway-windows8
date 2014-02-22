@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ctrls="clr-namespace:OneBusAway.Controls"
              mc:Ignorable="d"
-             x:Name="root"
+             x:Name="root"             
              SizeChanged="OnSizeChanged"
              IsHitTestVisible="{Binding IsShowingFlyout}"
              d:DesignHeight="480"
@@ -125,7 +126,12 @@
                   Grid.Row="0"
                   Grid.RowSpan="2"
                   Background="White">
-                <TextBlock>Hello World!</TextBlock>
+                <ContentPresenter x:Name="ContentPresenter"
+                                  Margin="5">
+                    <ContentPresenter.Content>
+                        <ctrls:SearchEntryControl />
+                    </ContentPresenter.Content>
+                </ContentPresenter>
             </Grid>
         </Grid>
     </Canvas>

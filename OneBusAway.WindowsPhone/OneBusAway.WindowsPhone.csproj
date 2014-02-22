@@ -195,6 +195,9 @@
     <Compile Include="Controls\ScalableTextBlock.xaml.cs">
       <DependentUpon>ScalableTextBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SearchEntryControl.xaml.cs">
+      <DependentUpon>SearchEntryControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SearchResultsControl.xaml.cs">
       <DependentUpon>SearchResultsControl.xaml</DependentUpon>
     </Compile>
@@ -280,6 +283,10 @@
     <Page Include="Controls\ScalableTextBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SearchEntryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SearchResultsControl.xaml">
       <SubType>Designer</SubType>

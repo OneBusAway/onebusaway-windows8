@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="OneBusAway.Controls.SearchEntryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Foreground="Black"
+             d:DesignHeight="480"
+             d:DesignWidth="480">
+
+    <StackPanel x:Name="LayoutRoot"
+                Background="White">
+
+        <TextBlock Foreground="Black"
+                   FontSize="25">Search</TextBlock>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>            
+            <TextBox Grid.Column="0"
+                     Grid.Row="0"
+                     Padding="0"
+                     Margin="0"
+                     BorderThickness="1"
+                     BorderBrush="Black"
+                     UseLayoutRounding="True" />
+            <TextBlock Grid.Column="1"
+                       Grid.Row="0"
+                       FontFamily="Segoe UI Symbol"
+                       FontSize="20"
+                       VerticalAlignment="Center"
+                       Text="&#xE11A;" />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="0"
+                        Grid.Row="1">
+                <TextBlock Grid.Column="0"
+                           Grid.Row="0"
+                           FontFamily="Segoe UI Symbol"
+                           FontSize="20"
+                           VerticalAlignment="Center"
+                           Text="&#xE1D2;" />
+                <TextBlock Grid.Column="0"
+                           Grid.Row="0"
+                           FontSize="20"
+                           Margin="4,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="Use My Location" />
+            </StackPanel>
+                        
+        </Grid>
+
+    </StackPanel>
+
+</UserControl>
