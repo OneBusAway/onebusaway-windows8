@@ -12,18 +12,18 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>OneBusAway_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>OneBusAway.Windows8_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <PackageCertificateThumbprint>009DA47CA65FAC6D259CF1103D80464F742CE290</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>BDB58E11554BAC32ABA3A8C39AED0B6E379CB1DA</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>D:\github\OneBusAway-windows8\ReleaseAppPackages\</AppxPackageDir>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <TargetFrameworkVersion />
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -256,8 +256,8 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="OneBusAway.licenseheader" />
+    <None Include="OneBusAway.Windows8_TemporaryKey.pfx" />
     <None Include="OneBusAway_StoreKey.pfx" />
-    <None Include="OneBusAway_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
