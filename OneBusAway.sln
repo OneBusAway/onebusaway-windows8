@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Windows8", "OneBusAway.Windows8\OneBusAway.Windows8.csproj", "{0C5F2939-61DC-452E-914F-DA55798327D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A} = {D13662C3-6CBC-4DBC-8C36-54863F27A27A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway", "OneBusAway\OneBusAway.csproj", "{D585DD67-74DD-4F14-960E-0A79E2AD910C}"
 EndProject
@@ -13,6 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Platforms.Window
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Windows8.Backgrounding", "OneBusAway.Windows8.Backgrounding\OneBusAway.Windows8.Backgrounding.csproj", "{35672B4C-7575-4D5C-956B-3674D4CB5AEC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13662C3-6CBC-4DBC-8C36-54863F27A27A} = {D13662C3-6CBC-4DBC-8C36-54863F27A27A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBusAway.Platforms.WindowsPhone", "OneBusAway.Platforms.WindowsPhone\OneBusAway.Platforms.WindowsPhone.csproj", "{EFDA7B53-DCCB-46B9-AAC7-7D071515463F}"
 EndProject
