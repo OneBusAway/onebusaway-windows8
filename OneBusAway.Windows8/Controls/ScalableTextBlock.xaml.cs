@@ -170,7 +170,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// If there is a command bound to this text block, invoke it.
         /// </summary>
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (this.Command != null && this.Command.CanExecute(this.CommandParameter))
             {

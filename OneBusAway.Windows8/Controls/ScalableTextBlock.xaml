@@ -26,7 +26,7 @@
              d:DesignHeight="30"
              d:DesignWidth="100">
 
-    <Grid PointerPressed="OnPointerPressed"
+    <Grid PointerReleased="OnPointerReleased"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
         <Rectangle HorizontalAlignment="Stretch"

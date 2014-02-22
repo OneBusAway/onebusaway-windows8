@@ -43,7 +43,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Called when the user selects a stop.
         /// </summary>
-        private void OnStopClicked(object sender, PointerRoutedEventArgs e)
+        private void OnStopPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             var viewModel = this.DataContext as TripTimelineControlViewModel;
             if (viewModel != null)

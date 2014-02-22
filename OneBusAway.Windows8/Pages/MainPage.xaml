@@ -95,7 +95,7 @@
         <Grid Grid.Column="0"
               Grid.Row="3"
               Grid.ColumnSpan="2"
-              PointerPressed="OnAppBarPointerPressed"
+              PointerReleased="OnAppBarPointerReleased"
               Background="{StaticResource obaGreen}"
               ToolTipService.ToolTip="Show more commands (Win + Z or right-click anywhere)"
               HorizontalAlignment="Stretch">

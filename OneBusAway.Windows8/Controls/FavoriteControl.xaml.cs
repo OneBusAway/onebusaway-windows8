@@ -27,7 +27,7 @@ namespace OneBusAway.Controls
         /// <summary>
         /// Fires the AddToFavorites command and passes it our data context.
         /// </summary>
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             NavigationController.Instance.AddToFavoritesCommand.Execute(this.DataContext);
         }

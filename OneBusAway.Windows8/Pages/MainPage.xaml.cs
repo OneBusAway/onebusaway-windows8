@@ -259,7 +259,7 @@ namespace OneBusAway.Pages
         /// <summary>
         /// Called when the semi-transparent appbar is pressed.
         /// </summary>
-        private void OnAppBarPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnAppBarPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             this.appBar.IsOpen = true;
         }

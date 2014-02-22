@@ -163,8 +163,8 @@
                                                      VerticalTextAlignment="Center"
                                                      NormalFontSize="12"
                                                      SnappedFontSize="12"
-                                                     LargeFontSize="12" 
-                                                     PointerPressed="OnStopClicked" />
+                                                     LargeFontSize="12"
+                                                     PointerReleased="OnStopPointerReleased" />
                         </Grid>
 
                         <!-- Border displays the selected border -->

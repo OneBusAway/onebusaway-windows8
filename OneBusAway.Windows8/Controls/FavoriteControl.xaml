@@ -21,7 +21,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:conv="using:OneBusAway.Converters"
              mc:Ignorable="d"
-             PointerPressed="OnPointerPressed"
+             PointerReleased="OnPointerReleased"
              x:Name="root"
              Width="20"
              Height="20"
