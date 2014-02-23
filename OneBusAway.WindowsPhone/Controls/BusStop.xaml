@@ -1,5 +1,5 @@
 ﻿<!--
- Copyright 2013 Michael Braude and individual contributors.
+ Copyright 2014 Michael Braude and individual contributors.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+
 <UserControl x:Class="OneBusAway.Controls.BusStop"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

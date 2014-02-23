@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="OneBusAway.licenseheader" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

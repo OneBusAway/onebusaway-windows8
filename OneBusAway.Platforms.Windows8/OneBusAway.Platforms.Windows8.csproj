@@ -118,6 +118,7 @@
     <Compile Include="TileXMLBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OneBusAway.licenseheader" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
