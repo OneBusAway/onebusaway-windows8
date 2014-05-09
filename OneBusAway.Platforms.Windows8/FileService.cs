@@ -48,26 +48,15 @@ namespace OneBusAway.Platforms.Windows8
         public async Task<Stream> ReadFileAsStreamAsync(string relativePath)
         {
             var file = await ApplicationData.Current.LocalFolder.GetFileAsync(relativePath);
-            var fileAccess = await file.OpenReadAsync();
+            var fileAccess = await file.OpenReadAsync();            
             return fileAccess.AsStream();
         }
 
         public async Task<Stream> OpenFileWriteStreamAsync(string relativePath)
         {
-            StorageFile file = null;
-            
             var storageItem = await ApplicationData.Current.LocalFolder.TryGetItemAsync(relativePath);
-            if (storageItem == null)
-            {
-                file = await ApplicationData.Current.LocalFolder.CreateFileAsync(relativePath, CreationCollisionOption.ReplaceExisting);
-            }
-            else
-            {
-                file = await ApplicationData.Current.LocalFolder.GetFileAsync(relativePath);
-            }
-
-            var randomAccessStream = await file.OpenAsync(FileAccessMode.ReadWrite);
-            return randomAccessStream.AsStream();
+            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(relativePath, CreationCollisionOption.ReplaceExisting);
+            return await file.OpenStreamForWriteAsync();
         }
     }
 }
